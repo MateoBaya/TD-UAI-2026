@@ -44,9 +44,14 @@
     <Compile Include="Bitacora.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Enums\TipoEvento.cs" />
+<<<<<<< HEAD
     <Compile Include="Permisos\PermisoAgrupamiento.cs" />
     <Compile Include="Permisos\PermisoAtomico.cs" />
     <Compile Include="Permisos\PermisoComponent.cs" />
+=======
+    <Compile Include="ControlIdioma.cs" />
+    <Compile Include="Idioma.cs" />
+>>>>>>> feature/gestion-multidiomas
     <Compile Include="Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

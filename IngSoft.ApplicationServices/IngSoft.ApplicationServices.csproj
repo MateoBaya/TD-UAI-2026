@@ -44,11 +44,17 @@
     <Compile Include="Factory\ServicesFactory.cs" />
     <Compile Include="IBitacoraServices.cs" />
     <Compile Include="Implementation\BitacoraServices.cs" />
+<<<<<<< HEAD
     <Compile Include="Implementation\GuardableEnBitacora.cs" />
     <Compile Include="Implementation\PermisoServices.cs" />
     <Compile Include="Implementation\UsuarioServices.cs" />
     <Compile Include="IPermisoServices.cs" />
     <Compile Include="IUsuarioServices.cs" />
+=======
+    <Compile Include="Implementation\MultiIdiomaServices.cs" />
+    <Compile Include="Implementation\UsuarioServices.cs" />
+    <Compile Include="IMultiIdiomaServices.cs" />
+>>>>>>> feature/gestion-multidiomas
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

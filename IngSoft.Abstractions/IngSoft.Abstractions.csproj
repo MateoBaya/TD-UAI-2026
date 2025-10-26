@@ -41,10 +41,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+<<<<<<< HEAD
     <Compile Include="Encriptador\IEncriptador.cs" />
     <Compile Include="Encriptador\IEncriptadorHash.cs" />
     <Compile Include="Encriptador\IEncriptadorKey.cs" />
     <Compile Include="ICompositable.cs" />
+=======
+    <Compile Include="IControlIdioma.cs" />
+    <Compile Include="IEntity.cs" />
+    <Compile Include="IIdioma.cs" />
+    <Compile Include="IObserver.cs" />
+    <Compile Include="ISubject.cs" />
+>>>>>>> feature/gestion-multidiomas
     <Compile Include="IUsuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
