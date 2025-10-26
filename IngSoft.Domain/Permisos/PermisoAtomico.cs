@@ -21,6 +21,7 @@ namespace IngSoft.Domain
             }
             else
             {
+                this.Parent.AddCompositable(compositable);
                 return this.Parent;
             }
         }

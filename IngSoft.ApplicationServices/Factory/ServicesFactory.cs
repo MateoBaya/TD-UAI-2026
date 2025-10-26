@@ -1,4 +1,5 @@
-﻿using IngSoft.Repository;
+﻿using IngSoft.ApplicationServices.Implementation;
+using IngSoft.Repository;
 using IngSoft.Repository.Factory;
 
 namespace IngSoft.ApplicationServices.Factory
@@ -14,6 +15,11 @@ namespace IngSoft.ApplicationServices.Factory
         {
             IUsuarioRepository usuarioRepository = FactoryRepository.CreateUsuarioRepository();
             return new UsuarioServices(usuarioRepository);
+        }
+        public static IPermisoServices CreatePermisoServices()
+        {
+            IPermisoRepository permisoRepository = FactoryRepository.CreatePermisoRepository();
+            return new PermisoServices(permisoRepository);
         }
     }
 }

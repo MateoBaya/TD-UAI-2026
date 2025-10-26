@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace IngSoft.Domain
 {
-    internal class PermisoAgrupamiento : PermisoComponent, ICollection<PermisoComponent>
+    public class PermisoAgrupamiento : PermisoComponent, ICollection<PermisoComponent>
     {
         private readonly List<ICompositable> _children = new List<ICompositable>();
 
@@ -127,15 +127,19 @@ namespace IngSoft.Domain
 
         public override ICompositable RemoveCompositable(ICompositable compositable)
         {
-            if (compositable == null) throw new ArgumentNullException(nameof(compositable));
+            if (compositable == null)
+            {
+                throw new ArgumentNullException(nameof(compositable));
+            }
 
             var item = BuscarRecursivo(compositable);
-            if (item == null) return null;
+            
+            if(item!= null&& ((PermisoAgrupamiento)item)._children.Remove(item))
+            {
+                item.RaisePermisoEliminado();
+            }
 
-            var removed = ((PermisoAgrupamiento)item.Parent)._children.Remove(item);
-            item.RaisePermisoEliminado();
-
-            return removed ? item : null;
+            return item;
         }
 
         IEnumerator IEnumerable.GetEnumerator()

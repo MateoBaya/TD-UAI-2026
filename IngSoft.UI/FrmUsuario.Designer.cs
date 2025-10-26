@@ -33,6 +33,7 @@
             this.verTodosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.loginToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cerrarSesionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.modificarUsuarioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -40,6 +41,7 @@
             // 
             this.menuStrip1.ImageScalingSize = new System.Drawing.Size(22, 22);
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.modificarUsuarioToolStripMenuItem,
             this.agregarNuevoToolStripMenuItem,
             this.verTodosToolStripMenuItem,
             this.loginToolStripMenuItem,
@@ -82,6 +84,13 @@
             this.cerrarSesionToolStripMenuItem.Visible = false;
             this.cerrarSesionToolStripMenuItem.Click += new System.EventHandler(this.cerrarSesionToolStripMenuItem_Click);
             // 
+            // modificarUsuarioToolStripMenuItem
+            // 
+            this.modificarUsuarioToolStripMenuItem.Name = "modificarUsuarioToolStripMenuItem";
+            this.modificarUsuarioToolStripMenuItem.Size = new System.Drawing.Size(141, 24);
+            this.modificarUsuarioToolStripMenuItem.Text = "Modificar Usuario";
+            this.modificarUsuarioToolStripMenuItem.Click += new System.EventHandler(this.modificarUsuarioToolStripMenuItem_Click);
+            // 
             // FrmUsuario
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -107,5 +116,6 @@
         private System.Windows.Forms.ToolStripMenuItem verTodosToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem loginToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cerrarSesionToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem modificarUsuarioToolStripMenuItem;
     }
 }

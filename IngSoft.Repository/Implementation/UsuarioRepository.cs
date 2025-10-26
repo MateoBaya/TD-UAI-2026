@@ -20,6 +20,42 @@ namespace IngSoft.Repository
             _connection = connection ?? ConnectionFactory.CreateSqlServerConnection();
         }
 
+        public void ModificarUsuario(Usuario usuario)
+        {
+            _connection.NuevaConexion(connectionString);
+            try
+            {
+                var existeUsuario = _connection.EjecutarEscalar("SELECT COUNT(*) FROM Usuario WHERE Username = @UserName", new Dictionary<string, object>
+                {
+                    {"@UserName", usuario.UserName }
+                });
+                if (Convert.ToInt32(existeUsuario) == 0)
+                {
+                    throw new ArgumentException("El usuario no existe");
+                }
+                else
+                {
+                    var parametros = new Dictionary<string, object>
+                    {
+                        {"@UserName", usuario.UserName },
+                        {"@Nombre", usuario.Nombre },
+                        {"@Apellido", usuario.Apellido },
+                        {"@Email", usuario.Email },
+                        {"@Bloqueado", usuario.Bloqueado }
+                    };
+                    _connection.EjecutarSinResultado("ModificarUsuario", parametros);
+
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                _connection.FinalizarConexion();
+            }
+        }
         public void GuardarUsuario(Usuario usuario)
         {
             EncriptadorExperto mEncritpador = new EncriptadorExperto();
@@ -29,22 +65,14 @@ namespace IngSoft.Repository
             {
                 _connection.IniciarTransaccion();               
 
-                var existeUsuario = _connection.EjecutarEscalar("SELECT COUNT(*) FROM Usuario WHERE UserName = @UserName", new Dictionary<string, object>
+                var existeUsuario = _connection.EjecutarEscalar("SELECT COUNT(*) FROM Usuario WHERE Username = @UserName", new Dictionary<string, object>
                 {
                     {"@UserName", usuario.UserName }
                 });
 
                 if (Convert.ToInt32(existeUsuario) > 0)
                 {
-                    var parametros = new Dictionary<string, object>
-                    {
-                        {"@UserName", usuario.UserName },
-                        {"@Nombre", usuario.Nombre },
-                        {"@Apellido", usuario.Apellido },
-                        {"@Email", usuario.Email },
-                        {"@Contrasena", usuario.Contrasena }
-                    };
-                    _connection.EjecutarSinResultado("ModificarUsuario", parametros);
+                    throw new ArgumentException("El usuario ya existe");
                 }
                 else
                 {

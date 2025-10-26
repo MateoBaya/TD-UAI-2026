@@ -1,27 +1,38 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Security.Authentication;
+﻿using IngSoft.ApplicationServices.Implementation;
 using IngSoft.Domain;
 using IngSoft.Domain.Enums;
 using IngSoft.Repository;
 using IngSoft.Repository.Factory;
 using IngSoft.Services;
+using System;
+using System.Collections.Generic;
+using System.Security.Authentication;
 
 namespace IngSoft.ApplicationServices
 {
-    public class UsuarioServices: IUsuarioServices
+    public class UsuarioServices: GuardableEnBitacora, IUsuarioServices
     {
         private readonly IUsuarioRepository _usuarioRepository;
-        private Action<Usuario, string, string, TipoEvento> _registrarEnBitacora;
 
         public UsuarioServices(IUsuarioRepository usuarioRepository)
         {
             _usuarioRepository = usuarioRepository ?? FactoryRepository.CreateUsuarioRepository();
         }
 
-        public void SetRegistradoBitacora(Action<Usuario, string, string, TipoEvento> registrarEnBitacora)
+
+
+        public void ModificarUsuario(Usuario usuario)
         {
-            _registrarEnBitacora = registrarEnBitacora;
+            try
+            {
+                _usuarioRepository.ModificarUsuario(usuario);
+                _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, "Usuario modificado exitosamente", "ModificarUsuario", TipoEvento.Message);
+            }
+            catch(Exception)
+            {
+                _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, "Error al modificar usuario", "ModificarUsuario", TipoEvento.Error);
+                throw;
+            }
         }
 
         public void GuardarUsuario(Usuario usuario)
@@ -29,11 +40,11 @@ namespace IngSoft.ApplicationServices
             try
             {
                _usuarioRepository.GuardarUsuario(usuario);
-               _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, "Usuario creado/modificado exitosamente", "GuardarUsuario", TipoEvento.Message);
+               _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, "Usuario creado exitosamente", "GuardarUsuario", TipoEvento.Message);
             }
             catch(Exception)
             {
-                _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, "Error al crear/modificar usuario", "GuardarUsuario", TipoEvento.Error);
+                _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, "Error al crear usuario", "GuardarUsuario", TipoEvento.Error);
                 throw;
             }
         }

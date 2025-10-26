@@ -45,7 +45,7 @@
     <Compile Include="Implementation\SqlServerConnection.cs" />
     <Compile Include="IConnection.cs" />
     <Compile Include="Models\BitacoraQuerySql.cs" />
-    <Compile Include="Models\RolQuerySql.cs" />
+    <Compile Include="Models\PermisoQuerySql.cs" />
     <Compile Include="Models\UsuarioQuerySql.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

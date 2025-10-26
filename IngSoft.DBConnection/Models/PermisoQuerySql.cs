@@ -6,7 +6,9 @@ using System.Threading.Tasks;
 
 namespace IngSoft.DBConnection.Models
 {
-    internal class RolQuerySql
+    public class PermisoQuerySql
     {
+        public string Nombre { get; set; }
+        public string Padre { get; set; }
     }
 }

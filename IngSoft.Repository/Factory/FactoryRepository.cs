@@ -1,5 +1,6 @@
 ﻿using IngSoft.DBConnection;
 using IngSoft.DBConnection.Factory;
+using IngSoft.Repository.Implementation;
 
 namespace IngSoft.Repository.Factory
 {
@@ -15,5 +16,16 @@ namespace IngSoft.Repository.Factory
             IConnection connection = ConnectionFactory.CreateSqlServerConnection();
             return new UsuarioRepository(connection);
         }
+        public static IPermisoRepository CreatePermisoRepository()
+        {
+            IConnection connection = ConnectionFactory.CreateSqlServerConnection();
+            return new PermisoRepository(connection);
+        }
+
+        //public static IRolRepository CreateRolRepository()
+        //{
+        //    IConnection connection = ConnectionFactory.CreateSqlServerConnection();
+        //    return new RolRepository(connection);
+        //}
     }
 }

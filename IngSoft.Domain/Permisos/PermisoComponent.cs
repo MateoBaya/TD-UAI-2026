@@ -1,6 +1,7 @@
 ﻿using IngSoft.Abstractions;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Security.Policy;
 using System.Text;
@@ -14,11 +15,11 @@ namespace IngSoft.Domain
         public string Nombre { get; set; }
 
         // Delegate y evento que notifica que este permiso fue eliminado de un agrupamiento
-        public delegate void PermisoEliminadoHandler(PermisoComponent permiso);
+        public delegate void PermisoEliminadoHandler(ICompositable permiso);
         public event PermisoEliminadoHandler PermisoEliminado;
 
         // Delegate y evento que notifica que este permiso fue asignado a un padre
-        public delegate void PermisoAsignadoHandler(PermisoComponent padre);
+        public delegate void PermisoAsignadoHandler(ICompositable padre);
         public event PermisoAsignadoHandler PermisoAsignado;
 
         // Constructor protegido para suscribirse al manejador por defecto
@@ -31,7 +32,7 @@ namespace IngSoft.Domain
         }
 
         // Hacer la propiedad accesible dentro del ensamblado además de derivadas para permitir asignarla a otros objetos
-        public ICompositable Parent {
+        internal ICompositable Parent {
             get
             {
                 return parent;
@@ -50,10 +51,19 @@ namespace IngSoft.Domain
             }
         }
 
-        // Handler por defecto: cuando se notifica que este permiso fue eliminado, limpiar su Parent
-        private void DefaultOnPermisoEliminado(PermisoComponent permiso)
+        public string ParentName
         {
-            if (ReferenceEquals(this, permiso))
+            get
+            {
+                return Parent.Nombre;
+            }
+        }
+
+
+        // Handler por defecto: cuando se notifica que este permiso fue eliminado, limpiar su Parent
+        private void DefaultOnPermisoEliminado(ICompositable permiso)
+        {
+            if (this.Nombre == permiso.Nombre)
             {
                 // Al limpiar Parent usamos la propiedad que ahora soporta null sin lanzar NRE
                 this.Parent = null;
@@ -61,7 +71,7 @@ namespace IngSoft.Domain
         }
 
         // Handler por defecto: cuando se notifica que este permiso fue asignado a un padre, setear Parent
-        private void DefaultOnPermisoAsignado(PermisoComponent padre)
+        private void DefaultOnPermisoAsignado(ICompositable padre)
         {
             if (padre != null)
             {
@@ -80,7 +90,7 @@ namespace IngSoft.Domain
         public void RaisePermisoAsignado(ICompositable padre)
         {
             // Disparar el evento con PermisoComponent si el padre es PermisoComponent
-            PermisoAsignado?.Invoke(padre as PermisoComponent);
+            PermisoAsignado?.Invoke(padre);
         }
 
         public virtual bool Operacion(string userAction)
@@ -141,5 +151,36 @@ namespace IngSoft.Domain
             collection.Add(this);
             return collection;
         }
+
+        public virtual bool EstaAsignadoPorComponent(ICompositable permisoComponent)
+        {
+            if(HasParent())
+            {
+                if(Parent.Nombre == permisoComponent.Nombre)
+                {
+                    return true;
+                }
+                else
+                {
+                    return Parent.EstaAsignadoPorComponent(permisoComponent);
+                }
+            }
+            else
+            {
+                return false;
+            }
+        }
+        public virtual ICompositable EncontrarRoot()
+        {
+            if(HasParent())
+            {
+                return Parent.EncontrarRoot();
+            }
+            else
+            {
+                return this;
+            }
+        }
+
     }
 }

@@ -9,6 +9,7 @@ namespace IngSoft.Repository
 {
     public interface IUsuarioRepository
     {
+        void ModificarUsuario(Usuario usuario);
         void GuardarUsuario(Usuario usuario);
         List<Usuario> ObtenerUsuarios();
         List<Usuario> ObtenerUsuariosFiltrados(string filtro);

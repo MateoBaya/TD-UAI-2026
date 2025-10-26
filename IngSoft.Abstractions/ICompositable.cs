@@ -10,7 +10,8 @@ namespace IngSoft.Abstractions
     public interface IComposible
     {
         string Nombre { get; set; }
-        ICompositable Parent { get; } // Parent es de solo lectura en la interfaz para evitar asignación externa
+        string ParentName { get; }
+
     }
 
     // Interfaz que contiene únicamente la metodología/operaciones
@@ -22,6 +23,8 @@ namespace IngSoft.Abstractions
         ICompositable ClearCompositable();
         void RaisePermisoEliminado();
         void RaisePermisoAsignado(ICompositable padre);
+        bool EstaAsignadoPorComponent(ICompositable permisoComponent);
+        ICompositable EncontrarRoot();
     }
 
     // Interfaz compuesta para compatibilidad: agrupa propiedades y métodos

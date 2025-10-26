@@ -47,7 +47,6 @@
     <Compile Include="Permisos\PermisoAgrupamiento.cs" />
     <Compile Include="Permisos\PermisoAtomico.cs" />
     <Compile Include="Permisos\PermisoComponent.cs" />
-    <Compile Include="Rol.cs" />
     <Compile Include="Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
