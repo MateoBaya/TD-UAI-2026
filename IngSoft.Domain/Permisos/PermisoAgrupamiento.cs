@@ -18,25 +18,19 @@ namespace IngSoft.Domain
 
         public void Add(PermisoComponent item)
         {
-            if (item == null) throw new ArgumentNullException(nameof(item));
-            if (_children.Contains(item)) return;
-
-            _children.Add(item);
-
-            // En lugar de asignar Parent directamente, notificamos la asignación para que el componente la gestione
-            item.RaisePermisoAsignado(this);
+            AddCompositable(item as ICompositable);
         }
 
         public override ICompositable AddCompositable(ICompositable compositable)
         {
             if (compositable == null) throw new ArgumentNullException(nameof(compositable));
 
-            if (!_children.Contains(compositable))
+            if (!(EncontrarRoot().BuscarRecursivo(compositable) is null))
             {
                 _children.Add(compositable);
                 compositable.RaisePermisoAsignado(this);
 
-                }
+            }
             return this;
         }
 
@@ -58,7 +52,7 @@ namespace IngSoft.Domain
 
         // Busca recursivamente el target entre los hijos y sus descendientes.
         // Devuelve la instancia encontrada o null si no existe.
-        private ICompositable BuscarRecursivo(ICompositable target)
+        public override ICompositable BuscarRecursivo(ICompositable target)
         {
             if (target == null) return null;
 

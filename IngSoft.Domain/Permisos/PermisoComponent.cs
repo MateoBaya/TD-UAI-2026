@@ -101,6 +101,14 @@ namespace IngSoft.Domain
         {
             return Parent != null;
         }
+        public virtual ICompositable BuscarRecursivo(ICompositable target)
+        {
+            if(this.Nombre == target.Nombre)
+            {
+                return this;
+            }
+            return null;
+        }
         public virtual ICompositable AddCompositable(ICompositable compositable)
         {
             if(HasParent())
