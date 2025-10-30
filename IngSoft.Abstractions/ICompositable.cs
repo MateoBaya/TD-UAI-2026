@@ -24,6 +24,7 @@ namespace IngSoft.Abstractions
         void RaisePermisoEliminado();
         void RaisePermisoAsignado(ICompositable padre);
         bool EstaAsignadoPorComponent(ICompositable permisoComponent);
+        ICompositable BuscarRecursivo(ICompositable target);
         ICompositable EncontrarRoot();
     }
 

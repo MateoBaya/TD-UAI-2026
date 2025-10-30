@@ -62,6 +62,7 @@ namespace IngSoft.Domain
 
         // Busca recursivamente el target entre los hijos y sus descendientes.
         // Devuelve la instancia encontrada o null si no existe.
+        public override ICompositable BuscarRecursivo(ICompositable target)
         public ICompositable BuscarRecursivo(ICompositable target)
         {
             if (target == null) return null;
