@@ -10,7 +10,9 @@ namespace IngSoft.ApplicationServices
     public interface IPermisoServices
     {
         void GuardarPermiso(PermisoComponent permiso);
-        void GuardarPermisoEnUsuario(PermisoComponent permiso, string userName);
+        void AsignarPermisoEnUsuario(PermisoComponent permiso, string userName);
+        void EliminarPermisoDeUsuario(PermisoComponent permiso, string userName);
+        void ModificarPermiso(string permisoNombre, string permisoNombreNuevo);
         void EliminarPermiso(string permisoNombre);
         PermisoComponent ObtenerPermisosPorUsuario(string userName);
         PermisoComponent ObtenerTodosLosPermisos();

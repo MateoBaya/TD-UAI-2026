@@ -39,21 +39,40 @@ namespace IngSoft.Repository.Implementation
                 _connection.FinalizarConexion();
             }
         }
-        public void GuardarPermisoEnUsuario(PermisoComponent permiso, string userName)
+
+        // Nuevo método: guarda todo un composite en una sola transacción usando PermisoComponent.Ejecutar
+        public void AsignarPermisoEnUsuario(PermisoComponent permisoComposite,string pUserName)
         {
+            if (permisoComposite == null) throw new ArgumentNullException(nameof(permisoComposite));
+
             _connection.NuevaConexion(connectionString);
             try
             {
-                var parametros = new Dictionary<string, object>
+                _connection.IniciarTransaccion();
+
+                // Acción que se pasará a Ejecutar: guarda cada permiso usando el mismo connection/transaction
+                Action<PermisoComponent> action = permiso =>
                 {
-                    {"@PermisoNombre", permiso.Nombre },
-                    { "@Padre", permiso.ParentName },
-                    {"@UserName", userName }
+                    var parametros = new Dictionary<string, object>
+                    {
+                        {"@PermisoNombre", permiso.Nombre },
+                        {"@Padre", permiso.ParentName },
+                        {"@UserName", pUserName }
+                    };
+                    _connection.EjecutarSinResultado("AsignarPermisoUsuario", parametros);
                 };
-                _connection.EjecutarSinResultado("AsignarPermisoAUsuario", parametros);
+
+                // Ejecutar el plan (recursivo en los agrupamientos)
+                permisoComposite.Ejecutar(action);
+
+                // Si todo sale bien aceptar transacción
+                _connection.AceptarTransaccion();
             }
             catch (Exception)
             {
+                // En caso de error revertir la transacción y propagar
+                _connection.CancelarTransaccion();
+        
                 throw;
             }
             finally
@@ -61,6 +80,42 @@ namespace IngSoft.Repository.Implementation
                 _connection.FinalizarConexion();
             }
         }
+
+        // Nuevo método: elimina en una sola transacción los permisos del composite para el usuario usando PermisoComponent.Ejecutar
+        public void EliminarPermisosDeUsuario(PermisoComponent permisoComposite, string pUserName)
+        {
+            if (permisoComposite == null) throw new ArgumentNullException(nameof(permisoComposite));
+
+            _connection.NuevaConexion(connectionString);
+            try
+            {
+                _connection.IniciarTransaccion();
+
+                Action<PermisoComponent> action = permiso =>
+                {
+                    var parametros = new Dictionary<string, object>
+                    {
+                        {"@PermisoNombre", permiso.Nombre },
+                        {"@Padre", permiso.ParentName },
+                        {"@UserName", pUserName }
+                    };
+                    _connection.EjecutarSinResultado("EliminarPermisoUsuario", parametros);
+                };
+
+                permisoComposite.Ejecutar(action);
+
+                _connection.AceptarTransaccion();
+            }
+            catch (Exception)
+            {
+                _connection.CancelarTransaccion();
+            }
+            finally
+            {
+                _connection.FinalizarConexion();
+            }
+        }
+
         public void EliminarPermiso(string permisoNombre)
         {
             _connection.NuevaConexion(connectionString);

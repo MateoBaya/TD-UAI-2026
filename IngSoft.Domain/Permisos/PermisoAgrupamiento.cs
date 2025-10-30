@@ -30,6 +30,10 @@ namespace IngSoft.Domain
         public override ICompositable AddCompositable(ICompositable compositable)
         {
             if (compositable == null) throw new ArgumentNullException(nameof(compositable));
+            if(EncontrarRoot().Operacion(compositable.Nombre))
+            {
+                throw new InvalidOperationException("No se puede agregar un permiso como hijo de sí mismo o crear una referencia circular.");
+            }
 
             if (!_children.Contains(compositable))
             {
@@ -58,7 +62,7 @@ namespace IngSoft.Domain
 
         // Busca recursivamente el target entre los hijos y sus descendientes.
         // Devuelve la instancia encontrada o null si no existe.
-        private ICompositable BuscarRecursivo(ICompositable target)
+        public ICompositable BuscarRecursivo(ICompositable target)
         {
             if (target == null) return null;
 
@@ -114,6 +118,26 @@ namespace IngSoft.Domain
             PermisoComponent permiso = new PermisoAgrupamiento();
             permiso.Nombre = userAction;
             return Contains(permiso);
+        }
+
+        // Nuevo: Ejecuta el action recursivamente en cada hoja del agrupamiento
+        public override void Ejecutar(Action<PermisoComponent> action)
+        {
+            if (action == null) throw new ArgumentNullException(nameof(action));
+
+            action(this);
+
+            foreach (var child in _children)
+            {
+                if (child is PermisoAgrupamiento agrupamiento)
+                {
+                    agrupamiento.Ejecutar(action);
+                }
+                else if (child is PermisoComponent permiso)
+                {
+                    action(permiso);
+                }
+            }
         }
 
         public bool Remove(PermisoComponent item)

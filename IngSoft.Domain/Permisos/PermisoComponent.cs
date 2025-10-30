@@ -41,11 +41,11 @@ namespace IngSoft.Domain
             {
                 if (value != null && value.Nombre == this.Nombre)
                 {
-                    throw new InvalidOperationException("Un componente no puede ser su propio padre.");
+                    throw new InvalidOperationException("Un permiso no puede ser su propio padre.");
                 }
                 if(HasParent() && value != null)
                 {
-                    throw new InvalidOperationException("El componente ya tiene un padre asignado.");
+                    throw new InvalidOperationException("El permiso ya tiene un padre asignado.");
                 }
                 parent = value;
             }
@@ -180,6 +180,13 @@ namespace IngSoft.Domain
             {
                 return this;
             }
+        }
+
+        // Nuevo método: Ejecuta el action pasándole esta instancia (implementación por defecto para hojas)
+        public virtual void Ejecutar(Action<PermisoComponent> action)
+        {
+            if (action == null) throw new ArgumentNullException(nameof(action));
+            action(this);
         }
 
     }

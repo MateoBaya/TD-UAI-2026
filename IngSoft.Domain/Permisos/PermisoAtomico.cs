@@ -14,7 +14,7 @@ namespace IngSoft.Domain
             if(base.AddCompositable(compositable) is null)
             {
                 PermisoAgrupamiento permisoAdmin = new PermisoAgrupamiento();
-                permisoAdmin.Nombre = "Admin";
+                permisoAdmin.Nombre = "Root";
                 permisoAdmin.AddCompositable(this);
                 permisoAdmin.AddCompositable(compositable);
                 return permisoAdmin;

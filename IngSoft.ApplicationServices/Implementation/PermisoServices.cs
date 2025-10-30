@@ -35,16 +35,43 @@ namespace IngSoft.ApplicationServices.Implementation
             }
         }
 
-        public void GuardarPermisoEnUsuario(PermisoComponent permiso, string userName)
+        public void AsignarPermisoEnUsuario(PermisoComponent permiso, string userName)
         {
             try
             {
-                _permisoRepository.GuardarPermisoEnUsuario(permiso, userName);
+                _permisoRepository.AsignarPermisoEnUsuario(permiso, userName);
                 _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, $"Permiso '{permiso.Nombre}' asignado al usuario '{userName}' exitosamente", "GuardarPermisoEnUsuario", TipoEvento.Message);
             }
             catch (Exception)
             {
                 _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, $"Error al asignar permiso '{permiso.Nombre}' al usuario '{userName}'", "GuardarPermisoEnUsuario", TipoEvento.Error);
+                throw;
+            }
+        }
+        public void EliminarPermisoDeUsuario(PermisoComponent permiso, string userName)
+        {
+            try
+            {
+                _permisoRepository.EliminarPermisosDeUsuario(permiso,userName);
+                _registrarEnBitacora(SessionManager.GetUsuario() as Usuario, $"Permiso {permiso.Nombre} eliminado del usuario {userName} exitosamente", "EliminarPermisoDeUsuario", TipoEvento.Message);
+            }
+            catch(Exception)
+            {
+                _registrarEnBitacora(SessionManager.GetUsuario() as Usuario, $"Error al eliminar permiso {permiso.Nombre} del usuario {userName}", "EliminarPermisoDeUsuario", TipoEvento.Error);
+                throw;
+            }
+        }
+
+        public void ModificarPermiso(string permisoNombre, string permisoNombreNuevo)
+        {
+            try
+            {
+                _permisoRepository.ModificarPermiso(permisoNombre,permisoNombreNuevo);
+                _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, $"Permiso '{permisoNombre}' modificado exitosamente", "ModificarPermiso", TipoEvento.Message);
+            }
+            catch (Exception)
+            {
+                _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, $"Error al modificar permiso '{permisoNombre}'", "ModificarPermiso", TipoEvento.Error);
                 throw;
             }
         }
@@ -84,6 +111,6 @@ namespace IngSoft.ApplicationServices.Implementation
                 throw;
             }
         }
-
+        
     }
 }
