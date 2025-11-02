@@ -5,18 +5,32 @@ using IngSoft.DBConnection;
 using IngSoft.DBConnection.Factory;
 using IngSoft.DBConnection.Models;
 using IngSoft.Domain;
+using IngSoft.Repository.Factory;
 using IngSoft.Services.Encriptadores;
 
-namespace IngSoft.Repository
+namespace IngSoft.Repository.Implementation
 {
     public class UsuarioRepository : IUsuarioRepository
     {
         private readonly IConnection _connection;
         private static readonly string connectionString= System.Configuration.ConfigurationManager.ConnectionStrings["IngSoftConnection"].ConnectionString;
+        private IDigitoVerificadorRepository _digitoVerificadorRepository;
 
         internal UsuarioRepository(IConnection connection)
         {
             _connection = connection ?? ConnectionFactory.CreateSqlServerConnection();
+        }
+
+        private IDigitoVerificadorRepository DigitoVerificadorRepository
+        {
+            get
+            {
+                if (_digitoVerificadorRepository == null)
+                {
+                    _digitoVerificadorRepository = FactoryRepository.CreateDigitoVerificadorRepository();
+                }
+                return _digitoVerificadorRepository;
+            }
         }
 
         public void GuardarUsuario(Usuario usuario)
@@ -33,15 +47,24 @@ namespace IngSoft.Repository
                     {"@UserName", usuario.UserName }
                 });
 
+                
+
                 if (Convert.ToInt32(existeUsuario) > 0)
                 {
+                    var usuarioExistente = ObtenerUsuarioInterno(usuario.UserName);
+                    usuarioExistente.Nombre = usuario.Nombre;
+                    usuarioExistente.Apellido = usuario.Apellido;
+                    usuarioExistente.Email = usuario.Email;
+                    usuarioExistente.Contrasena = usuario.Contrasena;
+
                     var parametros = new Dictionary<string, object>
                     {
                         {"@UserName", usuario.UserName },
-                        {"@Nombre", usuario.Nombre },
-                        {"@Apellido", usuario.Apellido },
-                        {"@Email", usuario.Email },
-                        {"@Contrasena", usuario.Contrasena }
+                        {"@Nombre", usuarioExistente.Nombre },
+                        {"@Apellido", usuarioExistente.Apellido },
+                        {"@Email", usuarioExistente.Email },
+                        {"@Contrasena", usuarioExistente.Contrasena },
+                        {"@Dvh", DigitoVerificadorRepository.CrearDVH(usuarioExistente)}
                     };
                     _connection.EjecutarSinResultado("ModificarUsuario", parametros);
                 }
@@ -55,11 +78,14 @@ namespace IngSoft.Repository
                         {"@Apellido", usuario.Apellido },
                         {"@Email", usuario.Email },
                         {"@Contrasena", usuario.Contrasena },
-                        {"@UserName", usuario.UserName }
+                        {"@UserName", usuario.UserName },
+                        {"@Dvh",  DigitoVerificadorRepository.CrearDVH(usuario)}
                     };
+
                     _connection.EjecutarSinResultado("CrearUsuario", parametros);
                 }
                 _connection.AceptarTransaccion();
+                ActualizarDVV();
             }
             catch (Exception)
             {
@@ -72,14 +98,27 @@ namespace IngSoft.Repository
             }            
         }
 
-        public Usuario ObtenerUsuario(Usuario pUsuario)
+        public Usuario ObtenerUsuario(string username)
         {
             _connection.NuevaConexion(connectionString);
 
+            try
+            {
+                return ObtenerUsuarioInterno(username);
+            }
+            finally
+            {
+                _connection.FinalizarConexion();
+            }
+        }
+
+        private Usuario ObtenerUsuarioInterno(string username)
+        {
             var parametros = new Dictionary<string, object>
             {
-                {"@UserName", pUsuario.UserName}
+                {"@UserName", username}
             };
+
             var resultado = _connection.EjecutarDataSet<UsuarioQuerySql> ("ObtenerUsuarioPorUsername", parametros);
             Usuario usuario = null;
 
@@ -114,6 +153,7 @@ namespace IngSoft.Repository
             var resultado = _connection.EjecutarDataSet<UsuarioQuerySql>("ObtenerUsuarios", new Dictionary<string, object>());
             List<Usuario> usuarios = resultado.Select(u => new Usuario
             {
+                IdUsuario = u.IdUsuario,
                 Id = EncriptarId(u.Id),
                 Nombre = u.Nombre,
                 Apellido = u.Apellido,
@@ -121,7 +161,8 @@ namespace IngSoft.Repository
                 Contrasena = u.Contrasena,
                 UserName = u.UserName,
                 Bloqueado = u.Bloqueado,
-                CantidadIntentos = u.CantidadIntentos
+                CantidadIntentos = u.CantidadIntentos,
+                Dvh = u.Dvh
             }).ToList();
             _connection.FinalizarConexion();
             return usuarios;
@@ -134,31 +175,44 @@ namespace IngSoft.Repository
         {
             _connection.NuevaConexion(connectionString);
             string query = "SELECT CantidadIntentos FROM Usuario WHERE UserName = @UserName";
+            var usuarioStored = ObtenerUsuarioInterno(usuario.UserName);
+
             var parametros = new Dictionary<string, object>
             {
                 {"@UserName", usuario.UserName}
             };
+
             int cantIntentos = (int)_connection.EjecutarEscalar(query, parametros);
 
             if (cantIntentos >= 2)
             {
+                usuarioStored.Bloqueado = true;
+                parametros.Add("@Dvh", DigitoVerificadorRepository.CrearDVH(usuarioStored));
                 _connection.EjecutarSinResultado("BloquearUsuario", parametros);
             }
             else
             {
+                usuarioStored.CantidadIntentos = cantIntentos + 1;
+                parametros.Add("@Dvh", DigitoVerificadorRepository.CrearDVH(usuarioStored));
                 _connection.EjecutarSinResultado("AumentarIntentosUsuario", parametros);
             }
+
+            ActualizarDVV();
             _connection.FinalizarConexion();
         }
 
         public void ResetearIntentosFallidos(Usuario usuario)
         {
             _connection.NuevaConexion(connectionString);
+            var usuarioStored = ObtenerUsuarioInterno(usuario.UserName);
+           
             var parametros = new Dictionary<string, object>
             {
-                {"@UserName", usuario.UserName}
+                {"@UserName", usuarioStored.UserName},
+                {"@Dvh", DigitoVerificadorRepository.CrearDVH(usuarioStored)}
             };
             _connection.EjecutarSinResultado("ResetearIntentosUsuario", parametros);
+            ActualizarDVV();
             _connection.FinalizarConexion();
         }
 
@@ -183,6 +237,12 @@ namespace IngSoft.Repository
             }).ToList();
             _connection.FinalizarConexion();
             return usuarios;
+        }
+
+        private void ActualizarDVV() 
+        {
+            var dvvActualizado = DigitoVerificadorRepository.CrearDVV(nameof(Usuario));
+            DigitoVerificadorRepository.ActualizarDVV(nameof(Usuario), dvvActualizado);
         }
     }
 }

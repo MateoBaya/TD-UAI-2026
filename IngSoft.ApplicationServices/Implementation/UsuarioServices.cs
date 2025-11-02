@@ -6,7 +6,7 @@ using IngSoft.Repository;
 using IngSoft.Repository.Factory;
 using IngSoft.Services;
 
-namespace IngSoft.ApplicationServices
+namespace IngSoft.ApplicationServices.Implementation
 {
     public class UsuarioServices: IUsuarioServices
     {
@@ -39,7 +39,7 @@ namespace IngSoft.ApplicationServices
         public SessionManager LoginUser(Usuario usuario)
         {
             SessionManager session = SessionManager.GetInstance();
-            Usuario usuarioStored = ObtenerUsuario(usuario);
+            Usuario usuarioStored = ObtenerUsuario(usuario.UserName);
             if(usuarioStored!= null && usuarioStored.Bloqueado)
             {
                 _registrarEnBitacora(usuarioStored, "Intento de acceso con usuario bloqueado", "Login", TipoEvento.Error);
@@ -49,12 +49,13 @@ namespace IngSoft.ApplicationServices
             {
                 session.LogIn(usuario, usuarioStored);
                 _registrarEnBitacora(usuarioStored, "Acceso exitoso", "Login", TipoEvento.Message);
-                _usuarioRepository.ResetearIntentosFallidos(usuario);
+                usuario.CantidadIntentos = 0;
+                _usuarioRepository.ResetearIntentosFallidos(usuarioStored);
             }
             catch(UnauthorizedAccessException)
             {
                 _registrarEnBitacora(usuarioStored, "Intento de acceso fallido", "Login", TipoEvento.Error);
-                _usuarioRepository.AumentarIntentosFallidos(usuario);
+                _usuarioRepository.AumentarIntentosFallidos(usuarioStored);
                 throw;
             }
             catch(Exception)
@@ -68,9 +69,9 @@ namespace IngSoft.ApplicationServices
             _registrarEnBitacora(SessionManager.GetUsuario() as Usuario, "Cierre de sesión exitoso", "LogOut", TipoEvento.Message);
             SessionManager.GetInstance().LogOut();
         }
-        public Usuario ObtenerUsuario(Usuario usuario)
+        public Usuario ObtenerUsuario(string username)
         {
-            return _usuarioRepository.ObtenerUsuario(usuario);
+            return _usuarioRepository.ObtenerUsuario(username);
         }
 
         public List<Usuario> ObtenerUsuarioFiltrados(string filtro)

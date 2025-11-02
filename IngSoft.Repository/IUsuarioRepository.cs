@@ -14,6 +14,6 @@ namespace IngSoft.Repository
         List<Usuario> ObtenerUsuariosFiltrados(string filtro);
         void AumentarIntentosFallidos(Usuario usuario);
         void ResetearIntentosFallidos(Usuario usuario);
-        Usuario ObtenerUsuario(Usuario usuario);
+        Usuario ObtenerUsuario(string username);
     }
 }

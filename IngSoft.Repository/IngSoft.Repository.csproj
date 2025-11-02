@@ -42,9 +42,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dto\MessageErrorIntegridad.cs" />
+    <Compile Include="Dto\ResultadoIntegridad.cs" />
+    <Compile Include="IDigitoVerificadorRepository.cs" />
     <Compile Include="Implementation\BitacoraRepository.cs" />
     <Compile Include="Factory\FactoryRepository.cs" />
     <Compile Include="IBitacoraRepository.cs" />
+    <Compile Include="Implementation\DigitoVerificadorRepository.cs" />
     <Compile Include="Implementation\UsuarioRepository.cs" />
     <Compile Include="IUsuarioRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -10,6 +10,8 @@ namespace IngSoft.Domain
         public string Descripcion { get; set; }
         public string Origen { get; set; }
         public TipoEvento TipoEvento { get; set; }
+        public string Dvh { get; set; }
+
     }
 }
 

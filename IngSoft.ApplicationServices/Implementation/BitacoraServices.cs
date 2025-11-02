@@ -2,8 +2,9 @@
 using IngSoft.Domain;
 using IngSoft.Repository;
 using IngSoft.Repository.Factory;
+using IngSoft.Services.Encriptadores;
 
-namespace IngSoft.ApplicationServices
+namespace IngSoft.ApplicationServices.Implementation
 {
     public class BitacoraServices: IBitacoraServices
     {

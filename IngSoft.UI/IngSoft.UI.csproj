@@ -47,6 +47,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTOs\BitacoraGridDto.cs" />
+    <Compile Include="FrmIntegridadDB.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmIntegridadDB.Designer.cs">
+      <DependentUpon>FrmIntegridadDB.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmLogin.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -74,6 +80,9 @@
     <Compile Include="FrmUsuarioFlexiblizador.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FrmIntegridadDB.resx">
+      <DependentUpon>FrmIntegridadDB.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmLogin.resx">
       <DependentUpon>FrmLogin.cs</DependentUpon>
     </EmbeddedResource>

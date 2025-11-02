@@ -9,6 +9,7 @@ namespace IngSoft.DBConnection.Models
         public DateTime Fecha { get; set; }
         public string Origen { get; set; }
         public int TipoEvento { get; set; }
+        public string Dvh { get; set; }
         public Guid UsuarioId { get; set; }
         public string Nombre { get; set; }
         public string Apellido { get; set; }

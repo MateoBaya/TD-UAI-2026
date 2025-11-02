@@ -7,21 +7,37 @@ using IngSoft.DBConnection.Factory;
 using IngSoft.DBConnection.Models;
 using IngSoft.Domain;
 using IngSoft.Domain.Enums;
+using IngSoft.Repository.Factory;
 
-namespace IngSoft.Repository
+namespace IngSoft.Repository.Implementation
 {
     public class BitacoraRepository : IBitacoraRepository
     {
         private readonly IConnection _connection;
+        private IDigitoVerificadorRepository _digitoVerificadorRepository;
+
         internal BitacoraRepository(IConnection connection)
         {
             _connection = connection ?? ConnectionFactory.CreateSqlServerConnection();
         }
+        private IDigitoVerificadorRepository DigitoVerificadorRepository
+        {
+            get
+            {
+                if (_digitoVerificadorRepository == null)
+                {
+                    _digitoVerificadorRepository = FactoryRepository.CreateDigitoVerificadorRepository();
+                }
+                return _digitoVerificadorRepository;
+            }
+        }
+
         public void GuardarBitacora(Bitacora bitacora)
         {
             var connectionString = ConfigurationManager.ConnectionStrings["IngSoftConnection"].ConnectionString;
             _connection.NuevaConexion(connectionString);
-
+            bitacora.Dvh = DigitoVerificadorRepository.CrearDVH(bitacora);
+            
             try
             {
 
@@ -32,11 +48,13 @@ namespace IngSoft.Repository
                     {"@Fecha", bitacora.Fecha },
                     {"@Descripcion", bitacora.Descripcion },
                     {"@Origen", bitacora.Origen },
-                    {"@TipoEvento", bitacora.TipoEvento }
+                    {"@TipoEvento", bitacora.TipoEvento },
+                    {"@DVH", bitacora.Dvh }
                 };
 
                 _connection.EjecutarSinResultado("GuardarBitacora", parametros);
-
+                var dvvActualizado = DigitoVerificadorRepository.CrearDVV(nameof(Bitacora));
+                DigitoVerificadorRepository.ActualizarDVV(nameof(Bitacora), dvvActualizado);
             }
             catch (Exception)
             {
@@ -64,6 +82,7 @@ namespace IngSoft.Repository
                     Fecha = b.Fecha,
                     Origen = b.Origen,
                     TipoEvento = (TipoEvento)b.TipoEvento,
+                    Dvh = b.Dvh,
                     Usuario = new Usuario
                     {
                         IdBitacora = b.UsuarioId,

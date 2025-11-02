@@ -11,7 +11,7 @@ namespace IngSoft.ApplicationServices
         void SetRegistradoBitacora(Action<Usuario, string, string, Domain.Enums.TipoEvento> registrarEnBitacora);
         List<Usuario> ObtenerUsuarios();
         List<Usuario> ObtenerUsuarioFiltrados(string filtro);
-        Usuario ObtenerUsuario(Usuario usuario);
+        Usuario ObtenerUsuario(string username);
         SessionManager LoginUser(Usuario usuario);
         void LogOutUser();
     }

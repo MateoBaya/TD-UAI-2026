@@ -12,11 +12,14 @@ namespace IngSoft.UI
     {
         private readonly IUsuarioServices usuarioServices;
         private readonly IBitacoraServices bitacoraServices;
+        private readonly IDigitoVerificadorServices digitoVerificadorServices;
+
         public FrmLogin()
         {
             InitializeComponent();
             usuarioServices = ServicesFactory.CreateUsuarioServices();
             bitacoraServices = ServicesFactory.CreateBitacoraServices();
+            digitoVerificadorServices = ServicesFactory.CreateDigitoVerificadorServices();
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -25,14 +28,23 @@ namespace IngSoft.UI
 
             try
             {
-                var mUsuarioActual = new Domain.Usuario
+                var mUsuarioActual = new Usuario
                 {
                     UserName = txtUsuario.Text,
                     Contrasena = txtContrasena.Text
                 };
 
                 usuarioServices.LoginUser(mUsuarioActual);
+                var integridadDB = digitoVerificadorServices.ValidarIntegridad();
+                
                 MessageBox.Show($"Iniciado sesion: {SessionManager.GetUsuario().UserName}");
+
+                if (!integridadDB.EsValida)
+                {
+                    var frmIntegridadDB = new FrmIntegridadDB(integridadDB);
+                    frmIntegridadDB.ShowDialog();
+                }
+
                 this.DialogResult = DialogResult.OK;
                 //new FrmUsuario().EliminarControlesAdicionalesUsuario();
                 this.Close();

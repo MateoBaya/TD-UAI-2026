@@ -41,9 +41,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Dto\MessageErrorIntegridad.cs" />
+    <Compile Include="Dto\ResultadoIntegridad.cs" />
     <Compile Include="Factory\ServicesFactory.cs" />
     <Compile Include="IBitacoraServices.cs" />
+    <Compile Include="IDigitoVerificadorServices.cs" />
     <Compile Include="Implementation\BitacoraServices.cs" />
+    <Compile Include="Implementation\DigitoVerificadorServices.cs" />
     <Compile Include="Implementation\UsuarioServices.cs" />
     <Compile Include="IUsuarioServices.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -3,6 +3,7 @@ using System.Windows.Forms;
 using IngSoft.ApplicationServices;
 using IngSoft.ApplicationServices.Factory;
 using IngSoft.Services;
+using IngSoft.Services.Encriptadores;
 
 namespace IngSoft.UI
 {
@@ -16,7 +17,7 @@ namespace IngSoft.UI
         }
 
         private void Form1_Load(object sender, EventArgs e)
-        {
+        {   
             ActualizarMenuSegunEstadoSesion();
         }
         private void usuariosToolStripMenuItem_Click(object sender, EventArgs e)
@@ -65,6 +66,11 @@ namespace IngSoft.UI
                 bitacoraToolStripMenuItem.Visible = false;
                 label1.Visible = false;
             }
-        }        
+        }
+
+        private void menuPrincipal_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
+        {
+
+        }
     }
 }
