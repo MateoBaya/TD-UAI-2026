@@ -7,6 +7,8 @@ using System.Drawing;
 using System.Windows.Forms;
 using System.Data;
 using System.Reflection;
+using IngSoft.Domain;
+using IngSoft.UI.Dictionary;
 
 namespace IngSoft.UI
 {
@@ -27,6 +29,13 @@ namespace IngSoft.UI
 
             parent.Controls.Add(control);
             return control;
+        }
+
+        public static void EliminarControlesAdicionalesForm(Form form)
+        {
+            Control menuStrip = form.MainMenuStrip;
+            form.Controls.Clear();
+            form.Controls.Add(menuStrip);
         }
 
         // Crea (o reemplaza) un label + textbox dinámicamente en el formulario padre
@@ -63,6 +72,52 @@ namespace IngSoft.UI
             AddOrReplaceControl(parent, txt);
 
             return txt;
+        }
+
+        // Nuevo: crea (o reemplaza) un label + ListBox dinámicamente en el formulario padre
+        public static ListBox CreateListBox(Form parent, string param, Point position, Size? size = null, IEnumerable<string> items = null, EventHandler onSelectedIndexChanged = null)
+        {
+            if (parent == null) throw new ArgumentNullException(nameof(parent));
+            if (string.IsNullOrWhiteSpace(param)) throw new ArgumentException("param no puede ser vacío", nameof(param));
+
+            var labelName = $"lbl{param}";
+            var listBoxName = $"lst{param}";
+
+            var lbl = new Label
+            {
+                Name = labelName,
+                Location = new Point(position.X, position.Y - 20),
+                Size = new Size(200, 20),
+                Text = param,
+                Visible = true
+            };
+
+            var lst = new ListBox
+            {
+                Name = listBoxName,
+                Location = new Point(position.X, position.Y),
+                Size = size ?? new Size(200, 100),
+                Visible = true,
+                Enabled = true,
+                SelectionMode = SelectionMode.One
+            };
+
+            if (items != null)
+            {
+                lst.Items.Clear();
+                foreach (var it in items)
+                {
+                    lst.Items.Add(it ?? string.Empty);
+                }
+            }
+
+            if (onSelectedIndexChanged != null)
+                lst.SelectedIndexChanged += onSelectedIndexChanged;
+
+            AddOrReplaceControl(parent, lbl);
+            AddOrReplaceControl(parent, lst);
+
+            return lst;
         }
 
         // Crea (o reemplaza) un CheckBox dinámicamente en el formulario padre (similar a CreateTextBox)
@@ -196,5 +251,165 @@ namespace IngSoft.UI
 
             return CreateDataGridView(parent, name, position, size, dt);
         }
+
+        // Crea (o reemplaza) un TreeView en el formulario padre
+        public static TreeView CreateTreeView(Form parent, string name, Point position, Size size)
+        {
+            if (parent == null) throw new ArgumentNullException(nameof(parent));
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("name no puede ser vacío", nameof(name));
+
+            var tree = new TreeView
+            {
+                Name = name,
+                Location = position,
+                Size = size,
+                Visible = true,
+                Enabled = true,
+                HideSelection = false
+            };
+
+            var existing = parent.Controls.Find(name, true).FirstOrDefault() as TreeView;
+            if (existing != null)
+            {
+                parent.Controls.Remove(existing);
+            }
+
+            parent.Controls.Add(tree);
+            return tree;
+        }
+
+        // Carga iterativamente el TreeView a partir de un PermisoComponent usando su método Ejecutar.
+        // Se crea un TreeNode por cada permiso; si el permiso tiene ParentName y el nodo padre ya fue creado se añade como hijo,
+        // en caso contrario se añade al nivel raíz.
+        public static void LoadTreeViewFromPermisos(TreeView treeView, PermisoComponent permisoRoot)
+        {
+            if (treeView == null) throw new ArgumentNullException(nameof(treeView));
+
+            treeView.BeginUpdate();
+            try
+            {
+                treeView.Nodes.Clear();
+
+                if (permisoRoot == null) return;
+
+                // Diccionario para encontrar nodos creados por nombre (se asume nombres únicos)
+                var nodesByName = new Dictionary<string, TreeNode>(StringComparer.OrdinalIgnoreCase);
+
+                // Acción que se pasará a Ejecutar: crear nodo y agregar según ParentName
+                Action<PermisoComponent> action = permiso =>
+                {
+                    if (permiso == null) return;
+
+                    var node = new TreeNode(permiso.Nombre)
+                    {
+                        Name = permiso.Nombre,
+                        Tag = permiso
+                    };
+
+                    // intentar obtener nombre del padre (puede ser null)
+                    var parentName = permiso.ParentName;
+
+                    if (!string.IsNullOrEmpty(parentName) && nodesByName.TryGetValue(parentName, out TreeNode parentNode))
+                    {
+                        parentNode.Nodes.Add(node);
+                    }
+                    else
+                    {
+                        treeView.Nodes.Add(node);
+                    }
+
+                    // registrar en diccionario para que sus hijos puedan referenciarlo
+                    if (!nodesByName.ContainsKey(permiso.Nombre))
+                        nodesByName.Add(permiso.Nombre, node);
+                };
+
+                // Usar Ejecutar para recorrer en orden y crear nodos
+                permisoRoot.Ejecutar(action);
+
+                treeView.ExpandAll();
+            }
+            finally
+            {
+                treeView.EndUpdate();
+            }
+        }
+
+        public static void MenuStripHider(MenuStrip stripToHide, PermisoComponent permisoRoot)
+        {
+            foreach (ToolStripMenuItem item in stripToHide.Items)
+            {
+                MenuStripItemRecursiveHider(item, permisoRoot, new PermisoAtomico());
+            }
+        }
+        private static void MenuStripItemRecursiveHider(ToolStripMenuItem item, PermisoComponent permisoRoot, PermisoComponent permisoTemp)
+        {
+            if (item == null) throw new ArgumentNullException(nameof(item));
+            if(!(permisoRoot is null))
+            {
+                // Lógica para ocultar elementos del menú según los permisos
+                if(DictionaryPermisos.PermisoControl.TryGetValue(item.Name, out string permisoNombre))
+                {
+                    permisoTemp.Nombre = permisoNombre;
+                    item.Enabled = !(permisoRoot.BuscarRecursivo(permisoTemp) is null);
+                    item.Visible = item.Enabled;
+                }
+                else
+                {
+                    item.Enabled = true;
+                    item.Visible = true;
+                }
+                foreach (ToolStripItem subItem in item.DropDownItems)
+                {
+                    if (subItem is ToolStripMenuItem subMenuItem)
+                    {
+                        MenuStripItemRecursiveHider(subMenuItem, permisoRoot, permisoTemp);
+                    }
+                }
+
+            }
+            else
+            {
+                if (DictionaryPermisos.PermisoControl.TryGetValue(item.Name, out string permisoNombre))
+                {
+                    item.Visible = false;
+                    item.Enabled = false;
+                }
+                else
+                {
+                    item.Visible = true;
+                    item.Enabled = true;
+                }
+            }
+        }
+        public static void MenuStripHider(MenuStrip stripToHide, List<string> buttonsToShow)
+        {
+            foreach (ToolStripMenuItem item in stripToHide.Items)
+            {
+                FlexibilizadorFormularios.MenuStripItemRecursiveHider(item, buttonsToShow);
+            }
+        }
+        private static void MenuStripItemRecursiveHider(ToolStripMenuItem item, List<string> buttonsToShow)
+        {
+            if (item == null) throw new ArgumentNullException(nameof(item));
+
+            if(!(buttonsToShow is null))
+            {
+                item.Visible = buttonsToShow.Contains(item.Name);
+            }
+            else
+            {
+                item.Visible = false;
+            }
+
+            foreach (ToolStripItem subItem in item.DropDownItems)
+            {
+                if (subItem is ToolStripMenuItem subMenuItem)
+                {
+                    MenuStripItemRecursiveHider(subMenuItem, buttonsToShow);
+                }
+            }
+        }
+
+
     }
 }

@@ -19,7 +19,6 @@ namespace IngSoft.UI
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            ActualizarMenuSegunEstadoSesion();
         }
         private void usuariosToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -38,13 +37,13 @@ namespace IngSoft.UI
             var frmLogin = new FrmLogin();
             if (frmLogin.ShowDialog() == DialogResult.OK)
             {
-                ActualizarMenuSegunEstadoSesion();
+                FrmPrincipalFlexibilizador.ActualizarMenuSegunEstadoSesion();
             }
         }
         private void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
         {
             LogOutUser();
-            ActualizarMenuSegunEstadoSesion();
+            FrmPrincipalFlexibilizador.ActualizarMenuSegunEstadoSesion();
         }
 
         private void LogOutUser()
@@ -52,26 +51,7 @@ namespace IngSoft.UI
             _usuarioServices.LogOutUser();
         }
 
-        private void ActualizarMenuSegunEstadoSesion()
-        {
-            if (SessionManager.GetInstance().IsLoggedIn())
-            {
-                iniciarSesionToolStripMenuItem.Enabled = false;
-                cerrarSesionToolStripMenuItem.Enabled = true;
-                usuariosToolStripMenuItem.Visible = true;
-                bitacoraToolStripMenuItem.Visible = true;
-                label1.Visible = true;
-                label1.Text = $"Bienvenido: {SessionManager.GetUsuario().Nombre} {SessionManager.GetUsuario().Apellido}";
-            }
-            else
-            {
-                iniciarSesionToolStripMenuItem.Enabled = true;
-                cerrarSesionToolStripMenuItem.Enabled = false;
-                usuariosToolStripMenuItem.Visible = false;
-                bitacoraToolStripMenuItem.Visible = false;
-                label1.Visible = false;
-            }
-        }
+
 
         private void FrmPrincipal_FormClosing(object sender, FormClosingEventArgs e)
         {
@@ -79,6 +59,17 @@ namespace IngSoft.UI
             {
                 LogOutUser();
             }
+        }
+
+        private void permisosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FrmPermiso frmPermiso = new FrmPermiso();
+            frmPermiso.ShowDialog();
+        }
+
+        private void FrmPrincipal_Shown(object sender, EventArgs e)
+        {
+            FrmPrincipalFlexibilizador.ActualizarMenuSegunEstadoSesion();
         }
     }
 }

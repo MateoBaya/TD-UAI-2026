@@ -55,7 +55,7 @@ namespace IngSoft.Domain
         {
             get
             {
-                return Parent.Nombre;
+                return !(Parent is null)? Parent.Nombre:null ;
             }
         }
 
@@ -66,7 +66,7 @@ namespace IngSoft.Domain
             if (this.Nombre == permiso.Nombre)
             {
                 // Al limpiar Parent usamos la propiedad que ahora soporta null sin lanzar NRE
-                this.Parent = null;
+                this.parent = null;
             }
         }
 

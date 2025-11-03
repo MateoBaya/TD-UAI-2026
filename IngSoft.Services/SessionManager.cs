@@ -13,6 +13,7 @@ namespace IngSoft.Services
     {
         private static SessionManager uniqueInstance;
         private static IUsuario usuario;
+        private static IComposible permisoRoot;
         private SessionManager() { }
 
         public static SessionManager GetInstance()
@@ -27,9 +28,11 @@ namespace IngSoft.Services
 
         public static IUsuario GetUsuario() { return usuario; }
 
+        public static IComposible GetPermisos() { return permisoRoot; }
+
         public bool IsLoggedIn() { return usuario != null; }
 
-        public SessionManager LogIn(IUsuario usuarioIngresado, IUsuario usuarioStored)
+        public SessionManager LogIn(IUsuario usuarioIngresado, IUsuario usuarioStored, IComposible permisoRoot)
         {
             if(this.IsLoggedIn())
             {
@@ -45,6 +48,7 @@ namespace IngSoft.Services
             }
             usuarioStored.Contrasena = "";
             SessionManager.usuario = usuarioStored;
+            SessionManager.permisoRoot = permisoRoot;
             return this;
         }
 
@@ -63,6 +67,7 @@ namespace IngSoft.Services
         {
             uniqueInstance = null;
             usuario = null;
+            permisoRoot = null;
         }
         //internal static void SetUsuario(IUsuario usuario)
         //{

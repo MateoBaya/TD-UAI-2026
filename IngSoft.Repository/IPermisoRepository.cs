@@ -12,7 +12,7 @@ namespace IngSoft.Repository
         void GuardarPermiso(PermisoComponent permiso);
         void AsignarPermisoEnUsuario(PermisoComponent permisoComposite, string pUserName);
         void EliminarPermisosDeUsuario(PermisoComponent permisoComposite, string pUserName);
-        void ModificarPermiso(string permisoNombre, string nuevoNombre);
+        void ModificarPermiso(string permisoNombre, string nuevoNombre,string permisoPadre=null);
         void EliminarPermiso(string permisoNombre);
         PermisoComponent ObtenerPermisosPorUsuario(string userName);
         PermisoComponent ObtenerTodosLosPermisos();

@@ -1,4 +1,5 @@
-﻿using IngSoft.ApplicationServices.Implementation;
+﻿using IngSoft.ApplicationServices.Factory;
+using IngSoft.ApplicationServices.Implementation;
 using IngSoft.Domain;
 using IngSoft.Domain.Enums;
 using IngSoft.Repository;
@@ -6,6 +7,7 @@ using IngSoft.Repository.Factory;
 using IngSoft.Services;
 using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using System.Security.Authentication;
 
 namespace IngSoft.ApplicationServices
@@ -59,7 +61,9 @@ namespace IngSoft.ApplicationServices
             }
             try
             {
-                session.LogIn(usuario, usuarioStored);
+                IPermisoServices _permisoServices = ServicesFactory.CreatePermisoServices();
+                PermisoComponent permisoRoot = _permisoServices.ObtenerPermisosPorUsuario(usuarioStored.UserName);
+                session.LogIn(usuario, usuarioStored, permisoRoot);
                 _registrarEnBitacora(usuarioStored, "Acceso exitoso", "Login", TipoEvento.Message);
                 _usuarioRepository.ResetearIntentosFallidos(usuario);
             }

@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTOs\BitacoraGridDto.cs" />
+    <Compile Include="Dictionary\DictionaryPermisos.cs" />
     <Compile Include="FlexibilizadorFormularios.cs" />
     <Compile Include="FrmLogin.cs">
       <SubType>Form</SubType>
@@ -54,7 +55,13 @@
     <Compile Include="FrmLogin.Designer.cs">
       <DependentUpon>FrmLogin.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmPermisosFlexibilizados.cs" />
+    <Compile Include="FrmPermiso.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmPermiso.Designer.cs">
+      <DependentUpon>FrmPermiso.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmPermisosFlexibilizador.cs" />
     <Compile Include="FrmPrincipal.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -67,6 +74,7 @@
     <Compile Include="FrmBitacora.Designer.cs">
       <DependentUpon>FrmBitacora.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmPrincipalFlexibilizador.cs" />
     <Compile Include="FrmUsuario.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -78,6 +86,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FrmLogin.resx">
       <DependentUpon>FrmLogin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmPermiso.resx">
+      <DependentUpon>FrmPermiso.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmPrincipal.resx">
       <DependentUpon>FrmPrincipal.cs</DependentUpon>

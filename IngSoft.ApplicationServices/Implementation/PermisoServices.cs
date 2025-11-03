@@ -62,11 +62,11 @@ namespace IngSoft.ApplicationServices.Implementation
             }
         }
 
-        public void ModificarPermiso(string permisoNombre, string permisoNombreNuevo)
+        public void ModificarPermiso(string permisoNombre, string permisoNombreNuevo, string permisoPadre=null)
         {
             try
             {
-                _permisoRepository.ModificarPermiso(permisoNombre,permisoNombreNuevo);
+                _permisoRepository.ModificarPermiso(permisoNombre,permisoNombreNuevo,permisoPadre);
                 _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, $"Permiso '{permisoNombre}' modificado exitosamente", "ModificarPermiso", TipoEvento.Message);
             }
             catch (Exception)
@@ -93,10 +93,15 @@ namespace IngSoft.ApplicationServices.Implementation
         {
             try
             {
+                if(SessionManager.GetInstance().IsLoggedIn())
+                {
+                    _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, $"Permisos del usuario '{userName}' obtenidos exitosamente", "ObtenerPermisosPorUsuario", TipoEvento.Message);
+                }
                 return _permisoRepository.ObtenerPermisosPorUsuario(userName);
             }
             catch (Exception)
             {
+                _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, $"Error al obtener permisos del usuario '{userName}'", "ObtenerPermisosPorUsuario", TipoEvento.Error);
                 throw;
             }
         }
@@ -104,10 +109,12 @@ namespace IngSoft.ApplicationServices.Implementation
         {
             try
             {
+                _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, $"Todos los permisos obtenidos exitosamente", "ObtenerTodosLosPermisos", TipoEvento.Message);
                 return _permisoRepository.ObtenerTodosLosPermisos();
             }
             catch (Exception)
             {
+                _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, $"Error al obtener todos los permisos", "ObtenerTodosLosPermisos", TipoEvento.Error);
                 throw;
             }
         }

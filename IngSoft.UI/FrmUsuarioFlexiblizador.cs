@@ -29,6 +29,10 @@ namespace IngSoft.UI
             };
             bitacoraServices.GuardarBitacora(bitacora);
         }
+        internal static void ActualizarMenuSegunPermisosUsuario()
+        {
+            FlexibilizadorFormularios.MenuStripHider(FrmUsuario.ActiveForm.MainMenuStrip, SessionManager.GetPermisos() as PermisoComponent);
+        }
 
         internal static void TextBoxCreator(string param, Point position)
         {

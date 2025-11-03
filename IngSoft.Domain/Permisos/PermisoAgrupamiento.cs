@@ -19,12 +19,7 @@ namespace IngSoft.Domain
         public void Add(PermisoComponent item)
         {
             if (item == null) throw new ArgumentNullException(nameof(item));
-            if (_children.Contains(item)) return;
-
-            _children.Add(item);
-
-            // En lugar de asignar Parent directamente, notificamos la asignación para que el componente la gestione
-            item.RaisePermisoAsignado(this);
+            AddCompositable(item);
         }
 
         public override ICompositable AddCompositable(ICompositable compositable)
@@ -39,8 +34,7 @@ namespace IngSoft.Domain
             {
                 _children.Add(compositable);
                 compositable.RaisePermisoAsignado(this);
-
-                }
+            }
             return this;
         }
 
@@ -63,7 +57,6 @@ namespace IngSoft.Domain
         // Busca recursivamente el target entre los hijos y sus descendientes.
         // Devuelve la instancia encontrada o null si no existe.
         public override ICompositable BuscarRecursivo(ICompositable target)
-        public ICompositable BuscarRecursivo(ICompositable target)
         {
             if (target == null) return null;
 
@@ -141,6 +134,53 @@ namespace IngSoft.Domain
             }
         }
 
+        // Nuevo: devuelve todos los PermisoAgrupamiento del árbol (incluye this)
+        public List<PermisoAgrupamiento> ObtenerTodosLosAgrupamientos()
+        {
+            var result = new List<PermisoAgrupamiento>();
+            Ejecutar(c =>
+            {
+                if (c is PermisoAgrupamiento a)
+                    result.Add(a);
+            });
+            return result;
+        }
+
+        // Nuevo: devuelve los agrupamientos cuyo Parent.Nombre coincide con padreNombre
+        public List<PermisoAgrupamiento> ObtenerAgrupamientosPorPadre(string padreNombre)
+        {
+            var result = new List<PermisoAgrupamiento>();
+            if (padreNombre == null) return result;
+
+            Ejecutar(c =>
+            {
+                if (c is PermisoAgrupamiento a)
+                {
+                    var parent = (a as PermisoComponent).Parent;
+                    var parentName = parent != null ? parent.Nombre : null;
+                    if (parentName == padreNombre)
+                        result.Add(a);
+                }
+            });
+
+            return result;
+        }
+
+        // Nuevo: busca un agrupamiento por nombre dentro del árbol
+        public PermisoAgrupamiento EncontrarAgrupamientoPorNombre(string nombre)
+        {
+            if (string.IsNullOrEmpty(nombre)) return null;
+            PermisoAgrupamiento found = null;
+            Ejecutar(c =>
+            {
+                if (found == null && c is PermisoAgrupamiento a && a.Nombre == nombre)
+                {
+                    found = a;
+                }
+            });
+            return found;
+        }
+
         public bool Remove(PermisoComponent item)
         {
             if (item == null) return false;
@@ -154,12 +194,12 @@ namespace IngSoft.Domain
         {
             if (compositable == null)
             {
-                throw new ArgumentNullException(nameof(compositable));
+                Parent.RemoveCompositable(this);
             }
 
             var item = BuscarRecursivo(compositable);
             
-            if(item!= null&& ((PermisoAgrupamiento)item)._children.Remove(item))
+            if(item!= null&& this._children.Remove(item))
             {
                 item.RaisePermisoEliminado();
             }

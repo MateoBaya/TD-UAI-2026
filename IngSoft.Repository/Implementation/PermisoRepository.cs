@@ -25,10 +25,11 @@ namespace IngSoft.Repository.Implementation
             {
                 var parametros = new Dictionary<string, object>
                 {
-                    {"@PermisoNombre", permiso.Nombre },
-                    {"@Padre", permiso.ParentName }
+                    { "@IdPermiso", permiso.Id },
+                    {"@NombrePermiso", permiso.Nombre },
+                    {"@PermisoParent", permiso.ParentName }
                 };
-                _connection.EjecutarSinResultado("GuardarPermiso", parametros);
+                _connection.EjecutarSinResultado("AltaPermiso", parametros);
             }
             catch (Exception)
             {
@@ -55,8 +56,7 @@ namespace IngSoft.Repository.Implementation
                 {
                     var parametros = new Dictionary<string, object>
                     {
-                        {"@PermisoNombre", permiso.Nombre },
-                        {"@Padre", permiso.ParentName },
+                        {"@NombrePermiso", permiso.Nombre },
                         {"@UserName", pUserName }
                     };
                     _connection.EjecutarSinResultado("AsignarPermisoUsuario", parametros);
@@ -64,6 +64,11 @@ namespace IngSoft.Repository.Implementation
 
                 // Ejecutar el plan (recursivo en los agrupamientos)
                 permisoComposite.Ejecutar(action);
+                //if (permisoComposite is PermisoAgrupamiento)
+                //    foreach (var child in (permisoComposite as PermisoAgrupamiento))
+                //    {
+                //        child.Ejecutar(action);
+                //    }
 
                 // Si todo sale bien aceptar transacción
                 _connection.AceptarTransaccion();
@@ -95,8 +100,7 @@ namespace IngSoft.Repository.Implementation
                 {
                     var parametros = new Dictionary<string, object>
                     {
-                        {"@PermisoNombre", permiso.Nombre },
-                        {"@Padre", permiso.ParentName },
+                        {"@NombrePermiso", permiso.Nombre },
                         {"@UserName", pUserName }
                     };
                     _connection.EjecutarSinResultado("EliminarPermisoUsuario", parametros);
@@ -123,7 +127,7 @@ namespace IngSoft.Repository.Implementation
             {
                 var parametros = new Dictionary<string, object>
                 {
-                    {"@PermisoNombre", permisoNombre },
+                    {"@NombrePermiso", permisoNombre },
                 };
                 _connection.EjecutarSinResultado("EliminarPermiso", parametros);
             }
@@ -136,15 +140,17 @@ namespace IngSoft.Repository.Implementation
                 _connection.FinalizarConexion();
             }
         }
-        public void ModificarPermiso(string permisoNombre, string nuevoNombre)
+        public void ModificarPermiso(string permisoNombre, string nuevoNombre, string permisoPadre=null)
         {
             _connection.NuevaConexion(connectionString);
             try
             {
+                string permisoPadrePisado = string.IsNullOrEmpty(permisoPadre) ? null : permisoPadre ;
                 var parametros = new Dictionary<string, object>
                 {
-                    {"@PermisoNombre", permisoNombre },
-                    {"@NuevoNombre", nuevoNombre }
+                    {"@NombrePermiso", permisoNombre },
+                    {"@NombreNuevo", nuevoNombre },
+                    { "@PermisoParent", permisoPadrePisado }
                 };
                 _connection.EjecutarSinResultado("ModificarPermiso", parametros);
             }
@@ -176,8 +182,8 @@ namespace IngSoft.Repository.Implementation
 
                 if (string.IsNullOrEmpty(userName))
                 {
-                    permisosSimples = _connection.EjecutarDataTable<PermisoQuerySql>("ObtenerPermisosSimples", new Dictionary<string, object>());
-                    permisosAgrupados = _connection.EjecutarDataTable<PermisoQuerySql>("ObtenerPermisosAgrupados", new Dictionary<string, object>());
+                    permisosSimples = _connection.EjecutarDataSet<PermisoQuerySql>("ObtenerPermisosSimples", new Dictionary<string, object>());
+                    permisosAgrupados = _connection.EjecutarDataSet<PermisoQuerySql>("ObtenerPermisosAgrupados", new Dictionary<string, object>());
                 }
                 else
                 {
@@ -185,8 +191,8 @@ namespace IngSoft.Repository.Implementation
                     {
                         {"@UserName", userName }
                     };
-                    permisosSimples = _connection.EjecutarDataTable<PermisoQuerySql>("ObtenerPermisosSimplesPorUsuario", parametros);
-                    permisosAgrupados = _connection.EjecutarDataTable<PermisoQuerySql>("ObtenerPermisosAgrupadosPorUsuario", parametros);
+                    permisosSimples = _connection.EjecutarDataSet<PermisoQuerySql>("ObtenerPermisosSimplesPorUsuario", parametros);
+                    permisosAgrupados = _connection.EjecutarDataSet<PermisoQuerySql>("ObtenerPermisosAgrupadosPorUsuario", parametros);
                 }
 
                 // construir instancias de permisos a partir de las filas obtenidas
@@ -200,7 +206,7 @@ namespace IngSoft.Repository.Implementation
                     Nombre = p.Nombre
                 }).ToList();
 
-                    foreach(var permisoAgrupamiento in permisosAgrupamiento)
+                foreach(var permisoAgrupamiento in permisosAgrupamiento)
                 {
                     var hijos = permisosSimples.Where(ps => ps.Padre == permisoAgrupamiento.Nombre).ToList();
                     foreach (var hijo in hijos)
@@ -212,10 +218,14 @@ namespace IngSoft.Repository.Implementation
                         }
                     }
 
-                    var subAgrupamientos = permisosAgrupados.Where(pa => pa.Padre == permisoAgrupamiento.Nombre).ToList();
-                    foreach (var subAgrupamiento in subAgrupamientos)
+                    // Asignar sub-agrupamientos: buscar filas agrupadas donde Padre == agrup.Nombre
+                    var subGrupo = permisosAgrupados.Where(pa => pa.Padre == permisoAgrupamiento.Nombre).ToList();
+
+                    foreach (var grupoHijo in subGrupo)
                     {
-                        var permisoSubAgrupamiento = permisosAgrupamiento.FirstOrDefault(p => p.Nombre == subAgrupamiento.Nombre);
+                        // encontrar la instancia del sub-agrupamiento usando el tempRoot
+                        var permisoSubAgrupamiento = permisosAgrupamiento.FirstOrDefault(p => p.Nombre == grupoHijo.Nombre);
+
                         if (permisoSubAgrupamiento != null)
                         {
                             permisoAgrupamiento.Add(permisoSubAgrupamiento);
@@ -223,16 +233,34 @@ namespace IngSoft.Repository.Implementation
                     }
                 }
 
-                // crear root y agregar el agrupamiento administrador si existe
+                // crear root final y agregar agrupamientos que no tienen padre conocido
                 PermisoAgrupamiento newRoot = new PermisoAgrupamiento
                 {
                     Nombre = "Root"
                 };
+
+
                 string nombreRoot = permisosAgrupados.FirstOrDefault(p => p.Padre == null)?.Nombre;
                 PermisoAgrupamiento permisoRoot = permisosAgrupamiento.FirstOrDefault(p => p.Nombre == nombreRoot);
+
+                // permisos sin padres conocidos (excepto el root elegido)
                 if (permisoRoot != null)
-                {
                     newRoot.Add(permisoRoot);
+
+                List<PermisoAgrupamiento> permisosAgrupadosSinPadresConocidos = permisosAgrupamiento
+                    .Where(p => p.ParentName == null && p.Nombre != nombreRoot)
+                    .ToList();
+                List<PermisoAtomico> permisosSimplesSinPadresConocidos = permisos
+                    .Where(p => p.ParentName == null && p.Nombre != nombreRoot)
+                    .ToList();
+
+                foreach (PermisoAgrupamiento permiso in permisosAgrupadosSinPadresConocidos)
+                {
+                    newRoot.Add(permiso);
+                }
+                foreach (PermisoAtomico permiso in permisosSimplesSinPadresConocidos) 
+                {
+                    newRoot.Add(permiso);
                 }
 
                 return newRoot;

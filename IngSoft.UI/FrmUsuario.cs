@@ -68,34 +68,31 @@ namespace IngSoft.UI
 
         internal void EliminarControlesAdicionalesUsuario()
         {
-            Control menuStrip = FrmUsuario.ActiveForm.Controls.Find("menuStrip1", true).FirstOrDefault();
-            ToolStripItemCollection botonera = ((MenuStrip)menuStrip).Items;
-            ActualizarBotoneraSesion(botonera);
-            FrmUsuario.ActiveForm.Controls.Clear();
-            FrmUsuario.ActiveForm.Controls.Add(menuStrip);
+            FlexibilizadorFormularios.EliminarControlesAdicionalesForm(this);
         }
 
-        private static void ActualizarBotoneraSesion(ToolStripItemCollection botonera)
-        {
-            ToolStripItem loginToolStripButton = botonera["loginToolStripMenuItem"];//botonera.Find("loginToolStripMenuItem", true).FirstOrDefault();
-            ToolStripItem logoutToolStripButton = botonera["cerrarSesionToolStripMenuItem"]; ;//botonera.Find("cerrarSesionToolStripMenuItem", true).FirstOrDefault();
-            ToolStripItem agregarUsuarioToolStripButton = botonera["agregarNuevoToolStripMenuItem"];
-            ToolStripItem verTodosToolStripButton = botonera["verTodosToolStripMenuItem"];
-            if (SessionManager.GetInstance().IsLoggedIn())
-            {
-                //loginToolStripButton.Visible = false;
-                //logoutToolStripButton.Visible = true;
-                agregarUsuarioToolStripButton.Visible = true;
-                verTodosToolStripButton.Visible = true;
-            }
-            else
-            {
-                //loginToolStripButton.Visible = true;
-                //logoutToolStripButton.Visible = false;
-                agregarUsuarioToolStripButton.Visible = false;
-                verTodosToolStripButton.Visible = false;
-            }
-        }
+
+        //private static void ActualizarBotoneraSesion(ToolStripItemCollection botonera)
+        //{
+        //    ToolStripItem loginToolStripButton = botonera["loginToolStripMenuItem"];//botonera.Find("loginToolStripMenuItem", true).FirstOrDefault();
+        //    ToolStripItem logoutToolStripButton = botonera["cerrarSesionToolStripMenuItem"]; ;//botonera.Find("cerrarSesionToolStripMenuItem", true).FirstOrDefault();
+        //    ToolStripItem agregarUsuarioToolStripButton = botonera["agregarNuevoToolStripMenuItem"];
+        //    ToolStripItem verTodosToolStripButton = botonera["verTodosToolStripMenuItem"];
+        //    if (SessionManager.GetInstance().IsLoggedIn())
+        //    {
+        //        //loginToolStripButton.Visible = false;
+        //        //logoutToolStripButton.Visible = true;
+        //        agregarUsuarioToolStripButton.Visible = true;
+        //        verTodosToolStripButton.Visible = true;
+        //    }
+        //    else
+        //    {
+        //        //loginToolStripButton.Visible = true;
+        //        //logoutToolStripButton.Visible = false;
+        //        agregarUsuarioToolStripButton.Visible = false;
+        //        verTodosToolStripButton.Visible = false;
+        //    }
+        //}
 
         private void loginToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -121,6 +118,7 @@ namespace IngSoft.UI
         private void FrmUsuario_Shown(object sender, EventArgs e)
         {
             EliminarControlesAdicionalesUsuario();
+            FrmUsuarioFlexiblizador.ActualizarMenuSegunPermisosUsuario();
         }
 
         private void FrmUsuario_Load(object sender, EventArgs e)
