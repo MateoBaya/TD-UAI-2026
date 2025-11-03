@@ -23,5 +23,10 @@ namespace IngSoft.Repository.Factory
             IUsuarioRepository usuarioRepository = CreateUsuarioRepository();
             return new DigitoVerificadorRepository(bitacoraRepository, usuarioRepository, connection);
         }
+        public static IUsuarioHistoricoRepository CreateUsuarioHistoricoRepository()
+        {
+            IConnection connection = ConnectionFactory.CreateSqlServerConnection();
+            return new UsuarioHistoricoRepository(connection);
+        }
     }
 }

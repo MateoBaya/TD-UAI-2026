@@ -55,6 +55,7 @@ namespace IngSoft.UI
                 cerrarSesionToolStripMenuItem.Enabled = true;
                 usuariosToolStripMenuItem.Visible = true;
                 bitacoraToolStripMenuItem.Visible = true;
+                controlDeCambiosToolStripMenuItem.Visible = true;
                 label1.Visible = true;
                 label1.Text = $"Bienvenido: {SessionManager.GetUsuario().Nombre} {SessionManager.GetUsuario().Apellido}";
             }
@@ -64,6 +65,7 @@ namespace IngSoft.UI
                 cerrarSesionToolStripMenuItem.Enabled = false;
                 usuariosToolStripMenuItem.Visible = false;
                 bitacoraToolStripMenuItem.Visible = false;
+                controlDeCambiosToolStripMenuItem.Visible = false;
                 label1.Visible = false;
             }
         }
@@ -71,6 +73,12 @@ namespace IngSoft.UI
         private void menuPrincipal_ItemClicked(object sender, ToolStripItemClickedEventArgs e)
         {
 
+        }
+
+        private void controlDeCambiosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var FrmControlCambios = new FrmControlDeCambios();
+            FrmControlCambios.ShowDialog();
         }
     }
 }

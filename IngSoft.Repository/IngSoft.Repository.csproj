@@ -44,6 +44,8 @@
   <ItemGroup>
     <Compile Include="Dto\MessageErrorIntegridad.cs" />
     <Compile Include="Dto\ResultadoIntegridad.cs" />
+    <Compile Include="Implementation\UsuarioHistoricoRepository.cs" />
+    <Compile Include="IUsuarioHistoricoRepository.cs" />
     <Compile Include="IDigitoVerificadorRepository.cs" />
     <Compile Include="Implementation\BitacoraRepository.cs" />
     <Compile Include="Factory\FactoryRepository.cs" />

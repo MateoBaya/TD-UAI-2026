@@ -45,8 +45,10 @@
     <Compile Include="DigitoVerificador.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Enums\TipoEvento.cs" />
+    <Compile Include="Enums\TipoOperacion.cs" />
     <Compile Include="Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="UsuarioHistorico.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IngSoft.Abstractions\IngSoft.Abstractions.csproj">

@@ -14,13 +14,20 @@ namespace IngSoft.ApplicationServices.Factory
         public static IUsuarioServices CreateUsuarioServices()
         {
             IUsuarioRepository usuarioRepository = FactoryRepository.CreateUsuarioRepository();
-            return new UsuarioServices(usuarioRepository);
+            IUsuarioHistoricoServices usuarioHistoricoServices = CreateUsuarioHistoricoServices();
+            return new UsuarioServices(usuarioRepository, usuarioHistoricoServices);
         }
         public static IDigitoVerificadorServices CreateDigitoVerificadorServices()
         {
             var digitoVerificadorRepository = FactoryRepository.CreateDigitoVerificadorRepository();
             var bitacoraRepository = FactoryRepository.CreateBitacoraRepository();
             return new DigitoVerificadorServices(digitoVerificadorRepository, bitacoraRepository);
+        }
+        public static IUsuarioHistoricoServices CreateUsuarioHistoricoServices()
+        {
+            var usuarioHistoricoRepository = FactoryRepository.CreateUsuarioHistoricoRepository();
+            var bitacoraRepository = FactoryRepository.CreateBitacoraRepository();
+            return new UsuarioHistoricoServices(usuarioHistoricoRepository, bitacoraRepository);
         }
     }
 }

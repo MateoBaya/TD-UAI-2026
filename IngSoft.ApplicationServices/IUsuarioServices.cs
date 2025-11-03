@@ -14,5 +14,7 @@ namespace IngSoft.ApplicationServices
         Usuario ObtenerUsuario(string username);
         SessionManager LoginUser(Usuario usuario);
         void LogOutUser();
+        void CrearUsuario(Usuario usuario);
+        void ModificarUsuario(Usuario usuario);
     }
 }

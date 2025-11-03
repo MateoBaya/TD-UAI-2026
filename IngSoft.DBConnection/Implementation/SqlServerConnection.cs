@@ -45,6 +45,11 @@ namespace IngSoft.DBConnection
             {
                 oneCommand.CommandType = CommandType.StoredProcedure;
 
+                if (_oneTransaction != null)
+                {
+                    oneCommand.Transaction = _oneTransaction;
+                }
+
                 if (parametros != null)
                 {
                     foreach (var p in parametros)

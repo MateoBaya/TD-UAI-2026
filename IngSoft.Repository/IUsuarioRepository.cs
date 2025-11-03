@@ -1,9 +1,5 @@
-﻿using IngSoft.Domain;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using IngSoft.Domain;
 
 namespace IngSoft.Repository
 {
@@ -12,8 +8,10 @@ namespace IngSoft.Repository
         void GuardarUsuario(Usuario usuario);
         List<Usuario> ObtenerUsuarios();
         List<Usuario> ObtenerUsuariosFiltrados(string filtro);
-        void AumentarIntentosFallidos(Usuario usuario);
+        Usuario AumentarIntentosFallidos(Usuario usuario);
         void ResetearIntentosFallidos(Usuario usuario);
         Usuario ObtenerUsuario(string username);
+        Usuario CrearUsuario(Usuario usuario);
+        Usuario ModificarUsuario(Usuario usuario);
     }
 }

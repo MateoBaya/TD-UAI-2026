@@ -98,6 +98,90 @@ namespace IngSoft.Repository.Implementation
             }            
         }
 
+        public Usuario CrearUsuario(Usuario usuario)
+        {
+            EncriptadorExperto mEncritpador = new EncriptadorExperto();
+            usuario.Contrasena = mEncritpador.EncriptadorSecuencial(usuario.Contrasena);
+            _connection.NuevaConexion(connectionString);
+
+            try
+            {
+                _connection.IniciarTransaccion();
+
+                usuario.IdUsuario = _connection.ObtenerUltimoId("Usuario", "Id") + 1;
+                var parametros = new Dictionary<string, object>
+                    {
+                        {"@Id", usuario.IdUsuario},
+                        {"@Nombre", usuario.Nombre },
+                        {"@Apellido", usuario.Apellido },
+                        {"@Email", usuario.Email },
+                        {"@Contrasena", usuario.Contrasena },
+                        {"@UserName", usuario.UserName },
+                        {"@Dvh",  DigitoVerificadorRepository.CrearDVH(usuario)}
+                    };
+
+                _connection.EjecutarSinResultado("CrearUsuario", parametros);
+
+                _connection.AceptarTransaccion();
+                ActualizarDVV();
+
+                return usuario;
+            }
+            catch (Exception)
+            {
+                _connection.CancelarTransaccion();
+                throw;
+            }
+            finally
+            {
+                _connection.FinalizarConexion();
+            }
+        }
+        public Usuario ModificarUsuario(Usuario usuario)
+        {
+            EncriptadorExperto mEncritpador = new EncriptadorExperto();
+            
+            _connection.NuevaConexion(connectionString);
+            
+            try
+            {
+                _connection.IniciarTransaccion();
+
+                var usuarioExistente = ObtenerUsuarioInterno(usuario.UserName);
+                usuarioExistente.Nombre = usuario.Nombre;
+                usuarioExistente.Apellido = usuario.Apellido;
+                usuarioExistente.Email = usuario.Email;
+
+                if (usuario.Contrasena != null)
+                {
+                    usuarioExistente.Contrasena = mEncritpador.EncriptadorSecuencial(usuario.Contrasena);
+                }
+
+                var parametros = new Dictionary<string, object>
+                    {
+                        {"@UserName", usuario.UserName },
+                        {"@Nombre", usuarioExistente.Nombre },
+                        {"@Apellido", usuarioExistente.Apellido },
+                        {"@Email", usuarioExistente.Email },
+                        {"@Contrasena", usuarioExistente.Contrasena },
+                        {"@Dvh", DigitoVerificadorRepository.CrearDVH(usuarioExistente)}
+                    };
+                _connection.EjecutarSinResultado("ModificarUsuario", parametros);
+                _connection.AceptarTransaccion();
+                ActualizarDVV();
+                return usuarioExistente;
+            }
+            catch (Exception)
+            {
+                _connection.CancelarTransaccion();
+                throw;
+            }
+            finally
+            {
+                _connection.FinalizarConexion();
+            }
+        }
+
         public Usuario ObtenerUsuario(string username)
         {
             _connection.NuevaConexion(connectionString);
@@ -171,41 +255,61 @@ namespace IngSoft.Repository.Implementation
         {
             return new Guid(new EncriptadorExperto().EncriptadorOnlyHash(id.ToString()));
         }
-        public void AumentarIntentosFallidos(Usuario usuario)
+        public Usuario AumentarIntentosFallidos(Usuario usuario)
         {
             _connection.NuevaConexion(connectionString);
-            string query = "SELECT CantidadIntentos FROM Usuario WHERE UserName = @UserName";
-            var usuarioStored = ObtenerUsuarioInterno(usuario.UserName);
 
-            var parametros = new Dictionary<string, object>
+            try
             {
-                {"@UserName", usuario.UserName}
-            };
+                _connection.IniciarTransaccion();
+                var usuarioStored = ObtenerUsuarioInterno(usuario.UserName);
 
-            int cantIntentos = (int)_connection.EjecutarEscalar(query, parametros);
+                if (usuarioStored == null)
+                {
+                    throw new UnauthorizedAccessException("Usuario no encontrado.");
+                }
 
-            if (cantIntentos >= 2)
-            {
-                usuarioStored.Bloqueado = true;
-                parametros.Add("@Dvh", DigitoVerificadorRepository.CrearDVH(usuarioStored));
-                _connection.EjecutarSinResultado("BloquearUsuario", parametros);
+                var parametros = new Dictionary<string, object>
+                {
+                    {"@UserName", usuarioStored.UserName}
+                };
+
+                if (usuarioStored.CantidadIntentos > 2)
+                {
+                    usuarioStored.Bloqueado = true;
+                    parametros.Add("@Dvh", DigitoVerificadorRepository.CrearDVH(usuarioStored));
+                    _connection.EjecutarSinResultado("BloquearUsuario", parametros);
+                }
+                else
+                {
+                    usuarioStored.CantidadIntentos = usuarioStored.CantidadIntentos + 1;
+                    parametros.Add("@Dvh", DigitoVerificadorRepository.CrearDVH(usuarioStored));
+                    _connection.EjecutarSinResultado("AumentarIntentosUsuario", parametros);
+                }
+
+                _connection.AceptarTransaccion();
+                ActualizarDVV();
+
+                return usuarioStored;
+
             }
-            else
+            catch (Exception)
             {
-                usuarioStored.CantidadIntentos = cantIntentos + 1;
-                parametros.Add("@Dvh", DigitoVerificadorRepository.CrearDVH(usuarioStored));
-                _connection.EjecutarSinResultado("AumentarIntentosUsuario", parametros);
+                _connection.CancelarTransaccion();
+                throw;
             }
-
-            ActualizarDVV();
-            _connection.FinalizarConexion();
+            finally
+            {
+                _connection.FinalizarConexion();
+            }
         }
 
         public void ResetearIntentosFallidos(Usuario usuario)
         {
             _connection.NuevaConexion(connectionString);
             var usuarioStored = ObtenerUsuarioInterno(usuario.UserName);
-           
+            usuarioStored.CantidadIntentos = usuario.CantidadIntentos;
+
             var parametros = new Dictionary<string, object>
             {
                 {"@UserName", usuarioStored.UserName},
