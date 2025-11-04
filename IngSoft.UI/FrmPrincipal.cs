@@ -19,15 +19,15 @@ namespace IngSoft.UI
             InitializeComponent();
             _usuarioServices = ServicesFactory.CreateUsuarioServices();
             _multidiomaServices = ServicesFactory.CreateMultidiomaServices();
+
+            SingleInstancesManager.Instance.AgregarObjeto(_usuarioServices);
+            SingleInstancesManager.Instance.AgregarObjeto(ServicesFactory.CreateBitacoraServices());
         }
 
         private void Form1_Load(object sender, EventArgs e)
         {   
-            ActualizarMenuSegunEstadoSesion();
             CargarIdiomas();
             EstablecerIdiomaPorDefecto();
-            SingleInstancesManager.Instance.AgregarObjeto(_usuarioServices);
-            SingleInstancesManager.Instance.AgregarObjeto(ServicesFactory.CreateBitacoraServices());
         }
         private void usuariosToolStripMenuItem_Click(object sender, EventArgs e)
         {

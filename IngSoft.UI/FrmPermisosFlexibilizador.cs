@@ -2,12 +2,10 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using IngSoft.Abstractions;
 using IngSoft.ApplicationServices;
 using IngSoft.ApplicationServices.Factory;
+using IngSoft.ApplicationServices.Implementation;
 using IngSoft.Domain;
 using IngSoft.Services;
 

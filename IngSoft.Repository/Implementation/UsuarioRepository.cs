@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Security.Authentication;
 using IngSoft.DBConnection;
 using IngSoft.DBConnection.Factory;
 using IngSoft.DBConnection.Models;
@@ -33,7 +32,7 @@ namespace IngSoft.Repository.Implementation
             }
         }
 
-        public void ModificarUsuario(Usuario usuario)
+        public void ModificarUsuarioPrueba(Usuario usuario)
         {
             _connection.NuevaConexion(connectionString);
             try

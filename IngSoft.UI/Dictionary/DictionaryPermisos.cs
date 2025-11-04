@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 
 namespace IngSoft.UI.Dictionary
 {
@@ -22,7 +18,11 @@ namespace IngSoft.UI.Dictionary
             { "asignarPermisoToolStripMenuItem", "AsignarPermisos" },
             {  "modificarPermisoToolStripMenuItem","ModificarPermiso" },
             {  "eliminarPermisoToolStripMenuItem","BajaPermiso" },
-            {  "bitacoraToolStripMenuItem", "Bitacora" }
+            {  "bitacoraToolStripMenuItem", "Bitacora" },
+            {  "controlDeCambiosToolStripMenuItem", "ControlCambios" },
+            {  "multidiomasToolStripMenuItem", "Multidiomas" },
+            {  "crearIdiomaToolStripMenuItem", "CrearIdioma" },
+            {  "modificarIdiomaToolStripMenuItem", "ModificarIdioma" },
         };
     }
 

@@ -1,5 +1,5 @@
-
-﻿using IngSoft.ApplicationServices.Factory;
+﻿
+using IngSoft.ApplicationServices.Factory;
 using IngSoft.ApplicationServices.Implementation;
 using IngSoft.Domain;
 using IngSoft.Domain.Enums;
@@ -13,10 +13,9 @@ using System.Security.Authentication;
 
 namespace IngSoft.ApplicationServices.Implementation
 {
-    public class UsuarioServices: GuardableEnBitacora, IUsuarioServices
+    public class UsuarioServices : GuardableEnBitacora, IUsuarioServices
     {
         private readonly IUsuarioRepository _usuarioRepository;
-        private Action<Usuario, string, string, TipoEvento> _registrarEnBitacora;
         private readonly IUsuarioHistoricoServices _usuarioHistoricoServices;
 
         public UsuarioServices(IUsuarioRepository usuarioRepository, IUsuarioHistoricoServices usuarioHistoricoServices)
@@ -25,8 +24,6 @@ namespace IngSoft.ApplicationServices.Implementation
             _usuarioHistoricoServices = usuarioHistoricoServices ?? ServicesFactory.CreateUsuarioHistoricoServices();
         }
 
-
-
         public void ModificarUsuario(Usuario usuario)
         {
             try
@@ -34,7 +31,7 @@ namespace IngSoft.ApplicationServices.Implementation
                 _usuarioRepository.ModificarUsuario(usuario);
                 _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, "Usuario modificado exitosamente", "ModificarUsuario", TipoEvento.Message);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, "Error al modificar usuario", "ModificarUsuario", TipoEvento.Error);
                 throw;
@@ -45,26 +42,26 @@ namespace IngSoft.ApplicationServices.Implementation
         {
             try
             {
-               var usuarioStored = _usuarioRepository.CrearUsuario(usuario);
-               GuardarUsuarioHistorico(usuarioStored, TipoOperacion.CREATE, SessionManager.GetUsuario().UserName);
+                var usuarioStored = _usuarioRepository.CrearUsuario(usuario);
+                GuardarUsuarioHistorico(usuarioStored, TipoOperacion.CREATE, SessionManager.GetUsuario().UserName);
                 _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, "Usuario creado exitosamente", "CrearUsuario", TipoEvento.Message);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, "Error al crear usuario", "CrearUsuario", TipoEvento.Error);
                 throw;
             }
         }
 
-        public void ModificarUsuario(Usuario usuario)
+        public void ModificarUsuario(Usuario usuario, string x)
         {
             try
             {
-               var usuarioStored = _usuarioRepository.ModificarUsuario(usuario);
-               GuardarUsuarioHistorico(usuarioStored, TipoOperacion.UPDATE, SessionManager.GetUsuario().UserName);
+                var usuarioStored = _usuarioRepository.ModificarUsuario(usuario);
+                GuardarUsuarioHistorico(usuarioStored, TipoOperacion.UPDATE, SessionManager.GetUsuario().UserName);
                 _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, "Usuario modificado exitosamente", "ModificarUsuario", TipoEvento.Message);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, "Error al modificar usuario", "ModificarUsuario", TipoEvento.Error);
                 throw;
@@ -76,7 +73,7 @@ namespace IngSoft.ApplicationServices.Implementation
             try
             {
                 var usuarioStored = ObtenerUsuario(usuario.UserName);
-                if(usuarioStored == null)
+                if (usuarioStored == null)
                 {
                     CrearUsuario(usuario);
                 }
@@ -85,9 +82,9 @@ namespace IngSoft.ApplicationServices.Implementation
                     ModificarUsuario(usuario);
                 }
                 //_usuarioRepository.GuardarUsuario(usuario);
-               //_registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, "Usuario creado/modificado exitosamente", "GuardarUsuario", TipoEvento.Message);
+                //_registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, "Usuario creado/modificado exitosamente", "GuardarUsuario", TipoEvento.Message);
             }
-            catch(Exception)
+            catch (Exception)
             {
                 //_registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, "Error al crear/modificar usuario", "GuardarUsuario", TipoEvento.Error);
                 throw;
@@ -97,7 +94,7 @@ namespace IngSoft.ApplicationServices.Implementation
         {
             SessionManager session = SessionManager.GetInstance();
             Usuario usuarioStored = ObtenerUsuario(usuario.UserName);
-            if(usuarioStored!= null && usuarioStored.Bloqueado)
+            if (usuarioStored != null && usuarioStored.Bloqueado)
             {
                 _registrarEnBitacora(usuarioStored, "Intento de acceso con usuario bloqueado", "Login", TipoEvento.Warning);
                 throw new UnauthorizedAccessException("El usuario se encuentra bloqueado.");
@@ -120,9 +117,9 @@ namespace IngSoft.ApplicationServices.Implementation
                 GuardarUsuarioHistorico(usuarioConIntentos, TipoOperacion.UPDATE, usuarioConIntentos.UserName);
                 throw;
             }
-            catch(Exception e)
+            catch (Exception e)
             {
-                _registrarEnBitacora(usuarioStored, "Error inesperado: "+e.Message, "Login", TipoEvento.Error);
+                _registrarEnBitacora(usuarioStored, "Error inesperado: " + e.Message, "Login", TipoEvento.Error);
                 throw;
             }
             return session;
@@ -136,14 +133,14 @@ namespace IngSoft.ApplicationServices.Implementation
         {
             try
             {
-                Usuario mUsuario = _usuarioRepository.ObtenerUsuario(usuario);
+                Usuario mUsuario = _usuarioRepository.ObtenerUsuario(username);
                 if (!(SessionManager.GetUsuario() is null))
                 {
-                    _registrarEnBitacora(SessionManager.GetUsuario() as Usuario, "Buscado Usuario "+usuario.UserName, "ObtenerUsuario", TipoEvento.Message);
+                    _registrarEnBitacora(SessionManager.GetUsuario() as Usuario, "Buscado Usuario " + username, "ObtenerUsuario", TipoEvento.Message);
                 }
                 return mUsuario;
             }
-            catch(ArgumentException)
+            /*catch(ArgumentException)
             {
                 _registrarEnBitacora(SessionManager.GetUsuario() as Usuario ?? usuario, "Usuario no Encontrado", "Login", TipoEvento.Warning);
                 throw new InvalidCredentialException();
@@ -152,10 +149,10 @@ namespace IngSoft.ApplicationServices.Implementation
             {
                 _registrarEnBitacora(SessionManager.GetUsuario() as Usuario ?? usuario, "Error inesperado: " + e.Message, "Login", TipoEvento.Warning);
                 throw;
-            }
-            catch(Exception e)
+            }*/
+            catch (Exception e)
             {
-                _registrarEnBitacora(SessionManager.GetUsuario() as Usuario??usuario, "Error inesperado: " + e.Message, "Login", TipoEvento.Error);
+                //_registrarEnBitacora(SessionManager.GetUsuario() as Usuario ?? usuario, "Error inesperado: " + e.Message, "Login", TipoEvento.Error);
                 throw;
             }
         }
@@ -165,7 +162,7 @@ namespace IngSoft.ApplicationServices.Implementation
             try
             {
                 List<Usuario> mUsuarios = _usuarioRepository.ObtenerUsuariosFiltrados(filtro);
-                _registrarEnBitacora(SessionManager.GetUsuario() as Usuario, "Buscados todos los Usuarios con filtro " +filtro , "ObtenerUsuariosFiltrados", TipoEvento.Message);
+                _registrarEnBitacora(SessionManager.GetUsuario() as Usuario, "Buscados todos los Usuarios con filtro " + filtro, "ObtenerUsuariosFiltrados", TipoEvento.Message);
                 return mUsuarios;
             }
             catch (Exception e)
@@ -209,4 +206,3 @@ namespace IngSoft.ApplicationServices.Implementation
         }
     }
 }
-

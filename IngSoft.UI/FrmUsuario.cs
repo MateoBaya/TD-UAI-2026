@@ -48,7 +48,7 @@ namespace IngSoft.UI
             Size size = new Size(FrmUsuario.ActiveForm.Width / 2 - FrmUsuario.ActiveForm.Width / 16, FrmUsuario.ActiveForm.Height / 2 + FrmUsuario.ActiveForm.Height / 4);
             new FrmUsuarioFlexiblizador().dataGridViewWithSelectionChanged(_usuarios, position, size);
             Point pointInicial = new Point(FrmUsuario.ActiveForm.Width / 2 + 20, FrmUsuario.ActiveForm.Height / 16);
-            FrmUsuarioFlexiblizador.TextBoxCreator("UserName", new Point(pointInicial.X, pointInicial.Y + FrmUsuario.ActiveForm.Height / 10));
+            FrmUsuarioFlexiblizador.TextBoxCreator("Usuario", new Point(pointInicial.X, pointInicial.Y + FrmUsuario.ActiveForm.Height / 10));
             FrmUsuarioFlexiblizador.TextBoxCreator("Nombre", new Point(pointInicial.X, pointInicial.Y + (FrmUsuario.ActiveForm.Height / 10) * 2));
             FrmUsuarioFlexiblizador.TextBoxCreator("Apellido", new Point(pointInicial.X, pointInicial.Y + (FrmUsuario.ActiveForm.Height / 10) * 3));
             FrmUsuarioFlexiblizador.TextBoxCreator("Email", new Point(pointInicial.X, pointInicial.Y + (FrmUsuario.ActiveForm.Height / 10) * 4));

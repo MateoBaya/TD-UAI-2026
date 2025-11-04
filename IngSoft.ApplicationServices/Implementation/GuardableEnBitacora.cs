@@ -1,10 +1,6 @@
-﻿using IngSoft.Domain;
+﻿using System;
+using IngSoft.Domain;
 using IngSoft.Domain.Enums;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace IngSoft.ApplicationServices.Implementation
 {

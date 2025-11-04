@@ -132,6 +132,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Multidioma\FrmMultidiomas.resx">
       <DependentUpon>FrmMultidiomas.cs</DependentUpon>
+	</EmbeddedResource>
     <EmbeddedResource Include="FrmPermiso.resx">
       <DependentUpon>FrmPermiso.cs</DependentUpon>
     </EmbeddedResource>

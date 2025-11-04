@@ -14,17 +14,17 @@ namespace IngSoft.UI
 {
     public partial class FrmLogin : Form, IObserver
     {
-        private readonly IUsuarioServices usuarioServices;
-        private readonly IBitacoraServices bitacoraServices;
+        //private readonly IUsuarioServices usuarioServices;
+        //private readonly IBitacoraServices bitacoraServices;
         private readonly IDigitoVerificadorServices digitoVerificadorServices;
         private readonly IMultidiomaServices _multidiomaServices;
-        //private readonly IUsuarioServices usuarioServices = SingleInstancesManager.Instance.ObtenerInstancia<IUsuarioServices>();
-        //private readonly IBitacoraServices bitacoraServices = SingleInstancesManager.Instance.ObtenerInstancia<IBitacoraServices>();
+        private readonly IUsuarioServices usuarioServices = SingleInstancesManager.Instance.ObtenerInstancia<IUsuarioServices>();
+        private readonly IBitacoraServices bitacoraServices = SingleInstancesManager.Instance.ObtenerInstancia<IBitacoraServices>();
         public FrmLogin()
         {
             InitializeComponent();
-            usuarioServices = ServicesFactory.CreateUsuarioServices();
-            bitacoraServices = ServicesFactory.CreateBitacoraServices();
+            //usuarioServices = ServicesFactory.CreateUsuarioServices();
+            //bitacoraServices = ServicesFactory.CreateBitacoraServices();
             digitoVerificadorServices = ServicesFactory.CreateDigitoVerificadorServices();
             _multidiomaServices = ServicesFactory.CreateMultidiomaServices();
         }
