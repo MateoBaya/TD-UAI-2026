@@ -1,5 +1,6 @@
 ﻿using System;
 using IngSoft.Domain.Enums;
+using IngSoft.Abstractions;
 
 namespace IngSoft.Domain
 {

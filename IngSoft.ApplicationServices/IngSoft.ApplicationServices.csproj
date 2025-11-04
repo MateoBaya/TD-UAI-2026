@@ -53,6 +53,10 @@
     <Compile Include="Implementation\UsuarioHistoricoServices.cs" />
     <Compile Include="Implementation\UsuarioServices.cs" />
     <Compile Include="IUsuarioHistoricoServices.cs" />
+    <Compile Include="Implementation\GuardableEnBitacora.cs" />
+    <Compile Include="Implementation\PermisoServices.cs" />
+    <Compile Include="Implementation\UsuarioServices.cs" />
+    <Compile Include="IPermisoServices.cs" />
     <Compile Include="IUsuarioServices.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

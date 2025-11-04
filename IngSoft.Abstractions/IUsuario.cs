@@ -13,16 +13,4 @@ namespace IngSoft.Abstractions
         string Apellido {  get; set; }
     }
 
-    public interface ICompositable
-    {
-        string Nombre {  get; set; }
-        object Operacion();
-
-        ICollection<ICompositable> GetListCompositable();
-
-        void AddCompositable(ICompositable compositable);
-        void RemoveCompositable(ICompositable compositable);
-        void ClearCompositable();
-
-    }
 }

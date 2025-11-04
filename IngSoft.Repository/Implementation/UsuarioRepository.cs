@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Authentication;
 using IngSoft.DBConnection;
 using IngSoft.DBConnection.Factory;
 using IngSoft.DBConnection.Models;
@@ -20,7 +21,6 @@ namespace IngSoft.Repository.Implementation
         {
             _connection = connection ?? ConnectionFactory.CreateSqlServerConnection();
         }
-
         private IDigitoVerificadorRepository DigitoVerificadorRepository
         {
             get
@@ -33,6 +33,42 @@ namespace IngSoft.Repository.Implementation
             }
         }
 
+        public void ModificarUsuario(Usuario usuario)
+        {
+            _connection.NuevaConexion(connectionString);
+            try
+            {
+                var existeUsuario = _connection.EjecutarEscalar("SELECT COUNT(*) FROM Usuario WHERE Username = @UserName", new Dictionary<string, object>
+                {
+                    {"@UserName", usuario.UserName }
+                });
+                if (Convert.ToInt32(existeUsuario) == 0)
+                {
+                    throw new ArgumentException("El usuario no existe");
+                }
+                else
+                {
+                    var parametros = new Dictionary<string, object>
+                    {
+                        {"@UserName", usuario.UserName },
+                        {"@Nombre", usuario.Nombre },
+                        {"@Apellido", usuario.Apellido },
+                        {"@Email", usuario.Email },
+                        {"@Bloqueado", usuario.Bloqueado }
+                    };
+                    _connection.EjecutarSinResultado("ModificarUsuario", parametros);
+
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            finally
+            {
+                _connection.FinalizarConexion();
+            }
+        }
         public void GuardarUsuario(Usuario usuario)
         {
             EncriptadorExperto mEncritpador = new EncriptadorExperto();
@@ -42,7 +78,7 @@ namespace IngSoft.Repository.Implementation
             {
                 _connection.IniciarTransaccion();               
 
-                var existeUsuario = _connection.EjecutarEscalar("SELECT COUNT(*) FROM Usuario WHERE UserName = @UserName", new Dictionary<string, object>
+                var existeUsuario = _connection.EjecutarEscalar("SELECT COUNT(*) FROM Usuario WHERE Username = @UserName", new Dictionary<string, object>
                 {
                     {"@UserName", usuario.UserName }
                 });
@@ -67,6 +103,7 @@ namespace IngSoft.Repository.Implementation
                         {"@Dvh", DigitoVerificadorRepository.CrearDVH(usuarioExistente)}
                     };
                     _connection.EjecutarSinResultado("ModificarUsuario", parametros);
+                    throw new ArgumentException("El usuario ya existe");
                 }
                 else
                 {
@@ -225,7 +262,7 @@ namespace IngSoft.Repository.Implementation
                 }
                 else
                 {
-                    throw new UnauthorizedAccessException("Usuario no encontrado.");
+                    throw new ArgumentException("Usuario no Encontrado");
                 }
             }
             return usuario;
@@ -291,7 +328,6 @@ namespace IngSoft.Repository.Implementation
                 ActualizarDVV();
 
                 return usuarioStored;
-
             }
             catch (Exception)
             {

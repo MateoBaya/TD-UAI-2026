@@ -36,6 +36,7 @@
             this.bitacoraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.controlDeCambiosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.multidiomasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.permisosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.label1 = new System.Windows.Forms.Label();
             this.lblIdioma = new System.Windows.Forms.Label();
             this.cboIdiomas = new System.Windows.Forms.ComboBox();
@@ -50,7 +51,8 @@
             this.usuariosToolStripMenuItem,
             this.bitacoraToolStripMenuItem,
             this.controlDeCambiosToolStripMenuItem,
-            this.multidiomasToolStripMenuItem});
+            this.multidiomasToolStripMenuItem,
+            this.permisosToolStripMenuItem});
             this.menuPrincipal.Location = new System.Drawing.Point(0, 0);
             this.menuPrincipal.Name = "menuPrincipal";
             this.menuPrincipal.Size = new System.Drawing.Size(901, 28);
@@ -93,7 +95,7 @@
             this.bitacoraToolStripMenuItem.Size = new System.Drawing.Size(78, 24);
             this.bitacoraToolStripMenuItem.Text = "Bitacora";
             this.bitacoraToolStripMenuItem.Click += new System.EventHandler(this.bitacoraToolStripMenuItem_Click);
-            // 
+            //
             // controlDeCambiosToolStripMenuItem
             // 
             this.controlDeCambiosToolStripMenuItem.Name = "controlDeCambiosToolStripMenuItem";
@@ -107,6 +109,12 @@
             this.multidiomasToolStripMenuItem.Size = new System.Drawing.Size(106, 24);
             this.multidiomasToolStripMenuItem.Text = "Multidiomas";
             this.multidiomasToolStripMenuItem.Click += new System.EventHandler(this.multidiomasToolStripMenuItem_Click);
+            // permisosToolStripMenuItem
+            // 
+            this.permisosToolStripMenuItem.Name = "permisosToolStripMenuItem";
+            this.permisosToolStripMenuItem.Size = new System.Drawing.Size(81, 24);
+            this.permisosToolStripMenuItem.Text = "Permisos";
+            this.permisosToolStripMenuItem.Click += new System.EventHandler(this.permisosToolStripMenuItem_Click);
             // 
             // label1
             // 
@@ -147,7 +155,9 @@
             this.MainMenuStrip = this.menuPrincipal;
             this.Name = "FrmPrincipal";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.FrmPrincipal_FormClosing);
             this.Load += new System.EventHandler(this.Form1_Load);
+            this.Shown += new System.EventHandler(this.FrmPrincipal_Shown);
             this.menuPrincipal.ResumeLayout(false);
             this.menuPrincipal.PerformLayout();
             this.ResumeLayout(false);
@@ -167,6 +177,7 @@
         private System.Windows.Forms.ToolStripMenuItem multidiomasToolStripMenuItem;
         private System.Windows.Forms.Label lblIdioma;
         private System.Windows.Forms.ComboBox cboIdiomas;
+        private System.Windows.Forms.ToolStripMenuItem permisosToolStripMenuItem;
     }
 }
 

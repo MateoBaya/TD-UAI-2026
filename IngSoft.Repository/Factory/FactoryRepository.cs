@@ -43,5 +43,16 @@ namespace IngSoft.Repository.Factory
             IConnection connection = ConnectionFactory.CreateSqlServerConnection();
             return new TraduccionRepository(connection);
         }
+        public static IPermisoRepository CreatePermisoRepository()
+        {
+            IConnection connection = ConnectionFactory.CreateSqlServerConnection();
+            return new PermisoRepository(connection);
+        }
+
+        //public static IRolRepository CreateRolRepository()
+        //{
+        //    IConnection connection = ConnectionFactory.CreateSqlServerConnection();
+        //    return new RolRepository(connection);
+        //}
     }
 }

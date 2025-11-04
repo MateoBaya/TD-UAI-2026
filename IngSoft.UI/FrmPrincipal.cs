@@ -26,6 +26,8 @@ namespace IngSoft.UI
             ActualizarMenuSegunEstadoSesion();
             CargarIdiomas();
             EstablecerIdiomaPorDefecto();
+            SingleInstancesManager.Instance.AgregarObjeto(_usuarioServices);
+            SingleInstancesManager.Instance.AgregarObjeto(ServicesFactory.CreateBitacoraServices());
         }
         private void usuariosToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -44,38 +46,27 @@ namespace IngSoft.UI
             var frmLogin = new FrmLogin();
             if (frmLogin.ShowDialog() == DialogResult.OK)
             {
-                ActualizarMenuSegunEstadoSesion();
+                FrmPrincipalFlexibilizador.ActualizarMenuSegunEstadoSesion();
             }
         }
         private void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _usuarioServices.SetRegistradoBitacora(FrmUsuarioFlexiblizador.RegistrarEnBitacora);
-            _usuarioServices.LogOutUser();
-            ActualizarMenuSegunEstadoSesion();
+            LogOutUser();
+            FrmPrincipalFlexibilizador.ActualizarMenuSegunEstadoSesion();
         }
 
-        private void ActualizarMenuSegunEstadoSesion()
+        private void LogOutUser()
+        {
+            _usuarioServices.LogOutUser();
+        }
+
+
+        
+        private void FrmPrincipal_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (SessionManager.GetInstance().IsLoggedIn())
             {
-                iniciarSesionToolStripMenuItem.Enabled = false;
-                cerrarSesionToolStripMenuItem.Enabled = true;
-                usuariosToolStripMenuItem.Visible = true;
-                bitacoraToolStripMenuItem.Visible = true;
-                controlDeCambiosToolStripMenuItem.Visible = true;
-                multidiomasToolStripMenuItem.Visible = true;
-                label1.Visible = true;
-                label1.Text = $"Bienvenido: {SessionManager.GetUsuario().Nombre} {SessionManager.GetUsuario().Apellido}";
-            }
-            else
-            {
-                iniciarSesionToolStripMenuItem.Enabled = true;
-                cerrarSesionToolStripMenuItem.Enabled = false;
-                usuariosToolStripMenuItem.Visible = false;
-                bitacoraToolStripMenuItem.Visible = false;
-                controlDeCambiosToolStripMenuItem.Visible = false;
-                multidiomasToolStripMenuItem.Visible = false;
-                label1.Visible = false;
+                LogOutUser();
             }
         }
 
@@ -152,7 +143,17 @@ namespace IngSoft.UI
                     .Cast<IControlIdioma>().ToList();
                 MultidiomaManager.CambiarIdiomaControles(this, controles);
             }
+        }        
+
+        private void permisosToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            FrmPermiso frmPermiso = new FrmPermiso();
+            frmPermiso.ShowDialog();
         }
 
+        private void FrmPrincipal_Shown(object sender, EventArgs e)
+        {
+            FrmPrincipalFlexibilizador.ActualizarMenuSegunEstadoSesion();
+        }
     }
 }

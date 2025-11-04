@@ -9,6 +9,7 @@ using IngSoft.Domain;
 using IngSoft.Domain.Multidioma;
 using IngSoft.Services;
 using IngSoft.UI.DTOs;
+using IngSoft.Services;
 
 namespace IngSoft.UI
 {
@@ -16,6 +17,8 @@ namespace IngSoft.UI
     {
         private readonly IBitacoraServices _bitacoraServices;
         private readonly IMultidiomaServices _multidiomaServices;
+        //private readonly IBitacoraServices _bitacoraServices = SingleInstancesManager.Instance.ObtenerInstancia<IBitacoraServices>();
+        //private readonly IMultidiomaServices _multidiomaServices = SingleInstancesManager.Instance.ObtenerInstancia<IMultidiomaServices>();
         private List<Bitacora> _bitacoras;
         public FrmBitacora()
         {

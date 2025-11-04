@@ -1,15 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using IngSoft.ApplicationServices.Factory;
+
+﻿using IngSoft.ApplicationServices.Factory;
+using IngSoft.ApplicationServices.Implementation;
 using IngSoft.Domain;
 using IngSoft.Domain.Enums;
 using IngSoft.Repository;
 using IngSoft.Repository.Factory;
 using IngSoft.Services;
+using System;
+using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.Security.Authentication;
 
 namespace IngSoft.ApplicationServices.Implementation
 {
-    public class UsuarioServices: IUsuarioServices
+    public class UsuarioServices: GuardableEnBitacora, IUsuarioServices
     {
         private readonly IUsuarioRepository _usuarioRepository;
         private Action<Usuario, string, string, TipoEvento> _registrarEnBitacora;
@@ -21,9 +25,20 @@ namespace IngSoft.ApplicationServices.Implementation
             _usuarioHistoricoServices = usuarioHistoricoServices ?? ServicesFactory.CreateUsuarioHistoricoServices();
         }
 
-        public void SetRegistradoBitacora(Action<Usuario, string, string, TipoEvento> registrarEnBitacora)
+
+
+        public void ModificarUsuario(Usuario usuario)
         {
-            _registrarEnBitacora = registrarEnBitacora;
+            try
+            {
+                _usuarioRepository.ModificarUsuario(usuario);
+                _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, "Usuario modificado exitosamente", "ModificarUsuario", TipoEvento.Message);
+            }
+            catch(Exception)
+            {
+                _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, "Error al modificar usuario", "ModificarUsuario", TipoEvento.Error);
+                throw;
+            }
         }
 
         public void CrearUsuario(Usuario usuario)
@@ -84,26 +99,30 @@ namespace IngSoft.ApplicationServices.Implementation
             Usuario usuarioStored = ObtenerUsuario(usuario.UserName);
             if(usuarioStored!= null && usuarioStored.Bloqueado)
             {
-                _registrarEnBitacora(usuarioStored, "Intento de acceso con usuario bloqueado", "Login", TipoEvento.Error);
+                _registrarEnBitacora(usuarioStored, "Intento de acceso con usuario bloqueado", "Login", TipoEvento.Warning);
                 throw new UnauthorizedAccessException("El usuario se encuentra bloqueado.");
             }
             try
             {
-                session.LogIn(usuario, usuarioStored);
+                IPermisoServices _permisoServices = ServicesFactory.CreatePermisoServices();
+                PermisoComponent permisoRoot = _permisoServices.ObtenerPermisosPorUsuario(usuarioStored.UserName);
+                session.LogIn(usuario, usuarioStored, permisoRoot);
                 _registrarEnBitacora(usuarioStored, "Acceso exitoso", "Login", TipoEvento.Message);
                 usuarioStored.CantidadIntentos = 0;
                 _usuarioRepository.ResetearIntentosFallidos(usuarioStored);
                 GuardarUsuarioHistorico(usuarioStored, TipoOperacion.UPDATE, SessionManager.GetUsuario().UserName);
             }
-            catch(UnauthorizedAccessException)
+
+            catch (InvalidCredentialException)
             {
                 _registrarEnBitacora(usuarioStored, "Intento de acceso fallido", "Login", TipoEvento.Error);
                 var usuarioConIntentos = _usuarioRepository.AumentarIntentosFallidos(usuarioStored);
                 GuardarUsuarioHistorico(usuarioConIntentos, TipoOperacion.UPDATE, usuarioConIntentos.UserName);
                 throw;
             }
-            catch(Exception)
+            catch(Exception e)
             {
+                _registrarEnBitacora(usuarioStored, "Error inesperado: "+e.Message, "Login", TipoEvento.Error);
                 throw;
             }
             return session;
@@ -115,17 +134,60 @@ namespace IngSoft.ApplicationServices.Implementation
         }
         public Usuario ObtenerUsuario(string username)
         {
-            return _usuarioRepository.ObtenerUsuario(username);
+            try
+            {
+                Usuario mUsuario = _usuarioRepository.ObtenerUsuario(usuario);
+                if (!(SessionManager.GetUsuario() is null))
+                {
+                    _registrarEnBitacora(SessionManager.GetUsuario() as Usuario, "Buscado Usuario "+usuario.UserName, "ObtenerUsuario", TipoEvento.Message);
+                }
+                return mUsuario;
+            }
+            catch(ArgumentException)
+            {
+                _registrarEnBitacora(SessionManager.GetUsuario() as Usuario ?? usuario, "Usuario no Encontrado", "Login", TipoEvento.Warning);
+                throw new InvalidCredentialException();
+            }
+            catch (InvalidCredentialException e)
+            {
+                _registrarEnBitacora(SessionManager.GetUsuario() as Usuario ?? usuario, "Error inesperado: " + e.Message, "Login", TipoEvento.Warning);
+                throw;
+            }
+            catch(Exception e)
+            {
+                _registrarEnBitacora(SessionManager.GetUsuario() as Usuario??usuario, "Error inesperado: " + e.Message, "Login", TipoEvento.Error);
+                throw;
+            }
         }
 
         public List<Usuario> ObtenerUsuarioFiltrados(string filtro)
         {
-            return _usuarioRepository.ObtenerUsuariosFiltrados(filtro);
+            try
+            {
+                List<Usuario> mUsuarios = _usuarioRepository.ObtenerUsuariosFiltrados(filtro);
+                _registrarEnBitacora(SessionManager.GetUsuario() as Usuario, "Buscados todos los Usuarios con filtro " +filtro , "ObtenerUsuariosFiltrados", TipoEvento.Message);
+                return mUsuarios;
+            }
+            catch (Exception e)
+            {
+                _registrarEnBitacora(SessionManager.GetUsuario() as Usuario, "Error inesperado: " + e.Message, "Login", TipoEvento.Error);
+                throw;
+            }
         }
 
         public List<Usuario> ObtenerUsuarios()
         {
-            return _usuarioRepository.ObtenerUsuarios();
+            try
+            {
+                List<Usuario> mUsuarios = _usuarioRepository.ObtenerUsuarios();
+                _registrarEnBitacora(SessionManager.GetUsuario() as Usuario, "Buscados todos los Usuarios", "ObtenerUsuariosFiltrados", TipoEvento.Message);
+                return mUsuarios;
+            }
+            catch (Exception e)
+            {
+                _registrarEnBitacora(SessionManager.GetUsuario() as Usuario, "Error inesperado: " + e.Message, "Login", TipoEvento.Error);
+                throw;
+            }
         }
 
         private void GuardarUsuarioHistorico(Usuario usuario, TipoOperacion tipoOperacion, string usuarioModificador)

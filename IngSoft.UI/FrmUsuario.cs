@@ -19,70 +19,80 @@ namespace IngSoft.UI
 {
     public partial class FrmUsuario : Form
     {
-        private readonly IUsuarioServices _usuarioServices;
+        private readonly IUsuarioServices _usuarioServices = SingleInstancesManager.Instance.ObtenerInstancia<IUsuarioServices>();
         private List<Usuario> _usuarios;
         public FrmUsuario()
         {
             InitializeComponent();
-            _usuarioServices = ServicesFactory.CreateUsuarioServices();
         }
 
         private void agregarNuevoToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EliminarControlesAdicionalesUsuario();
-            CrearTextBoxesUsuario();
+            CrearControlesAgregarUsuario();
         }
 
-        private void CrearTextBoxesUsuario()
+        private void CrearControlesAgregarUsuario()
         {
             FrmUsuarioFlexiblizador.TextBoxCreator("Usuario", new Point(FrmUsuario.ActiveForm.Width / 2 - 230, FrmUsuario.ActiveForm.Height / 8));
             FrmUsuarioFlexiblizador.TextBoxCreator("Nombre", new Point((FrmUsuario.ActiveForm.Width / 2 - 280) + (280), FrmUsuario.ActiveForm.Height / 8));
             FrmUsuarioFlexiblizador.TextBoxCreator("Apellido", new Point((FrmUsuario.ActiveForm.Width / 2 - 230), FrmUsuario.ActiveForm.Height / 4));
             FrmUsuarioFlexiblizador.TextBoxCreator("Email", new Point((FrmUsuario.ActiveForm.Width / 2 - 280) + (280), FrmUsuario.ActiveForm.Height / 4));
             FrmUsuarioFlexiblizador.TextBoxCreator("Contraseña", new Point((FrmUsuario.ActiveForm.Width / 2 - 230), (FrmUsuario.ActiveForm.Height / 8 + FrmUsuario.ActiveForm.Height / 4)));
-            FrmUsuarioFlexiblizador.TextBoxCreator("Repetir Contraseña", new Point((FrmUsuario.ActiveForm.Width / 2 - 280) + (280), (FrmUsuario.ActiveForm.Height / 8 + FrmUsuario.ActiveForm.Height / 4)));
             FrmUsuarioFlexiblizador.GuardarUsuarioButtonCreator();
         }
+        private void CrearControlesModificarUsuario()
+        {
+            _usuarios = _usuarioServices.ObtenerUsuarios();
+            Point position = new Point(FrmUsuario.ActiveForm.Width / 16, FrmUsuario.ActiveForm.Height / 8);
+            Size size = new Size(FrmUsuario.ActiveForm.Width / 2 - FrmUsuario.ActiveForm.Width / 16, FrmUsuario.ActiveForm.Height / 2 + FrmUsuario.ActiveForm.Height / 4);
+            new FrmUsuarioFlexiblizador().dataGridViewWithSelectionChanged(_usuarios, position, size);
+            Point pointInicial = new Point(FrmUsuario.ActiveForm.Width / 2 + 20, FrmUsuario.ActiveForm.Height / 16);
+            FrmUsuarioFlexiblizador.TextBoxCreator("UserName", new Point(pointInicial.X, pointInicial.Y + FrmUsuario.ActiveForm.Height / 10));
+            FrmUsuarioFlexiblizador.TextBoxCreator("Nombre", new Point(pointInicial.X, pointInicial.Y + (FrmUsuario.ActiveForm.Height / 10) * 2));
+            FrmUsuarioFlexiblizador.TextBoxCreator("Apellido", new Point(pointInicial.X, pointInicial.Y + (FrmUsuario.ActiveForm.Height / 10) * 3));
+            FrmUsuarioFlexiblizador.TextBoxCreator("Email", new Point(pointInicial.X, pointInicial.Y + (FrmUsuario.ActiveForm.Height / 10) * 4));
+            FrmUsuarioFlexiblizador.CheckboxCreator("Bloqueado", new Point(pointInicial.X, pointInicial.Y + (FrmUsuario.ActiveForm.Height / 10) * 6));
+            FrmUsuarioFlexiblizador.ModificarUsuarioButtonCreator(new Point(pointInicial.X, pointInicial.Y + (FrmUsuario.ActiveForm.Height / 10) * 7));
+        }
 
-       
         private void verTodosToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EliminarControlesAdicionalesUsuario();
             _usuarios = _usuarioServices.ObtenerUsuarios();
-            FrmUsuarioFlexiblizador.DataGridViewUsuarioCreator(_usuarios);
+            Point position = new Point(FrmUsuario.ActiveForm.Width / 8, FrmUsuario.ActiveForm.Height / 8);
+            Size size = new Size(FrmUsuario.ActiveForm.Width / 2 + FrmUsuario.ActiveForm.Width / 4, FrmUsuario.ActiveForm.Height / 2 + FrmUsuario.ActiveForm.Height / 4);
+            FrmUsuarioFlexiblizador.DataGridViewUsuarioCreator(_usuarios,position,size);
         }
 
 
         internal void EliminarControlesAdicionalesUsuario()
         {
-            Control menuStrip = FrmUsuario.ActiveForm.Controls.Find("menuStrip1", true).FirstOrDefault();
-            ToolStripItemCollection botonera = ((MenuStrip)menuStrip).Items;
-            ActualizarBotoneraSesion(botonera);
-            FrmUsuario.ActiveForm.Controls.Clear();
-            FrmUsuario.ActiveForm.Controls.Add(menuStrip);
+            FlexibilizadorFormularios.EliminarControlesAdicionalesForm(this);
         }
 
-        private static void ActualizarBotoneraSesion(ToolStripItemCollection botonera)
-        {
-            ToolStripItem loginToolStripButton = botonera["loginToolStripMenuItem"];//botonera.Find("loginToolStripMenuItem", true).FirstOrDefault();
-            ToolStripItem logoutToolStripButton = botonera["cerrarSesionToolStripMenuItem"]; ;//botonera.Find("cerrarSesionToolStripMenuItem", true).FirstOrDefault();
-            ToolStripItem agregarUsuarioToolStripButton = botonera["agregarNuevoToolStripMenuItem"];
-            ToolStripItem verTodosToolStripButton = botonera["verTodosToolStripMenuItem"];
-            if (SessionManager.GetInstance().IsLoggedIn())
-            {
-                //loginToolStripButton.Visible = false;
-                //logoutToolStripButton.Visible = true;
-                agregarUsuarioToolStripButton.Visible = true;
-                verTodosToolStripButton.Visible = true;
-            }
-            else
-            {
-                //loginToolStripButton.Visible = true;
-                //logoutToolStripButton.Visible = false;
-                agregarUsuarioToolStripButton.Visible = false;
-                verTodosToolStripButton.Visible = false;
-            }
-        }
+
+        //private static void ActualizarBotoneraSesion(ToolStripItemCollection botonera)
+        //{
+        //    ToolStripItem loginToolStripButton = botonera["loginToolStripMenuItem"];//botonera.Find("loginToolStripMenuItem", true).FirstOrDefault();
+        //    ToolStripItem logoutToolStripButton = botonera["cerrarSesionToolStripMenuItem"]; ;//botonera.Find("cerrarSesionToolStripMenuItem", true).FirstOrDefault();
+        //    ToolStripItem agregarUsuarioToolStripButton = botonera["agregarNuevoToolStripMenuItem"];
+        //    ToolStripItem verTodosToolStripButton = botonera["verTodosToolStripMenuItem"];
+        //    if (SessionManager.GetInstance().IsLoggedIn())
+        //    {
+        //        //loginToolStripButton.Visible = false;
+        //        //logoutToolStripButton.Visible = true;
+        //        agregarUsuarioToolStripButton.Visible = true;
+        //        verTodosToolStripButton.Visible = true;
+        //    }
+        //    else
+        //    {
+        //        //loginToolStripButton.Visible = true;
+        //        //logoutToolStripButton.Visible = false;
+        //        agregarUsuarioToolStripButton.Visible = false;
+        //        verTodosToolStripButton.Visible = false;
+        //    }
+        //}
 
         private void loginToolStripMenuItem_Click(object sender, EventArgs e)
         {
@@ -101,7 +111,6 @@ namespace IngSoft.UI
 
         private void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            _usuarioServices.SetRegistradoBitacora(FrmUsuarioFlexiblizador.RegistrarEnBitacora);
             _usuarioServices.LogOutUser();
             EliminarControlesAdicionalesUsuario();
         }
@@ -109,11 +118,17 @@ namespace IngSoft.UI
         private void FrmUsuario_Shown(object sender, EventArgs e)
         {
             EliminarControlesAdicionalesUsuario();
+            FrmUsuarioFlexiblizador.ActualizarMenuSegunPermisosUsuario();
         }
 
         private void FrmUsuario_Load(object sender, EventArgs e)
         {
+        }
 
+        private void modificarUsuarioToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EliminarControlesAdicionalesUsuario();
+            CrearControlesModificarUsuario();
         }
     }
 }

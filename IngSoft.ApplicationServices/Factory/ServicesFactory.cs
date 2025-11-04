@@ -37,5 +37,10 @@ namespace IngSoft.ApplicationServices.Factory
             var traduccionRepository = FactoryRepository.CreateTraduccionRepository();
             return new MultidiomaServices(idiomaRepository, controlIdiomaRepository, bitacoraRepository, traduccionRepository);
         }
+        public static IPermisoServices CreatePermisoServices()
+        {
+            IPermisoRepository permisoRepository = FactoryRepository.CreatePermisoRepository();
+            return new PermisoServices(permisoRepository);
+        }
     }
 }

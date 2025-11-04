@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Security.Authentication;
 using System.Windows.Forms;
 using IngSoft.Abstractions.Multidioma;
 using IngSoft.ApplicationServices;
@@ -17,6 +18,8 @@ namespace IngSoft.UI
         private readonly IBitacoraServices bitacoraServices;
         private readonly IDigitoVerificadorServices digitoVerificadorServices;
         private readonly IMultidiomaServices _multidiomaServices;
+        //private readonly IUsuarioServices usuarioServices = SingleInstancesManager.Instance.ObtenerInstancia<IUsuarioServices>();
+        //private readonly IBitacoraServices bitacoraServices = SingleInstancesManager.Instance.ObtenerInstancia<IBitacoraServices>();
         public FrmLogin()
         {
             InitializeComponent();
@@ -53,9 +56,14 @@ namespace IngSoft.UI
                 //new FrmUsuario().EliminarControlesAdicionalesUsuario();
                 this.Close();
             }
-            catch (UnauthorizedAccessException UnAcExc)
+            catch(InvalidCredentialException)
             {
-                MessageBox.Show($"Error de autenticación: {UnAcExc.Message}");
+                MessageBox.Show($"Credenciales Incorrectas");
+                this.DialogResult = DialogResult.None;
+            }
+            catch (UnauthorizedAccessException)
+            {
+                MessageBox.Show($"Su cuenta está bloqueada");
                 this.DialogResult = DialogResult.None;
             }
             catch (Exception ex)

@@ -47,6 +47,7 @@
     <Compile Include="IEntity.cs" />
     <Compile Include="Multidioma\IControlIdioma.cs" />
     <Compile Include="Multidioma\IIdioma.cs" />
+    <Compile Include="ICompositable.cs" />
     <Compile Include="IUsuario.cs" />
     <Compile Include="Multidioma\IObserver.cs" />
     <Compile Include="Multidioma\ISubject.cs" />

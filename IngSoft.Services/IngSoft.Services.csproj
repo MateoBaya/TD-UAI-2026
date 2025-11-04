@@ -45,6 +45,7 @@
     <Compile Include="Encriptadores\EncriptadorManager.cs" />
     <Compile Include="Encriptadores\EncriptadorMD5.cs" />
     <Compile Include="MultidiomaManager.cs" />
+    <Compile Include="SingleInstancesManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SessionManager.cs" />
   </ItemGroup>

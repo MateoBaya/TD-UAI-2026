@@ -57,7 +57,9 @@
     <Compile Include="Factory\FactoryRepository.cs" />
     <Compile Include="IBitacoraRepository.cs" />
     <Compile Include="Implementation\DigitoVerificadorRepository.cs" />
+    <Compile Include="Implementation\PermisoRepository.cs" />
     <Compile Include="Implementation\UsuarioRepository.cs" />
+    <Compile Include="IPermisoRepository.cs" />
     <Compile Include="IUsuarioRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

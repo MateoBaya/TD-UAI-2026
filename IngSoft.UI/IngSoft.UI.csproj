@@ -60,6 +60,8 @@
     <Compile Include="FrmIntegridadDB.Designer.cs">
       <DependentUpon>FrmIntegridadDB.cs</DependentUpon>
     </Compile>
+    <Compile Include="Dictionary\DictionaryPermisos.cs" />
+    <Compile Include="FlexibilizadorFormularios.cs" />
     <Compile Include="FrmLogin.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -78,6 +80,13 @@
     <Compile Include="Multidioma\FrmMultidiomas.Designer.cs">
       <DependentUpon>FrmMultidiomas.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmPermiso.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmPermiso.Designer.cs">
+      <DependentUpon>FrmPermiso.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmPermisosFlexibilizador.cs" />
     <Compile Include="FrmPrincipal.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -90,6 +99,7 @@
     <Compile Include="FrmBitacora.Designer.cs">
       <DependentUpon>FrmBitacora.cs</DependentUpon>
     </Compile>
+    <Compile Include="FrmPrincipalFlexibilizador.cs" />
     <Compile Include="FrmUsuario.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -122,6 +132,8 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Multidioma\FrmMultidiomas.resx">
       <DependentUpon>FrmMultidiomas.cs</DependentUpon>
+    <EmbeddedResource Include="FrmPermiso.resx">
+      <DependentUpon>FrmPermiso.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmPrincipal.resx">
       <DependentUpon>FrmPrincipal.cs</DependentUpon>

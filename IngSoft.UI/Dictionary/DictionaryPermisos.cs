@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace IngSoft.UI.Dictionary
+{
+    public static class DictionaryPermisos
+    {
+        public static Dictionary<string, string> PermisoControl = new Dictionary<string, string>()
+        {
+            //Necesito dar vuelta el diccionario para que funcione bien
+
+            { "usuariosToolStripMenuItem", "Usuarios" },
+            { "agregarNuevoToolStripMenuItem","AltaUsuario" },
+            { "modificarUsuarioToolStripMenuItem","ModificarUsuario" },
+            { "verTodosToolStripMenuItem","VerTodosUsuarios" },
+            //{  "Eliminar Usuario","BajaUsuario" },
+            { "permisosToolStripMenuItem", "Permisos" },
+            {  "agregarPermisoToolStripMenuItem","AltaPermiso" },
+            { "asignarPermisoToolStripMenuItem", "AsignarPermisos" },
+            {  "modificarPermisoToolStripMenuItem","ModificarPermiso" },
+            {  "eliminarPermisoToolStripMenuItem","BajaPermiso" },
+            {  "bitacoraToolStripMenuItem", "Bitacora" }
+        };
+    }
+
+}
