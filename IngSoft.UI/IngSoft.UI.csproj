@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DTOs\BitacoraGridDto.cs" />
+    <Compile Include="DTOs\MultidiomaGridDto.cs" />
     <Compile Include="FrmControlDeCambios.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -64,6 +65,18 @@
     </Compile>
     <Compile Include="FrmLogin.Designer.cs">
       <DependentUpon>FrmLogin.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Multidioma\FrmCrearIdioma.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Multidioma\FrmCrearIdioma.Designer.cs">
+      <DependentUpon>FrmCrearIdioma.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Multidioma\FrmMultidiomas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Multidioma\FrmMultidiomas.Designer.cs">
+      <DependentUpon>FrmMultidiomas.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmPrincipal.cs">
       <SubType>Form</SubType>
@@ -84,6 +97,12 @@
       <DependentUpon>FrmUsuario.cs</DependentUpon>
     </Compile>
     <Compile Include="FrmUsuarioFlexiblizador.cs" />
+    <Compile Include="Multidioma\FrmModificarIdioma.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Multidioma\FrmModificarIdioma.Designer.cs">
+      <DependentUpon>FrmModificarIdioma.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="FrmControlDeCambios.resx">
@@ -94,6 +113,15 @@
     </EmbeddedResource>
     <EmbeddedResource Include="FrmLogin.resx">
       <DependentUpon>FrmLogin.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Multidioma\FrmCrearIdioma.resx">
+      <DependentUpon>FrmCrearIdioma.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Multidioma\FrmModificarIdioma.resx">
+      <DependentUpon>FrmModificarIdioma.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Multidioma\FrmMultidiomas.resx">
+      <DependentUpon>FrmMultidiomas.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmPrincipal.resx">
       <DependentUpon>FrmPrincipal.cs</DependentUpon>

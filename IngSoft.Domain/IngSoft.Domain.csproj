@@ -46,6 +46,9 @@
     <Compile Include="Entity.cs" />
     <Compile Include="Enums\TipoEvento.cs" />
     <Compile Include="Enums\TipoOperacion.cs" />
+    <Compile Include="Multidioma\ControlIdioma.cs" />
+    <Compile Include="Multidioma\Idioma.cs" />
+    <Compile Include="Multidioma\Traduccion.cs" />
     <Compile Include="Usuario.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UsuarioHistorico.cs" />

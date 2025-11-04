@@ -2,76 +2,33 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using IngSoft.Abstractions.Multidioma;
 using IngSoft.ApplicationServices;
 using IngSoft.ApplicationServices.Factory;
 using IngSoft.Domain;
-using IngSoft.Domain.Enums;
+using IngSoft.Domain.Multidioma;
+using IngSoft.Services;
 using IngSoft.UI.DTOs;
 
 namespace IngSoft.UI
 {
-    public partial class FrmBitacora : Form
+    public partial class FrmBitacora : Form, IObserver
     {
         private readonly IBitacoraServices _bitacoraServices;
+        private readonly IMultidiomaServices _multidiomaServices;
         private List<Bitacora> _bitacoras;
         public FrmBitacora()
         {
             InitializeComponent();
             _bitacoraServices = ServicesFactory.CreateBitacoraServices();
+            _multidiomaServices = ServicesFactory.CreateMultidiomaServices();
         }
 
         private void FrmBitacora_Load(object sender, EventArgs e)
         {
             CargarBitacora();
-        }
-
-        private void btnAddMessage_Click(object sender, EventArgs e)
-        {
-            var bitacora = new Bitacora {
-                Id = Guid.NewGuid(),
-                Usuario = new Usuario { IdUsuario = 1},
-                Fecha = DateTime.Now,
-                Descripcion = "Bitacora creada del tipo Message",
-                Origen = "FrmBitacora",
-                TipoEvento = TipoEvento.Message
-            };
-
-            _bitacoraServices.GuardarBitacora(bitacora);
-            CargarBitacora();
-        }
-
-        private void btnAddWarning_Click(object sender, EventArgs e)
-        {
-
-            var bitacora = new Bitacora
-            {
-                Id = Guid.NewGuid(),
-                Usuario = new Usuario { IdUsuario = 2 },
-                Fecha = DateTime.Now,
-                Descripcion = "Bitacora creada del tipo Warning",
-                Origen = "FrmBitacora",
-                TipoEvento = TipoEvento.Warning
-            };
-
-            _bitacoraServices.GuardarBitacora(bitacora);
-            CargarBitacora();
-        }
-
-        private void btnError_Click(object sender, EventArgs e)
-        {
-
-            var bitacora = new Bitacora
-            {
-                Id = Guid.NewGuid(),
-                Usuario = new Usuario { IdUsuario = 1 },
-                Fecha = DateTime.Now,
-                Descripcion = "Bitacora creada del tipo Error",
-                Origen = "FrmBitacora",
-                TipoEvento = TipoEvento.Error
-            };
-
-            _bitacoraServices.GuardarBitacora(bitacora);
-            CargarBitacora();
+            AplicarIdiomaActual();
+            SuscribirseAIdiomaActual();
         }
 
         private void txtBusquedaBitacora_TextChanged(object sender, EventArgs e)
@@ -182,6 +139,42 @@ namespace IngSoft.UI
         private void gridBitacora_DataBindingComplete(object sender, DataGridViewBindingCompleteEventArgs e)
         {
             gridBitacora.Columns["Descripcion"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill;
-        }        
+        }
+        public void Actualizar()
+        {
+            if(MultidiomaManager.GetIdioma() != null) 
+            {
+                var controles = _multidiomaServices.ObtenerControlesPorIdioma(MultidiomaManager.GetIdioma().Id);
+                MultidiomaManager.CambiarIdiomaControles(this, controles.Cast<IControlIdioma>().ToList());
+            }
+        }
+        private void SuscribirseAIdiomaActual()
+        {
+            var idioma = MultidiomaManager.GetIdioma();
+
+            if (idioma != null)
+            {
+                // Asegurarse de que sea la instancia cacheada
+                if (idioma is Idioma idiomaConcreto)
+                {
+                    var idiomaCacheado = MultidiomaManager.ObtenerIdiomaCache(idiomaConcreto);
+                    idiomaCacheado.Suscribir(this);
+                }
+                else
+                {
+                    idioma.Suscribir(this);
+                }
+            }
+        }
+        private void AplicarIdiomaActual()
+        {
+            // Aplicar el idioma actual al formulario
+            if (MultidiomaManager.GetIdioma() != null)
+            {
+                var controles = _multidiomaServices.ObtenerControlesPorIdioma(MultidiomaManager.GetIdioma().Id)
+                    .Cast<IControlIdioma>().ToList();
+                MultidiomaManager.CambiarIdiomaControles(this, controles);
+            }
+        }
     }
 }

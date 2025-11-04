@@ -1,25 +1,29 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
+using IngSoft.Abstractions.Multidioma;
 using IngSoft.ApplicationServices;
 using IngSoft.ApplicationServices.Factory;
 using IngSoft.Domain;
 using IngSoft.Domain.Enums;
+using IngSoft.Domain.Multidioma;
 using IngSoft.Services;
 
 namespace IngSoft.UI
 {
-    public partial class FrmLogin : Form
+    public partial class FrmLogin : Form, IObserver
     {
         private readonly IUsuarioServices usuarioServices;
         private readonly IBitacoraServices bitacoraServices;
         private readonly IDigitoVerificadorServices digitoVerificadorServices;
-
+        private readonly IMultidiomaServices _multidiomaServices;
         public FrmLogin()
         {
             InitializeComponent();
             usuarioServices = ServicesFactory.CreateUsuarioServices();
             bitacoraServices = ServicesFactory.CreateBitacoraServices();
             digitoVerificadorServices = ServicesFactory.CreateDigitoVerificadorServices();
+            _multidiomaServices = ServicesFactory.CreateMultidiomaServices();
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -77,7 +81,46 @@ namespace IngSoft.UI
 
         private void FrmLogin_Load(object sender, EventArgs e)
         {
+            SuscribirseAIdiomaActual();
+            AplicarIdiomaActual();
+        }
 
+        private void SuscribirseAIdiomaActual()
+        {
+            var idioma = MultidiomaManager.GetIdioma();
+
+            if (idioma != null)
+            {
+                // Asegurarse de que sea la instancia cacheada
+                if (idioma is Idioma idiomaConcreto)
+                {
+                    var idiomaCacheado = MultidiomaManager.ObtenerIdiomaCache(idiomaConcreto);
+                    idiomaCacheado.Suscribir(this);
+                }
+                else
+                {
+                    idioma.Suscribir(this);
+                }
+            }
+        }
+        private void AplicarIdiomaActual()
+        {
+            // Aplicar el idioma actual al formulario
+            if (MultidiomaManager.GetIdioma() != null)
+            {
+                var controles = _multidiomaServices.ObtenerControlesPorIdioma(MultidiomaManager.GetIdioma().Id)
+                    .Cast<IControlIdioma>().ToList();
+                MultidiomaManager.CambiarIdiomaControles(this, controles);
+            }
+        }
+
+        public void Actualizar()
+        {
+            if (MultidiomaManager.GetIdioma() != null)
+            {
+                var controles = _multidiomaServices.ObtenerControlesPorIdioma(MultidiomaManager.GetIdioma().Id);
+                MultidiomaManager.CambiarIdiomaControles(this, controles.Cast<IControlIdioma>().ToList());
+            }
         }
     }
 }

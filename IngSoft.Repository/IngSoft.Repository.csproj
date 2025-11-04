@@ -44,7 +44,13 @@
   <ItemGroup>
     <Compile Include="Dto\MessageErrorIntegridad.cs" />
     <Compile Include="Dto\ResultadoIntegridad.cs" />
+    <Compile Include="IControlIdiomaRepository.cs" />
+    <Compile Include="IIdiomaRepository.cs" />
+    <Compile Include="Implementation\ControlIdiomaRepository.cs" />
+    <Compile Include="Implementation\IdiomaRepository.cs" />
+    <Compile Include="Implementation\TraduccionRepository.cs" />
     <Compile Include="Implementation\UsuarioHistoricoRepository.cs" />
+    <Compile Include="ITraduccionRepository.cs" />
     <Compile Include="IUsuarioHistoricoRepository.cs" />
     <Compile Include="IDigitoVerificadorRepository.cs" />
     <Compile Include="Implementation\BitacoraRepository.cs" />

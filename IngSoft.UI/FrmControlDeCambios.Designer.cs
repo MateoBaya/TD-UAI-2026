@@ -31,7 +31,7 @@
             this.lblControlCambiosTitulo = new System.Windows.Forms.Label();
             this.lblEntidad = new System.Windows.Forms.Label();
             this.cboEntidades = new System.Windows.Forms.ComboBox();
-            this.lblUserNameCC = new System.Windows.Forms.Label();
+            this.lblUsuario = new System.Windows.Forms.Label();
             this.txtUserName = new System.Windows.Forms.TextBox();
             this.btnBuscar = new System.Windows.Forms.Button();
             this.dgvControlCambios = new System.Windows.Forms.DataGridView();
@@ -69,15 +69,15 @@
             this.cboEntidades.Size = new System.Drawing.Size(178, 24);
             this.cboEntidades.TabIndex = 2;
             // 
-            // lblUserNameCC
+            // lblUsuario
             // 
-            this.lblUserNameCC.AutoSize = true;
-            this.lblUserNameCC.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblUserNameCC.Location = new System.Drawing.Point(61, 130);
-            this.lblUserNameCC.Name = "lblUserNameCC";
-            this.lblUserNameCC.Size = new System.Drawing.Size(67, 20);
-            this.lblUserNameCC.TabIndex = 3;
-            this.lblUserNameCC.Text = "Usuario";
+            this.lblUsuario.AutoSize = true;
+            this.lblUsuario.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblUsuario.Location = new System.Drawing.Point(61, 130);
+            this.lblUsuario.Name = "lblUsuario";
+            this.lblUsuario.Size = new System.Drawing.Size(67, 20);
+            this.lblUsuario.TabIndex = 3;
+            this.lblUsuario.Text = "Usuario";
             // 
             // txtUserName
             // 
@@ -127,13 +127,14 @@
             this.Controls.Add(this.dgvControlCambios);
             this.Controls.Add(this.btnBuscar);
             this.Controls.Add(this.txtUserName);
-            this.Controls.Add(this.lblUserNameCC);
+            this.Controls.Add(this.lblUsuario);
             this.Controls.Add(this.cboEntidades);
             this.Controls.Add(this.lblEntidad);
             this.Controls.Add(this.lblControlCambiosTitulo);
             this.Name = "FrmControlDeCambios";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FrmControlDeCambios";
+            this.Load += new System.EventHandler(this.FrmControlDeCambios_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dgvControlCambios)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -145,7 +146,7 @@
         private System.Windows.Forms.Label lblControlCambiosTitulo;
         private System.Windows.Forms.Label lblEntidad;
         private System.Windows.Forms.ComboBox cboEntidades;
-        private System.Windows.Forms.Label lblUserNameCC;
+        private System.Windows.Forms.Label lblUsuario;
         private System.Windows.Forms.TextBox txtUserName;
         private System.Windows.Forms.Button btnBuscar;
         private System.Windows.Forms.DataGridView dgvControlCambios;

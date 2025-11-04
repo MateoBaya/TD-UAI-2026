@@ -28,5 +28,20 @@ namespace IngSoft.Repository.Factory
             IConnection connection = ConnectionFactory.CreateSqlServerConnection();
             return new UsuarioHistoricoRepository(connection);
         }
+        public static IIdiomaRepository CreateIdiomaRepository()
+        {
+            IConnection connection = ConnectionFactory.CreateSqlServerConnection();
+            return new IdiomaRepository(connection);
+        }
+        public static IControlIdiomaRepository CreateControlIdiomaRepository()
+        {
+            IConnection connection = ConnectionFactory.CreateSqlServerConnection();
+            return new ControlIdiomaRepository(connection);
+        }
+        public static ITraduccionRepository CreateTraduccionRepository()
+        {
+            IConnection connection = ConnectionFactory.CreateSqlServerConnection();
+            return new TraduccionRepository(connection);
+        }
     }
 }

@@ -44,7 +44,13 @@
     <Compile Include="Encriptador\IEncriptador.cs" />
     <Compile Include="Encriptador\IEncriptadorHash.cs" />
     <Compile Include="Encriptador\IEncriptadorKey.cs" />
+    <Compile Include="IEntity.cs" />
+    <Compile Include="Multidioma\IControlIdioma.cs" />
+    <Compile Include="Multidioma\IIdioma.cs" />
     <Compile Include="IUsuario.cs" />
+    <Compile Include="Multidioma\IObserver.cs" />
+    <Compile Include="Multidioma\ISubject.cs" />
+    <Compile Include="Multidioma\ITraduccion.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

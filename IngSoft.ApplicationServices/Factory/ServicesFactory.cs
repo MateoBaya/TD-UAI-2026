@@ -29,5 +29,13 @@ namespace IngSoft.ApplicationServices.Factory
             var bitacoraRepository = FactoryRepository.CreateBitacoraRepository();
             return new UsuarioHistoricoServices(usuarioHistoricoRepository, bitacoraRepository);
         }
+        public static IMultidiomaServices CreateMultidiomaServices()
+        {
+            var idiomaRepository = FactoryRepository.CreateIdiomaRepository();
+            var controlIdiomaRepository = FactoryRepository.CreateControlIdiomaRepository();
+            var bitacoraRepository = FactoryRepository.CreateBitacoraRepository();
+            var traduccionRepository = FactoryRepository.CreateTraduccionRepository();
+            return new MultidiomaServices(idiomaRepository, controlIdiomaRepository, bitacoraRepository, traduccionRepository);
+        }
     }
 }

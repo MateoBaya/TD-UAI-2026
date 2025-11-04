@@ -34,8 +34,11 @@
             this.cerrarSesionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.usuariosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.bitacoraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.label1 = new System.Windows.Forms.Label();
             this.controlDeCambiosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.multidiomasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.label1 = new System.Windows.Forms.Label();
+            this.lblIdioma = new System.Windows.Forms.Label();
+            this.cboIdiomas = new System.Windows.Forms.ComboBox();
             this.menuPrincipal.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -46,13 +49,13 @@
             this.sesionToolStripMenuItem,
             this.usuariosToolStripMenuItem,
             this.bitacoraToolStripMenuItem,
-            this.controlDeCambiosToolStripMenuItem});
+            this.controlDeCambiosToolStripMenuItem,
+            this.multidiomasToolStripMenuItem});
             this.menuPrincipal.Location = new System.Drawing.Point(0, 0);
             this.menuPrincipal.Name = "menuPrincipal";
             this.menuPrincipal.Size = new System.Drawing.Size(901, 28);
             this.menuPrincipal.TabIndex = 3;
             this.menuPrincipal.Text = "menuStrip1";
-            this.menuPrincipal.ItemClicked += new System.Windows.Forms.ToolStripItemClickedEventHandler(this.menuPrincipal_ItemClicked);
             // 
             // sesionToolStripMenuItem
             // 
@@ -91,6 +94,20 @@
             this.bitacoraToolStripMenuItem.Text = "Bitacora";
             this.bitacoraToolStripMenuItem.Click += new System.EventHandler(this.bitacoraToolStripMenuItem_Click);
             // 
+            // controlDeCambiosToolStripMenuItem
+            // 
+            this.controlDeCambiosToolStripMenuItem.Name = "controlDeCambiosToolStripMenuItem";
+            this.controlDeCambiosToolStripMenuItem.Size = new System.Drawing.Size(157, 24);
+            this.controlDeCambiosToolStripMenuItem.Text = "Control De Cambios";
+            this.controlDeCambiosToolStripMenuItem.Click += new System.EventHandler(this.controlDeCambiosToolStripMenuItem_Click);
+            // 
+            // multidiomasToolStripMenuItem
+            // 
+            this.multidiomasToolStripMenuItem.Name = "multidiomasToolStripMenuItem";
+            this.multidiomasToolStripMenuItem.Size = new System.Drawing.Size(106, 24);
+            this.multidiomasToolStripMenuItem.Text = "Multidiomas";
+            this.multidiomasToolStripMenuItem.Click += new System.EventHandler(this.multidiomasToolStripMenuItem_Click);
+            // 
             // label1
             // 
             this.label1.AutoSize = true;
@@ -101,16 +118,30 @@
             this.label1.TabIndex = 4;
             this.label1.Text = "label1";
             // 
-            // controlDeCambiosToolStripMenuItem
+            // lblIdioma
             // 
-            this.controlDeCambiosToolStripMenuItem.Name = "controlDeCambiosToolStripMenuItem";
-            this.controlDeCambiosToolStripMenuItem.Size = new System.Drawing.Size(157, 24);
-            this.controlDeCambiosToolStripMenuItem.Text = "Control De Cambios";
-            this.controlDeCambiosToolStripMenuItem.Click += new System.EventHandler(this.controlDeCambiosToolStripMenuItem_Click);
+            this.lblIdioma.AutoSize = true;
+            this.lblIdioma.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblIdioma.Location = new System.Drawing.Point(747, 41);
+            this.lblIdioma.Name = "lblIdioma";
+            this.lblIdioma.Size = new System.Drawing.Size(58, 20);
+            this.lblIdioma.TabIndex = 5;
+            this.lblIdioma.Text = "Idioma";
+            // 
+            // cboIdiomas
+            // 
+            this.cboIdiomas.FormattingEnabled = true;
+            this.cboIdiomas.Location = new System.Drawing.Point(811, 41);
+            this.cboIdiomas.Name = "cboIdiomas";
+            this.cboIdiomas.Size = new System.Drawing.Size(62, 24);
+            this.cboIdiomas.TabIndex = 6;
+            this.cboIdiomas.SelectedIndexChanged += new System.EventHandler(this.cboIdiomas_SelectedIndexChanged);
             // 
             // FrmPrincipal
             // 
             this.ClientSize = new System.Drawing.Size(901, 545);
+            this.Controls.Add(this.cboIdiomas);
+            this.Controls.Add(this.lblIdioma);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.menuPrincipal);
             this.MainMenuStrip = this.menuPrincipal;
@@ -133,6 +164,9 @@
         private System.Windows.Forms.ToolStripMenuItem bitacoraToolStripMenuItem;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ToolStripMenuItem controlDeCambiosToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem multidiomasToolStripMenuItem;
+        private System.Windows.Forms.Label lblIdioma;
+        private System.Windows.Forms.ComboBox cboIdiomas;
     }
 }
 

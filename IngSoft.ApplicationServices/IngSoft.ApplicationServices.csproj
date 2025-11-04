@@ -46,8 +46,10 @@
     <Compile Include="Factory\ServicesFactory.cs" />
     <Compile Include="IBitacoraServices.cs" />
     <Compile Include="IDigitoVerificadorServices.cs" />
+    <Compile Include="IMultidiomaServices.cs" />
     <Compile Include="Implementation\BitacoraServices.cs" />
     <Compile Include="Implementation\DigitoVerificadorServices.cs" />
+    <Compile Include="Implementation\MultidiomaServices.cs" />
     <Compile Include="Implementation\UsuarioHistoricoServices.cs" />
     <Compile Include="Implementation\UsuarioServices.cs" />
     <Compile Include="IUsuarioHistoricoServices.cs" />
