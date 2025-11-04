@@ -45,6 +45,7 @@
             // 
             // menuPrincipal
             // 
+            this.menuPrincipal.GripMargin = new System.Windows.Forms.Padding(2, 2, 0, 2);
             this.menuPrincipal.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuPrincipal.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.sesionToolStripMenuItem,
@@ -55,7 +56,7 @@
             this.permisosToolStripMenuItem});
             this.menuPrincipal.Location = new System.Drawing.Point(0, 0);
             this.menuPrincipal.Name = "menuPrincipal";
-            this.menuPrincipal.Size = new System.Drawing.Size(901, 28);
+            this.menuPrincipal.Size = new System.Drawing.Size(1706, 61);
             this.menuPrincipal.TabIndex = 3;
             this.menuPrincipal.Text = "menuStrip1";
             // 
@@ -65,54 +66,55 @@
             this.iniciarSesionToolStripMenuItem,
             this.cerrarSesionToolStripMenuItem});
             this.sesionToolStripMenuItem.Name = "sesionToolStripMenuItem";
-            this.sesionToolStripMenuItem.Size = new System.Drawing.Size(66, 24);
+            this.sesionToolStripMenuItem.Size = new System.Drawing.Size(151, 57);
             this.sesionToolStripMenuItem.Text = "Sesion";
             // 
             // iniciarSesionToolStripMenuItem
             // 
             this.iniciarSesionToolStripMenuItem.Name = "iniciarSesionToolStripMenuItem";
-            this.iniciarSesionToolStripMenuItem.Size = new System.Drawing.Size(179, 26);
+            this.iniciarSesionToolStripMenuItem.Size = new System.Drawing.Size(429, 66);
             this.iniciarSesionToolStripMenuItem.Text = "Iniciar Sesion";
             this.iniciarSesionToolStripMenuItem.Click += new System.EventHandler(this.iniciarSesionToolStripMenuItem_Click);
             // 
             // cerrarSesionToolStripMenuItem
             // 
             this.cerrarSesionToolStripMenuItem.Name = "cerrarSesionToolStripMenuItem";
-            this.cerrarSesionToolStripMenuItem.Size = new System.Drawing.Size(179, 26);
+            this.cerrarSesionToolStripMenuItem.Size = new System.Drawing.Size(429, 66);
             this.cerrarSesionToolStripMenuItem.Text = "Cerrar Sesion";
             this.cerrarSesionToolStripMenuItem.Click += new System.EventHandler(this.cerrarSesionToolStripMenuItem_Click);
             // 
             // usuariosToolStripMenuItem
             // 
             this.usuariosToolStripMenuItem.Name = "usuariosToolStripMenuItem";
-            this.usuariosToolStripMenuItem.Size = new System.Drawing.Size(79, 24);
+            this.usuariosToolStripMenuItem.Size = new System.Drawing.Size(184, 57);
             this.usuariosToolStripMenuItem.Text = "Usuarios";
             this.usuariosToolStripMenuItem.Click += new System.EventHandler(this.usuariosToolStripMenuItem_Click);
             // 
             // bitacoraToolStripMenuItem
             // 
             this.bitacoraToolStripMenuItem.Name = "bitacoraToolStripMenuItem";
-            this.bitacoraToolStripMenuItem.Size = new System.Drawing.Size(78, 24);
+            this.bitacoraToolStripMenuItem.Size = new System.Drawing.Size(177, 57);
             this.bitacoraToolStripMenuItem.Text = "Bitacora";
             this.bitacoraToolStripMenuItem.Click += new System.EventHandler(this.bitacoraToolStripMenuItem_Click);
-            //
+            // 
             // controlDeCambiosToolStripMenuItem
             // 
             this.controlDeCambiosToolStripMenuItem.Name = "controlDeCambiosToolStripMenuItem";
-            this.controlDeCambiosToolStripMenuItem.Size = new System.Drawing.Size(157, 24);
+            this.controlDeCambiosToolStripMenuItem.Size = new System.Drawing.Size(367, 57);
             this.controlDeCambiosToolStripMenuItem.Text = "Control De Cambios";
             this.controlDeCambiosToolStripMenuItem.Click += new System.EventHandler(this.controlDeCambiosToolStripMenuItem_Click);
             // 
             // multidiomasToolStripMenuItem
             // 
             this.multidiomasToolStripMenuItem.Name = "multidiomasToolStripMenuItem";
-            this.multidiomasToolStripMenuItem.Size = new System.Drawing.Size(106, 24);
+            this.multidiomasToolStripMenuItem.Size = new System.Drawing.Size(245, 57);
             this.multidiomasToolStripMenuItem.Text = "Multidiomas";
             this.multidiomasToolStripMenuItem.Click += new System.EventHandler(this.multidiomasToolStripMenuItem_Click);
+            // 
             // permisosToolStripMenuItem
             // 
             this.permisosToolStripMenuItem.Name = "permisosToolStripMenuItem";
-            this.permisosToolStripMenuItem.Size = new System.Drawing.Size(81, 24);
+            this.permisosToolStripMenuItem.Size = new System.Drawing.Size(190, 57);
             this.permisosToolStripMenuItem.Text = "Permisos";
             this.permisosToolStripMenuItem.Click += new System.EventHandler(this.permisosToolStripMenuItem_Click);
             // 
@@ -122,7 +124,7 @@
             this.label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 16.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(150, 211);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(92, 32);
+            this.label1.Size = new System.Drawing.Size(204, 74);
             this.label1.TabIndex = 4;
             this.label1.Text = "label1";
             // 
@@ -132,7 +134,7 @@
             this.lblIdioma.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.2F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblIdioma.Location = new System.Drawing.Point(747, 41);
             this.lblIdioma.Name = "lblIdioma";
-            this.lblIdioma.Size = new System.Drawing.Size(58, 20);
+            this.lblIdioma.Size = new System.Drawing.Size(144, 47);
             this.lblIdioma.TabIndex = 5;
             this.lblIdioma.Text = "Idioma";
             // 
@@ -141,13 +143,13 @@
             this.cboIdiomas.FormattingEnabled = true;
             this.cboIdiomas.Location = new System.Drawing.Point(811, 41);
             this.cboIdiomas.Name = "cboIdiomas";
-            this.cboIdiomas.Size = new System.Drawing.Size(62, 24);
+            this.cboIdiomas.Size = new System.Drawing.Size(62, 45);
             this.cboIdiomas.TabIndex = 6;
             this.cboIdiomas.SelectedIndexChanged += new System.EventHandler(this.cboIdiomas_SelectedIndexChanged);
             // 
             // FrmPrincipal
             // 
-            this.ClientSize = new System.Drawing.Size(901, 545);
+            this.ClientSize = new System.Drawing.Size(1706, 661);
             this.Controls.Add(this.cboIdiomas);
             this.Controls.Add(this.lblIdioma);
             this.Controls.Add(this.label1);

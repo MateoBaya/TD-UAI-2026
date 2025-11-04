@@ -10,7 +10,7 @@ namespace IngSoft.UI.Dictionary
 
             { "usuariosToolStripMenuItem", "Usuarios" },
             { "agregarNuevoToolStripMenuItem","AltaUsuario" },
-            { "modificarUsuarioToolStripMenuItem","ModificarUsuario" },
+            { "modificarUsuarioToolStripMenuItem","ModificarUsuarios" },
             { "verTodosToolStripMenuItem","VerTodosUsuarios" },
             //{  "Eliminar Usuario","BajaUsuario" },
             { "permisosToolStripMenuItem", "Permisos" },

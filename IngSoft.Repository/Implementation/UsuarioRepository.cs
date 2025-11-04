@@ -259,10 +259,10 @@ namespace IngSoft.Repository.Implementation
                         CantidadIntentos = u.CantidadIntentos
                     }).First<Usuario>();
                 }
-                else
-                {
-                    throw new ArgumentException("Usuario no Encontrado");
-                }
+                //else
+                //{
+                //    throw new ArgumentException("Usuario no Encontrado");
+                //}
             }
             return usuario;
         }
