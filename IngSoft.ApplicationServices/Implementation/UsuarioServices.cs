@@ -80,6 +80,7 @@ namespace IngSoft.ApplicationServices.Implementation
                 else
                 {
                     ModificarUsuario(usuario);
+                    GuardarUsuarioHistorico(usuario, TipoOperacion.UPDATE, SessionManager.GetUsuario().UserName);
                 }
                 //_usuarioRepository.GuardarUsuario(usuario);
                 //_registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, "Usuario creado/modificado exitosamente", "GuardarUsuario", TipoEvento.Message);
@@ -94,35 +95,46 @@ namespace IngSoft.ApplicationServices.Implementation
         {
             SessionManager session = SessionManager.GetInstance();
             Usuario usuarioStored = ObtenerUsuario(usuario.UserName);
-            if (usuarioStored != null && usuarioStored.Bloqueado)
-            {
-                _registrarEnBitacora(usuarioStored, "Intento de acceso con usuario bloqueado", "Login", TipoEvento.Warning);
-                throw new UnauthorizedAccessException("El usuario se encuentra bloqueado.");
+            if(usuarioStored != null)    
+            { 
+                if (usuarioStored.Bloqueado)
+                {
+                    _registrarEnBitacora(usuarioStored, "Intento de acceso con usuario bloqueado", "Login", TipoEvento.Warning);
+                    throw new UnauthorizedAccessException("El usuario se encuentra bloqueado.");
+                }
+                try
+                {
+                    IPermisoServices _permisoServices = ServicesFactory.CreatePermisoServices();
+                    PermisoComponent permisoRoot = _permisoServices.ObtenerPermisosPorUsuario(usuarioStored.UserName);
+                    session.LogIn(usuario, usuarioStored, permisoRoot);
+                    _registrarEnBitacora(usuarioStored, "Acceso exitoso", "Login", TipoEvento.Message);
+                    if(usuarioStored.CantidadIntentos>0)
+                    {
+                        usuarioStored.CantidadIntentos = 0;
+                        _usuarioRepository.ResetearIntentosFallidos(usuarioStored);
+                        GuardarUsuarioHistorico(usuarioStored, TipoOperacion.UPDATE, SessionManager.GetUsuario().UserName);
+                    }
+                }
+
+                catch (InvalidCredentialException)
+                {
+                    _registrarEnBitacora(usuarioStored, "Intento de acceso fallido", "Login", TipoEvento.Error);
+                    var usuarioConIntentos = _usuarioRepository.AumentarIntentosFallidos(usuarioStored);
+                    GuardarUsuarioHistorico(usuarioConIntentos, TipoOperacion.UPDATE, usuarioConIntentos.UserName);
+                    throw;
+                }
+                catch (Exception e)
+                {
+                    _registrarEnBitacora(usuarioStored, "Error inesperado: " + e.Message, "Login", TipoEvento.Error);
+                    throw;
+                }
             }
-            try
+            else
             {
-                IPermisoServices _permisoServices = ServicesFactory.CreatePermisoServices();
-                PermisoComponent permisoRoot = _permisoServices.ObtenerPermisosPorUsuario(usuarioStored.UserName);
-                session.LogIn(usuario, usuarioStored, permisoRoot);
-                _registrarEnBitacora(usuarioStored, "Acceso exitoso", "Login", TipoEvento.Message);
-                usuarioStored.CantidadIntentos = 0;
-                _usuarioRepository.ResetearIntentosFallidos(usuarioStored);
-                GuardarUsuarioHistorico(usuarioStored, TipoOperacion.UPDATE, SessionManager.GetUsuario().UserName);
+                throw new InvalidCredentialException("Credenciales incorrectas");
             }
 
-            catch (InvalidCredentialException)
-            {
-                _registrarEnBitacora(usuarioStored, "Intento de acceso fallido", "Login", TipoEvento.Error);
-                var usuarioConIntentos = _usuarioRepository.AumentarIntentosFallidos(usuarioStored);
-                GuardarUsuarioHistorico(usuarioConIntentos, TipoOperacion.UPDATE, usuarioConIntentos.UserName);
-                throw;
-            }
-            catch (Exception e)
-            {
-                _registrarEnBitacora(usuarioStored, "Error inesperado: " + e.Message, "Login", TipoEvento.Error);
-                throw;
-            }
-            return session;
+                return session;
         }
         public void LogOutUser()
         {
