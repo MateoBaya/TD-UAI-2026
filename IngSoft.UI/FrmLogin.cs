@@ -18,6 +18,7 @@ namespace IngSoft.UI
         //private readonly IBitacoraServices bitacoraServices;
         private readonly IDigitoVerificadorServices digitoVerificadorServices;
         private readonly IMultidiomaServices _multidiomaServices;
+        private readonly IPermisoServices permisoServices;
         private readonly IUsuarioServices usuarioServices = SingleInstancesManager.Instance.ObtenerInstancia<IUsuarioServices>();
         private readonly IBitacoraServices bitacoraServices = SingleInstancesManager.Instance.ObtenerInstancia<IBitacoraServices>();
         public FrmLogin()
@@ -27,6 +28,7 @@ namespace IngSoft.UI
             //bitacoraServices = ServicesFactory.CreateBitacoraServices();
             digitoVerificadorServices = ServicesFactory.CreateDigitoVerificadorServices();
             _multidiomaServices = ServicesFactory.CreateMultidiomaServices();
+            permisoServices = ServicesFactory.CreatePermisoServices();
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
@@ -46,7 +48,10 @@ namespace IngSoft.UI
                 
                 MessageBox.Show($"Iniciado sesion: {SessionManager.GetUsuario().UserName}");
 
-                if (!integridadDB.EsValida)
+                var permisos = permisoServices.ObtenerPermisosPorUsuario(SessionManager.GetUsuario().UserName);
+                var isAdmin = permisos.BuscarRecursivo(new PermisoAtomico { Nombre = "Admin" });
+
+                if (!integridadDB.EsValida && isAdmin != null)
                 {
                     var frmIntegridadDB = new FrmIntegridadDB(integridadDB);
                     frmIntegridadDB.ShowDialog();

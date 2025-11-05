@@ -46,47 +46,51 @@
             this.asignarPermisoToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
-            this.menuStrip1.Size = new System.Drawing.Size(800, 28);
+            this.menuStrip1.Padding = new System.Windows.Forms.Padding(4, 2, 0, 2);
+            this.menuStrip1.Size = new System.Drawing.Size(600, 24);
             this.menuStrip1.TabIndex = 0;
             this.menuStrip1.Text = "menuStrip1";
             // 
             // agregarPermisoToolStripMenuItem
             // 
             this.agregarPermisoToolStripMenuItem.Name = "agregarPermisoToolStripMenuItem";
-            this.agregarPermisoToolStripMenuItem.Size = new System.Drawing.Size(133, 24);
+            this.agregarPermisoToolStripMenuItem.Size = new System.Drawing.Size(107, 20);
             this.agregarPermisoToolStripMenuItem.Text = "Agregar Permiso";
             this.agregarPermisoToolStripMenuItem.Click += new System.EventHandler(this.verTodosToolStripMenuItem_Click);
             // 
             // modificarPermisoToolStripMenuItem
             // 
             this.modificarPermisoToolStripMenuItem.Name = "modificarPermisoToolStripMenuItem";
-            this.modificarPermisoToolStripMenuItem.Size = new System.Drawing.Size(143, 24);
+            this.modificarPermisoToolStripMenuItem.Size = new System.Drawing.Size(116, 20);
             this.modificarPermisoToolStripMenuItem.Text = "Modificar Permiso";
             this.modificarPermisoToolStripMenuItem.Click += new System.EventHandler(this.modificarPermisoToolStripMenuItem_Click);
             // 
             // eliminarPermisoToolStripMenuItem
             // 
             this.eliminarPermisoToolStripMenuItem.Name = "eliminarPermisoToolStripMenuItem";
-            this.eliminarPermisoToolStripMenuItem.Size = new System.Drawing.Size(133, 24);
+            this.eliminarPermisoToolStripMenuItem.Size = new System.Drawing.Size(108, 20);
             this.eliminarPermisoToolStripMenuItem.Text = "Eliminar Permiso";
             this.eliminarPermisoToolStripMenuItem.Click += new System.EventHandler(this.eliminarPermisoToolStripMenuItem_Click);
             // 
             // asignarPermisoToolStripMenuItem
             // 
             this.asignarPermisoToolStripMenuItem.Name = "asignarPermisoToolStripMenuItem";
-            this.asignarPermisoToolStripMenuItem.Size = new System.Drawing.Size(129, 24);
+            this.asignarPermisoToolStripMenuItem.Size = new System.Drawing.Size(105, 20);
             this.asignarPermisoToolStripMenuItem.Text = "Asignar Permiso";
             this.asignarPermisoToolStripMenuItem.Click += new System.EventHandler(this.asignarPermisoToolStripMenuItem_Click);
             // 
             // FrmPermiso
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.ClientSize = new System.Drawing.Size(600, 366);
             this.Controls.Add(this.menuStrip1);
             this.MainMenuStrip = this.menuStrip1;
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "FrmPermiso";
+            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FrmPermisos";
+            this.Load += new System.EventHandler(this.FrmPermiso_Load);
             this.Shown += new System.EventHandler(this.FrmPermiso_Shown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();

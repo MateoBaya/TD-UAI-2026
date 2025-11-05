@@ -1,23 +1,24 @@
-﻿using IngSoft.Domain;
-using IngSoft.Services;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
+﻿using System;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
+using IngSoft.Abstractions.Multidioma;
+using IngSoft.ApplicationServices;
+using IngSoft.ApplicationServices.Factory;
+using IngSoft.Domain;
+using IngSoft.Domain.Multidioma;
+using IngSoft.Services;
 
 namespace IngSoft.UI
 {
-    public partial class FrmPermiso : Form
+    public partial class FrmPermiso : Form, IObserver
     {
+        private readonly IMultidiomaServices _multidiomaServices;
+
         public FrmPermiso()
         {
             InitializeComponent();
+            _multidiomaServices = ServicesFactory.CreateMultidiomaServices();
         }
 
         internal void EliminarControlesAdicionales()
@@ -56,6 +57,7 @@ namespace IngSoft.UI
             Size sizePermisosPendientesQuitar = new Size(this.Width / 8, this.Height / 4);
             Point pointPermisosPendientesQuitar = new Point(pointPermisosPendientesAsignar.X + sizePermisosPendientesAsignar.Width +15, pointPermisosPendientesAsignar.Y);
             FrmPermisosFlexibilizador.PermisosPendientesRemoverTreeViewCreator(pointPermisosPendientesQuitar, sizePermisosPendientesQuitar);
+            AplicarIdiomaActual();
         }
 
         private void verTodosToolStripMenuItem_Click(object sender, EventArgs e)
@@ -68,6 +70,7 @@ namespace IngSoft.UI
             Point pointPadre = new Point(pointNombre.X, pointNombre.Y + 50);
             Point pointButton = new Point(pointNombre.X, pointPadre.Y + 50);
             FrmPermisosFlexibilizador.PantallaAgregarPermisoCreator(pointNombre,pointPadre,pointButton);
+            AplicarIdiomaActual();
         }
 
         private void eliminarPermisoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -79,6 +82,7 @@ namespace IngSoft.UI
             Point pointNombre = new Point(this.Width / 2 + this.Width / 16, this.Height / 4);
             Point pointButton = new Point(pointNombre.X, pointNombre.Y + 50);
             FrmPermisosFlexibilizador.PantallaEliminarPermisoCreator(pointNombre, pointButton);
+            AplicarIdiomaActual();
         }
 
         private void modificarPermisoToolStripMenuItem_Click(object sender, EventArgs e)
@@ -92,6 +96,49 @@ namespace IngSoft.UI
             Point pointPadre = new Point(pointNombre.X, pointNuevoNombre.Y + 50);
             Point pointButton = new Point(pointNombre.X, pointPadre.Y + 50);
             FrmPermisosFlexibilizador.PantallaModificarPermisoCreator(pointNombre, pointNuevoNombre, pointPadre, pointButton);
+            AplicarIdiomaActual();
+        }
+
+        private void FrmPermiso_Load(object sender, EventArgs e)
+        {
+            SuscribirseAIdiomaActual();
+            AplicarIdiomaActual();
+        }
+        private void SuscribirseAIdiomaActual()
+        {
+            var idioma = MultidiomaManager.GetIdioma();
+
+            if (idioma != null)
+            {
+                // Asegurarse de que sea la instancia cacheada
+                if (idioma is Idioma idiomaConcreto)
+                {
+                    var idiomaCacheado = MultidiomaManager.ObtenerIdiomaCache(idiomaConcreto);
+                    idiomaCacheado.Suscribir(this);
+                }
+                else
+                {
+                    idioma.Suscribir(this);
+                }
+            }
+        }
+        private void AplicarIdiomaActual()
+        {
+            // Aplicar el idioma actual al formulario
+            if (MultidiomaManager.GetIdioma() != null)
+            {
+                var controles = _multidiomaServices.ObtenerControlesPorIdioma(MultidiomaManager.GetIdioma().Id)
+                    .Cast<IControlIdioma>().ToList();
+                MultidiomaManager.CambiarIdiomaControles(this, controles);
+            }
+        }
+        public void Actualizar()
+        {
+            if (MultidiomaManager.GetIdioma() != null)
+            {
+                var controles = _multidiomaServices.ObtenerControlesPorIdioma(MultidiomaManager.GetIdioma().Id);
+                MultidiomaManager.CambiarIdiomaControles(this, controles.Cast<IControlIdioma>().ToList());
+            }
         }
     }
 }
