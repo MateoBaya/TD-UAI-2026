@@ -53,7 +53,7 @@ namespace IngSoft.UI
                 usuarioServices.GuardarUsuario(new Usuario
                 {
                     IdUsuario = 0,
-                    UserName = FrmUsuario.ActiveForm.Controls.Find("txtUsuario", true).FirstOrDefault() is TextBox txtUsuario ? txtUsuario.Text : string.Empty,
+                    UserName = FrmUsuario.ActiveForm.Controls.Find("txtUserName", true).FirstOrDefault() is TextBox txtUsuario ? txtUsuario.Text : string.Empty,
                     Nombre = FrmUsuario.ActiveForm.Controls.Find("txtNombre", true).FirstOrDefault() is TextBox txtNombre ? txtNombre.Text : string.Empty,
                     Apellido = FrmUsuario.ActiveForm.Controls.Find("txtApellido", true).FirstOrDefault() is TextBox txtApellido ? txtApellido.Text : string.Empty,
                     Email = FrmUsuario.ActiveForm.Controls.Find("txtEmail", true).FirstOrDefault() is TextBox txtEmail ? txtEmail.Text : string.Empty,
@@ -73,7 +73,7 @@ namespace IngSoft.UI
             IUsuarioServices usuarioServices = ServicesFactory.CreateUsuarioServices();
             try
             {
-                /*usuarioServices.ModificarUsuario(new Usuario
+                usuarioServices.ModificarUsuario(new Usuario
                 {
                     UserName = FrmUsuario.ActiveForm.Controls.Find("txtUserName", true).FirstOrDefault() is TextBox txtUsuario ? txtUsuario.Text : string.Empty,
                     Nombre = FrmUsuario.ActiveForm.Controls.Find("txtNombre", true).FirstOrDefault() is TextBox txtNombre ? txtNombre.Text : string.Empty,
@@ -81,7 +81,7 @@ namespace IngSoft.UI
                     Email = FrmUsuario.ActiveForm.Controls.Find("txtEmail", true).FirstOrDefault() is TextBox txtEmail ? txtEmail.Text : string.Empty,
                     Contrasena = FrmUsuario.ActiveForm.Controls.Find("txtContraseña", true).FirstOrDefault() is TextBox txtContraseña ? txtContraseña.Text : string.Empty,
                     Bloqueado = FrmUsuario.ActiveForm.Controls.Find("chkBloqueado", true).FirstOrDefault() is CheckBox chkBloqueado ? chkBloqueado.Checked : false
-                });*/
+                });
                 MessageBox.Show("Usuario modificado con éxito.");
                 new FrmUsuario().EliminarControlesAdicionalesUsuario();
             }
@@ -99,7 +99,7 @@ namespace IngSoft.UI
 
             Usuario mUsuarioActual = new Usuario
             {
-                UserName = FrmUsuario.ActiveForm.Controls.Find("txtUsuario", true).FirstOrDefault() is TextBox txtUsuario ? txtUsuario.Text : string.Empty,
+                UserName = FrmUsuario.ActiveForm.Controls.Find("txtUserName", true).FirstOrDefault() is TextBox txtUsuario ? txtUsuario.Text : string.Empty,
                 Contrasena = FrmUsuario.ActiveForm.Controls.Find("txtContraseña", true).FirstOrDefault() is TextBox txtContraseña ? txtContraseña.Text : string.Empty
             };
             try

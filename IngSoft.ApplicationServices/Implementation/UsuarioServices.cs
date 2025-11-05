@@ -1,15 +1,13 @@
 ﻿
+using System;
+using System.Collections.Generic;
+using System.Security.Authentication;
 using IngSoft.ApplicationServices.Factory;
-using IngSoft.ApplicationServices.Implementation;
 using IngSoft.Domain;
 using IngSoft.Domain.Enums;
 using IngSoft.Repository;
 using IngSoft.Repository.Factory;
 using IngSoft.Services;
-using System;
-using System.Collections.Generic;
-using System.Runtime.CompilerServices;
-using System.Security.Authentication;
 
 namespace IngSoft.ApplicationServices.Implementation
 {
@@ -22,20 +20,6 @@ namespace IngSoft.ApplicationServices.Implementation
         {
             _usuarioRepository = usuarioRepository ?? FactoryRepository.CreateUsuarioRepository();
             _usuarioHistoricoServices = usuarioHistoricoServices ?? ServicesFactory.CreateUsuarioHistoricoServices();
-        }
-
-        public void ModificarUsuario(Usuario usuario)
-        {
-            try
-            {
-                _usuarioRepository.ModificarUsuario(usuario);
-                _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, "Usuario modificado exitosamente", "ModificarUsuario", TipoEvento.Message);
-            }
-            catch (Exception)
-            {
-                _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, "Error al modificar usuario", "ModificarUsuario", TipoEvento.Error);
-                throw;
-            }
         }
 
         public void CrearUsuario(Usuario usuario)
@@ -53,7 +37,7 @@ namespace IngSoft.ApplicationServices.Implementation
             }
         }
 
-        public void ModificarUsuario(Usuario usuario, string x)
+        public void ModificarUsuario(Usuario usuario)
         {
             try
             {
