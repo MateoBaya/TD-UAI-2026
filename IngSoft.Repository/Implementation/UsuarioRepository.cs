@@ -113,7 +113,7 @@ namespace IngSoft.Repository.Implementation
                         {"@Nombre", usuario.Nombre },
                         {"@Apellido", usuario.Apellido },
                         {"@Email", usuario.Email },
-                        {"@Contrasena", usuario.Contrasena },
+                        //{"@Contrasena", usuario.Contrasena },
                         {"@UserName", usuario.UserName },
                         {"@Dvh",  DigitoVerificadorRepository.CrearDVH(usuario)}
                     };
@@ -189,7 +189,7 @@ namespace IngSoft.Repository.Implementation
                 usuarioExistente.Email = usuario.Email;
                 usuarioExistente.Bloqueado = usuario.Bloqueado;
                 
-                if (usuario.Contrasena != string.Empty)
+                if (!string.IsNullOrEmpty(usuario.Contrasena))
                 {
                     usuarioExistente.Contrasena = mEncritpador.EncriptadorSecuencial(usuario.Contrasena);
                 }
