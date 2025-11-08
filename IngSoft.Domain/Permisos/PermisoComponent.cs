@@ -45,7 +45,7 @@ namespace IngSoft.Domain
                 }
                 if(HasParent() && value != null)
                 {
-                    throw new InvalidOperationException("El permiso ya tiene un padre asignado.");
+                    //throw new InvalidOperationException("El permiso ya tiene un padre asignado.");
                 }
                 parent = value;
             }

@@ -30,11 +30,25 @@ namespace IngSoft.Domain
                 throw new InvalidOperationException("No se puede agregar un permiso como hijo de sí mismo o crear una referencia circular.");
             }
 
-            if (!_children.Contains(compositable))
+
+            PermisoComponent permisoAgregar = compositable as PermisoComponent;
+            
+            // Acción que se ejecutará recursivamente sobre el compositable a agregar.
+            // Por cada permiso recorrido verificamos si ya existe en el root de este agrupamiento.
+            Action<PermisoComponent> validarNoExisteEnRoot = pc =>
             {
-                _children.Add(compositable);
-                compositable.RaisePermisoAsignado(this);
-            }
+                if (pc == null) return;
+                var root = this.EncontrarRoot();
+                if (root != null && root.Operacion(pc.Nombre))
+                {
+                    throw new InvalidOperationException($"El permiso '{pc.Nombre}' ya existe en el root y no puede agregarse duplicado.");
+                }
+            };
+
+            permisoAgregar.Ejecutar(validarNoExisteEnRoot);
+
+            _children.Add(compositable);
+            compositable.RaisePermisoAsignado(this);
             return this;
         }
 

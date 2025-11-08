@@ -228,6 +228,25 @@ namespace IngSoft.UI
                     {
                         if (node.Tag is PermisoComponent permiso)
                         {
+                            // Validación: recorrer permisosUsuario usando Ejecutar y comprobar si ya existe un permiso con el mismo nombre
+                            bool yaAsignado = false;
+                            if (permisosUsuario != null)
+                            {
+                                permisosUsuario.Ejecutar(pc =>
+                                {
+                                    if(pc.Operacion(permiso.Nombre))
+                                    {
+                                        yaAsignado = true;
+                                    }
+                                });
+                            }
+
+
+                            if (yaAsignado)
+                            {
+                                // Si ya está asignado, saltar o lanzar excepción según la política (aquí lanzamos excepción para notificar)
+                                throw new Exception($"El permiso '{permiso.Nombre}' ya está asignado al usuario '{usuarioSeleccionadoActual}'.");
+                            }
                             permisosUsuario.AddCompositable(permiso);
                             permisoServices.AsignarPermisoEnUsuario(permiso, usuarioSeleccionadoActual);
                         }
