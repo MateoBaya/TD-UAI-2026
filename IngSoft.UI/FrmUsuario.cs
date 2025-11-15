@@ -69,7 +69,7 @@ namespace IngSoft.UI
 
         internal void EliminarControlesAdicionalesUsuario()
         {
-            FlexibilizadorFormularios.EliminarControlesAdicionalesForm(this);
+            FlexibilizadorFormularios.EliminarControlesAdicionalesForm(FrmUsuario.ActiveForm);
         }
 
 

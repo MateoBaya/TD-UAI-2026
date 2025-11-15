@@ -243,6 +243,9 @@ namespace IngSoft.UI
 
                 // clear textbox
                 if (txt != null) txt.Text = string.Empty;
+
+                new FrmUsuario().EliminarControlesAdicionalesUsuario();
+                
             }
             catch (Exception ex)
             {
