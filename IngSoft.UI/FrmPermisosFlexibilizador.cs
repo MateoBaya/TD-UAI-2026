@@ -316,6 +316,7 @@ namespace IngSoft.UI
 
                 try
                 {
+                    permisosSistema.AddCompositable(nuevo);
                     permisoServices.GuardarPermiso(nuevo);
                     MessageBox.Show($"Permiso '{nombre}' guardado correctamente.");
 

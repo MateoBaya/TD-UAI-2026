@@ -30,6 +30,7 @@
         {
             this.lblIntegridadDBTitulo = new System.Windows.Forms.Label();
             this.dgvIntegridad = new System.Windows.Forms.DataGridView();
+            this.btnRecalcular = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvIntegridad)).BeginInit();
             this.SuspendLayout();
             // 
@@ -48,20 +49,31 @@
             // 
             this.dgvIntegridad.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvIntegridad.Location = new System.Drawing.Point(64, 101);
-            this.dgvIntegridad.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dgvIntegridad.Margin = new System.Windows.Forms.Padding(4);
             this.dgvIntegridad.Name = "dgvIntegridad";
             this.dgvIntegridad.RowHeadersWidth = 51;
             this.dgvIntegridad.Size = new System.Drawing.Size(919, 394);
             this.dgvIntegridad.TabIndex = 1;
+            // 
+            // btnRecalcular
+            // 
+            this.btnRecalcular.Location = new System.Drawing.Point(64, 29);
+            this.btnRecalcular.Name = "btnRecalcular";
+            this.btnRecalcular.Size = new System.Drawing.Size(187, 41);
+            this.btnRecalcular.TabIndex = 2;
+            this.btnRecalcular.Text = "Recalcular DV";
+            this.btnRecalcular.UseVisualStyleBackColor = true;
+            this.btnRecalcular.Click += new System.EventHandler(this.btnRecalcular_Click);
             // 
             // FrmIntegridadDB
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(1067, 554);
+            this.Controls.Add(this.btnRecalcular);
             this.Controls.Add(this.dgvIntegridad);
             this.Controls.Add(this.lblIntegridadDBTitulo);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "FrmIntegridadDB";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FrmIntegridadDB";
@@ -76,5 +88,6 @@
 
         private System.Windows.Forms.Label lblIntegridadDBTitulo;
         private System.Windows.Forms.DataGridView dgvIntegridad;
+        private System.Windows.Forms.Button btnRecalcular;
     }
 }

@@ -5,6 +5,7 @@ using IngSoft.Abstractions.Multidioma;
 using IngSoft.ApplicationServices;
 using IngSoft.ApplicationServices.Dto;
 using IngSoft.ApplicationServices.Factory;
+using IngSoft.ApplicationServices.Implementation;
 using IngSoft.Domain.Multidioma;
 using IngSoft.Services;
 
@@ -67,6 +68,12 @@ namespace IngSoft.UI
                     .Cast<IControlIdioma>().ToList();
                 MultidiomaManager.CambiarIdiomaControles(this, controles);
             }
+        }
+
+        private void btnRecalcular_Click(object sender, EventArgs e)
+        {
+            var digitoVerificadorServices = ServicesFactory.CreateDigitoVerificadorServices();
+
         }
     }
 }
