@@ -15,5 +15,6 @@ namespace IngSoft.Domain
         public bool Bloqueado { get; set; } = false;
         public int CantidadIntentos { get; set; } = 0;
         public string Dvh { get; set; }
+        public DateTime FechaEliminado { get; set; }
     }
 }

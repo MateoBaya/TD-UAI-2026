@@ -14,5 +14,6 @@ namespace IngSoft.Repository
         Usuario ObtenerUsuario(string username);
         Usuario CrearUsuario(Usuario usuario);
         Usuario ModificarUsuario(Usuario usuario);
+        Usuario EliminarUsuario(Usuario usuario);
     }
 }

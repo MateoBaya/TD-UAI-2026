@@ -20,19 +20,33 @@ namespace IngSoft.Repository.Implementation
         }
         public void GuardarPermiso(PermisoComponent permiso)
         {
+            Dictionary<string, object> parametros;
             _connection.NuevaConexion(connectionString);
-            try
+            if(string.IsNullOrEmpty(permiso.ParentName))
             {
-                var parametros = new Dictionary<string, object>
+                parametros = new Dictionary<string, object>
+                {
+                    { "@IdPermiso", permiso.Id },
+                    {"@NombrePermiso", permiso.Nombre }
+                };
+            }
+            else
+            {
+                parametros = new Dictionary<string, object>
                 {
                     { "@IdPermiso", permiso.Id },
                     {"@NombrePermiso", permiso.Nombre },
                     {"@PermisoParent", permiso.ParentName }
                 };
+            }
+            try
+            {
+
                 _connection.EjecutarSinResultado("AltaPermiso", parametros);
             }
             catch (Exception)
             {
+                _connection.CancelarTransaccion();
                 throw;
             }
             finally
@@ -113,6 +127,7 @@ namespace IngSoft.Repository.Implementation
             catch (Exception)
             {
                 _connection.CancelarTransaccion();
+                throw;
             }
             finally
             {
@@ -133,6 +148,7 @@ namespace IngSoft.Repository.Implementation
             }
             catch (Exception)
             {
+                _connection.CancelarTransaccion();
                 throw;
             }
             finally
@@ -145,17 +161,29 @@ namespace IngSoft.Repository.Implementation
             _connection.NuevaConexion(connectionString);
             try
             {
-                string permisoPadrePisado = string.IsNullOrEmpty(permisoPadre) ? null : permisoPadre ;
-                var parametros = new Dictionary<string, object>
+                Dictionary<string,object> parametros;
+                if (string.IsNullOrEmpty(permisoPadre))
                 {
-                    {"@NombrePermiso", permisoNombre },
-                    {"@NombreNuevo", nuevoNombre },
-                    { "@PermisoParent", permisoPadrePisado }
-                };
+                    parametros = new Dictionary<string, object>
+                    {
+                        {"@NombrePermiso", permisoNombre },
+                        {"@NombreNuevo", nuevoNombre }
+                    };
+                }
+                else
+                {
+                    parametros = new Dictionary<string, object>
+                    {
+                        {"@NombrePermiso", permisoNombre },
+                        {"@NombreNuevo", nuevoNombre },
+                        { "@PermisoParent", permisoPadre }
+                    };
+                }
                 _connection.EjecutarSinResultado("ModificarPermiso", parametros);
             }
             catch (Exception)
             {
+                _connection.CancelarTransaccion();
                 throw;
             }
             finally

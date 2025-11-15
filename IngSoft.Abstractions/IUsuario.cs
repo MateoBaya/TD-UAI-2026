@@ -11,6 +11,7 @@ namespace IngSoft.Abstractions
         string Contrasena {  get; set; }
         string Nombre {  get; set; }
         string Apellido {  get; set; }
+        DateTime FechaEliminado { get; set; }
     }
 
 }

@@ -36,6 +36,20 @@ namespace IngSoft.ApplicationServices.Implementation
                 throw;
             }
         }
+        public void EliminarUsuario(Usuario usuario)
+        {
+            try
+            {
+                var usuarioStored = _usuarioRepository.EliminarUsuario(usuario);
+                GuardarUsuarioHistorico(usuarioStored, TipoOperacion.DELETE, SessionManager.GetUsuario().UserName);
+                _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, "Usuario eliminado exitosamente", "EliminarUsuario", TipoEvento.Message);
+            }
+            catch (Exception)
+            {
+                _registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, "Error al eliminar usuario", "EliminarUsuario", TipoEvento.Error);
+                throw;
+            }
+        }
 
         public void ModificarUsuario(Usuario usuario)
         {

@@ -313,12 +313,23 @@ namespace IngSoft.UI
                     var tempParent = new PermisoAgrupamiento { Nombre = padre };
                     tempParent.Add(nuevo);
                 }
+                else
+                {
+                    padre = null;
+                }
 
                 try
                 {
-                    permisosSistema.AddCompositable(nuevo);
-                    permisoServices.GuardarPermiso(nuevo);
-                    MessageBox.Show($"Permiso '{nombre}' guardado correctamente.");
+                    if(permisosSistema.BuscarRecursivo(nuevo) != null)
+                    {
+                        MessageBox.Show($"El permiso '{nombre}' ya existe en el sistema.");
+                        return;
+                    }
+                    else
+                    {
+                        permisoServices.GuardarPermiso(nuevo);
+                        MessageBox.Show($"Permiso '{nombre}' guardado correctamente.");
+                    }
 
                     // limpiar campos
                     txtNombre.Text = string.Empty;
@@ -328,7 +339,7 @@ namespace IngSoft.UI
                     var treeSistema = parent.Controls.Find("treeViewPermisos", true).FirstOrDefault() as TreeView;
                     if (treeSistema != null)
                     {
-                        CrearArbolPermisosConSelector(treeSistema.Location, treeSistema.Size,Tree_AfterSelect_FillTextboxes);
+                        CrearArbolPermisosConSelector(treeSistema.Location, treeSistema.Size, Tree_AfterSelect_FillTextboxes);
                     }
                 }
                 catch (Exception ex)
@@ -362,7 +373,10 @@ namespace IngSoft.UI
                     MessageBox.Show("Nombre actual y Nombre nuevo no pueden estar vacíos.");
                     return;
                 }
-
+                if(string.IsNullOrEmpty(nombrePadre))
+                {
+                    nombrePadre = null;
+                }
                 IPermisoServices permisoServices = ServicesFactory.CreatePermisoServices();
                 try
                 {

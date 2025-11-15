@@ -133,7 +133,40 @@ namespace IngSoft.Repository.Implementation
                 _connection.FinalizarConexion();
             }            
         }
+        public Usuario EliminarUsuario(Usuario usuario)
+        {
+            _connection.NuevaConexion(connectionString);
+            try
+            {
+                var parametros = new Dictionary<string, object>
+                {
+                    {"@UserName", usuario.UserName }
+                };
+                Usuario usuarioInterno = ObtenerUsuarioInterno(usuario.UserName); // Verifica si el usuario existe
+                if(usuarioInterno == null)
+                {
+                    throw new ArgumentException("El usuario no existe");
+                }
+                if(usuarioInterno.FechaEliminado != null)
+                {
+                    throw new ArgumentException("El usuario ya fue eliminado");
+                }
 
+                _connection.EjecutarSinResultado("EliminarUsuario", parametros);
+                ActualizarDVV();
+
+                return usuarioInterno;
+            }
+            catch (Exception)
+            {
+                _connection.CancelarTransaccion();
+                throw;
+            }
+            finally
+            {
+                _connection.FinalizarConexion();
+            }
+        }
         public Usuario CrearUsuario(Usuario usuario)
         {
             EncriptadorExperto mEncritpador = new EncriptadorExperto();
@@ -184,6 +217,16 @@ namespace IngSoft.Repository.Implementation
                 _connection.IniciarTransaccion();
 
                 var usuarioExistente = ObtenerUsuarioInterno(usuario.UserName);
+
+                if(usuarioExistente == null)
+                {
+                    throw new ArgumentException("El usuario no existe");
+                }
+                if(usuarioExistente.FechaEliminado != null)
+                {
+                    throw new ArgumentException("El usuario fue eliminado");
+                }
+
                 usuarioExistente.Nombre = usuario.Nombre;
                 usuarioExistente.Apellido = usuario.Apellido;
                 usuarioExistente.Email = usuario.Email;
