@@ -9,6 +9,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using IngSoft.ApplicationServices.Implementation;
 
 namespace IngSoft.UI
 {
@@ -136,13 +137,13 @@ namespace IngSoft.UI
                 
             Dictionary<string, Type> columnDefinitions = new Dictionary<string, Type>
             {
-                { "Id", typeof(Guid) },
                 { "UserName", typeof(string) },
                 { "Email", typeof(string) },
                 { "Nombre", typeof(string) },
                 { "Apellido", typeof(string) },
                 { "Bloqueado", typeof(bool) },
-                { "CantidadIntentos", typeof(int) }
+                { "CantidadIntentos", typeof(int) },
+                { "FechaEliminado", typeof(DateTime) }
             };
 
             return FlexibilizadorFormularios.CreateDataGridView<Usuario>(FrmUsuario.ActiveForm, "dataGridViewUsuarios", position, size,columnDefinitions, pUsuarios);
@@ -195,6 +196,60 @@ namespace IngSoft.UI
                 }
             };
         }
+        internal static void EliminarUsuarioCreator(Point listPos, Size listSize, Point txtPos, Point btnPos)
+        {
+            var parent = FrmUsuario.ActiveForm;
+            if (parent == null) return;
 
+            // Get users
+            IUsuarioServices usuarioServices = ServicesFactory.CreateUsuarioServices();
+            List<Usuario> usuarios = new List<Usuario>();
+            try
+            {
+                usuarios = usuarioServices.ObtenerUsuarios();
+            }
+            catch(Exception)
+            {
+                MessageBox.Show("Error al obtener la lista de usuarios."); 
+                return;
+            }
+
+            // Create DataGridView with users (so selection fills textboxes similarly to modify flow)
+            var flex = new FrmUsuarioFlexiblizador();
+            flex.dataGridViewWithSelectionChanged(usuarios, listPos, listSize);
+
+            // Create textbox for username (will be filled by the DataGridView selection handler)
+            FlexibilizadorFormularios.CreateTextBox(parent, "UserName", txtPos);
+
+            FlexibilizadorFormularios.CreateButton(parent, "btnEliminarUsuario", btnPos, new Size(200, 30), "Eliminar Usuario", btnEliminar_Click);
+        }
+
+        private static void btnEliminar_Click(object sender, EventArgs e)
+        {
+            var txt = FrmUsuario.ActiveForm.Controls.Find("txtUserName", true).FirstOrDefault() as TextBox;
+            if (txt == null) return;
+            string username = txt.Text?.Trim();
+            if (string.IsNullOrEmpty(username))
+            {
+                MessageBox.Show("Ingrese el UserName del usuario a eliminar o selecciónelo de la lista.");
+                return;
+            }
+
+            try
+            {
+                IUsuarioServices usuarioServices = ServicesFactory.CreateUsuarioServices();
+                usuarioServices.EliminarUsuario(new Usuario { UserName = username });
+                MessageBox.Show($"Usuario '{username}' eliminado correctamente.");
+
+                // clear textbox
+                if (txt != null) txt.Text = string.Empty;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al eliminar usuario: {ex.Message}");
+            }
+
+            return;
+        }
     }
 }

@@ -138,6 +138,7 @@ namespace IngSoft.Repository.Implementation
             _connection.NuevaConexion(connectionString);
             try
             {
+                _connection.IniciarTransaccion();
                 var parametros = new Dictionary<string, object>
                 {
                     {"@UserName", usuario.UserName }
@@ -147,12 +148,13 @@ namespace IngSoft.Repository.Implementation
                 {
                     throw new ArgumentException("El usuario no existe");
                 }
-                if(usuarioInterno.FechaEliminado != null)
+                if(usuarioInterno.FechaEliminado != DateTime.MinValue)
                 {
                     throw new ArgumentException("El usuario ya fue eliminado");
                 }
 
                 _connection.EjecutarSinResultado("EliminarUsuario", parametros);
+                _connection.AceptarTransaccion();
                 ActualizarDVV();
 
                 return usuarioInterno;
@@ -214,6 +216,7 @@ namespace IngSoft.Repository.Implementation
             
             try
             {
+                Dictionary<string,object> parametros;
                 _connection.IniciarTransaccion();
 
                 var usuarioExistente = ObtenerUsuarioInterno(usuario.UserName);
@@ -222,22 +225,33 @@ namespace IngSoft.Repository.Implementation
                 {
                     throw new ArgumentException("El usuario no existe");
                 }
-                if(usuarioExistente.FechaEliminado != null)
-                {
-                    throw new ArgumentException("El usuario fue eliminado");
-                }
-
                 usuarioExistente.Nombre = usuario.Nombre;
                 usuarioExistente.Apellido = usuario.Apellido;
                 usuarioExistente.Email = usuario.Email;
                 usuarioExistente.Bloqueado = usuario.Bloqueado;
-                
+
                 if (!string.IsNullOrEmpty(usuario.Contrasena))
                 {
                     usuarioExistente.Contrasena = mEncritpador.EncriptadorSecuencial(usuario.Contrasena);
                 }
 
-                var parametros = new Dictionary<string, object>
+                if(usuario.FechaEliminado != DateTime.MinValue)
+                {
+                    usuarioExistente.FechaEliminado = usuario.FechaEliminado;
+                    parametros = new Dictionary<string, object>
+                    {
+                        {"@UserName", usuario.UserName },
+                        {"@Nombre", usuarioExistente.Nombre },
+                        {"@Apellido", usuarioExistente.Apellido },
+                        {"@Email", usuarioExistente.Email },
+                        {"@Bloqueado", usuarioExistente.Bloqueado },
+                        {"@Dvh", DigitoVerificadorRepository.CrearDVH(usuarioExistente)},
+                        {"@FechaEliminado", usuarioExistente.FechaEliminado }
+                    };
+                }
+                else
+                {
+                    parametros = new Dictionary<string, object>
                     {
                         {"@UserName", usuario.UserName },
                         {"@Nombre", usuarioExistente.Nombre },
@@ -246,7 +260,9 @@ namespace IngSoft.Repository.Implementation
                         {"@Bloqueado", usuarioExistente.Bloqueado },
                         {"@Dvh", DigitoVerificadorRepository.CrearDVH(usuarioExistente)}
                     };
-                _connection.EjecutarSinResultado("ModificarUsuario", parametros);
+                }
+
+                    _connection.EjecutarSinResultado("ModificarUsuario", parametros);
                 _connection.AceptarTransaccion();
                 ActualizarDVV();
                 return usuarioExistente;
@@ -300,7 +316,8 @@ namespace IngSoft.Repository.Implementation
                         Contrasena = u.Contrasena,
                         UserName = u.UserName,
                         Bloqueado = u.Bloqueado,
-                        CantidadIntentos = u.CantidadIntentos
+                        CantidadIntentos = u.CantidadIntentos,
+                        FechaEliminado = u.FechaEliminado
                     }).First<Usuario>();
                 }
                 //else
@@ -326,7 +343,8 @@ namespace IngSoft.Repository.Implementation
                 UserName = u.UserName,
                 Bloqueado = u.Bloqueado,
                 CantidadIntentos = u.CantidadIntentos,
-                Dvh = u.Dvh
+                Dvh = u.Dvh,
+                FechaEliminado = u.FechaEliminado
             }).ToList();
             _connection.FinalizarConexion();
             return usuarios;

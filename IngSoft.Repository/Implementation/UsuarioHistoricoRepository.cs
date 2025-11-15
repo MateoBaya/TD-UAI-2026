@@ -23,22 +23,44 @@ namespace IngSoft.Repository.Implementation
 
             try
             {
-                var parametros = new Dictionary<string, object>
+                Dictionary<string, object> parametros;
+                if(usuarioHistorico.FechaEliminado == DateTime.MinValue)
                 {
-                    {"@Id", usuarioHistorico.Id },
-                    {"@IdUsuario", usuarioHistorico.IdUsuario },
-                    {"@Nombre", usuarioHistorico.Nombre },
-                    {"@Apellido", usuarioHistorico.Apellido },
-                    {"@Email", usuarioHistorico.Email },
-                    {"@UserName", usuarioHistorico.UserName },
-                    {"@Bloqueado", usuarioHistorico.Bloqueado },
-                    {"@CantidadIntentos", usuarioHistorico.CantidadIntentos },
-                    {"@FechaModificacion", usuarioHistorico.FechaModificacion },
-                    {"@TipoOperacion", usuarioHistorico.TipoOperacion },
-                    {"@UsuarioModificador", usuarioHistorico.UsuarioModificador }
-                };
+                    parametros = new Dictionary<string, object>
+                    {
+                        {"@Id", usuarioHistorico.Id },
+                        {"@IdUsuario", usuarioHistorico.IdUsuario },
+                        {"@Nombre", usuarioHistorico.Nombre },
+                        {"@Apellido", usuarioHistorico.Apellido },
+                        {"@Email", usuarioHistorico.Email },
+                        {"@UserName", usuarioHistorico.UserName },
+                        {"@Bloqueado", usuarioHistorico.Bloqueado },
+                        {"@CantidadIntentos", usuarioHistorico.CantidadIntentos },
+                        {"@FechaModificacion", usuarioHistorico.FechaModificacion },
+                        {"@TipoOperacion", usuarioHistorico.TipoOperacion },
+                        {"@UsuarioModificador", usuarioHistorico.UsuarioModificador }
+                    };
+                }
+                else
+                {
+                    parametros = new Dictionary<string, object>
+                    {
+                        {"@Id", usuarioHistorico.Id },
+                        {"@IdUsuario", usuarioHistorico.IdUsuario },
+                        {"@Nombre", usuarioHistorico.Nombre },
+                        {"@Apellido", usuarioHistorico.Apellido },
+                        {"@Email", usuarioHistorico.Email },
+                        {"@UserName", usuarioHistorico.UserName },
+                        {"@Bloqueado", usuarioHistorico.Bloqueado },
+                        {"@CantidadIntentos", usuarioHistorico.CantidadIntentos },
+                        { "@FechaEliminado",usuarioHistorico.FechaEliminado },
+                        {"@FechaModificacion", usuarioHistorico.FechaModificacion },
+                        {"@TipoOperacion", usuarioHistorico.TipoOperacion },
+                        {"@UsuarioModificador", usuarioHistorico.UsuarioModificador }
+                    };
+                }
 
-                _connection.EjecutarSinResultado("GuardarUsuarioHistorico", parametros);
+                    _connection.EjecutarSinResultado("GuardarUsuarioHistorico", parametros);
             }
             catch (Exception)
             {

@@ -32,6 +32,7 @@
             this.modificarUsuarioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.agregarNuevoToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.verTodosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.eliminarUsuarioToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.menuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -41,6 +42,7 @@
             this.menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.modificarUsuarioToolStripMenuItem,
             this.agregarNuevoToolStripMenuItem,
+            this.eliminarUsuarioToolStripMenuItem,
             this.verTodosToolStripMenuItem});
             this.menuStrip1.Location = new System.Drawing.Point(0, 0);
             this.menuStrip1.Name = "menuStrip1";
@@ -69,6 +71,13 @@
             this.verTodosToolStripMenuItem.Text = "Ver Todos";
             this.verTodosToolStripMenuItem.Click += new System.EventHandler(this.verTodosToolStripMenuItem_Click);
             // 
+            // eliminarUsuarioToolStripMenuItem
+            // 
+            this.eliminarUsuarioToolStripMenuItem.Name = "eliminarUsuarioToolStripMenuItem";
+            this.eliminarUsuarioToolStripMenuItem.Size = new System.Drawing.Size(131, 24);
+            this.eliminarUsuarioToolStripMenuItem.Text = "Eliminar Usuario";
+            this.eliminarUsuarioToolStripMenuItem.Click += new System.EventHandler(this.eliminarUsuarioToolStripMenuItem_Click);
+            // 
             // FrmUsuario
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -93,5 +102,6 @@
         private System.Windows.Forms.ToolStripMenuItem agregarNuevoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem verTodosToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem modificarUsuarioToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem eliminarUsuarioToolStripMenuItem;
     }
 }

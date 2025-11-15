@@ -15,5 +15,6 @@ namespace IngSoft.Domain
         public DateTime FechaModificacion { get; set; }
         public TipoOperacion TipoOperacion { get; set; }
         public string UsuarioModificador { get; set; }
+        public DateTime FechaEliminado { get; set; }
     }
 }

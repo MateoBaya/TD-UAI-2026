@@ -100,6 +100,11 @@ namespace IngSoft.ApplicationServices.Implementation
                     _registrarEnBitacora(usuarioStored, "Intento de acceso con usuario bloqueado", "Login", TipoEvento.Warning);
                     throw new UnauthorizedAccessException("El usuario se encuentra bloqueado.");
                 }
+                if (usuarioStored.FechaEliminado != DateTime.MinValue)
+                {
+                    _registrarEnBitacora(usuarioStored, "Intento de acceso con usuario eliminado", "Login", TipoEvento.Warning);
+                    throw new InvalidCredentialException("Credenciales Incorrectas.");
+                }
                 try
                 {
                     IPermisoServices _permisoServices = ServicesFactory.CreatePermisoServices();
@@ -129,7 +134,7 @@ namespace IngSoft.ApplicationServices.Implementation
             }
             else
             {
-                throw new InvalidCredentialException("Credenciales incorrectas");
+                throw new InvalidCredentialException("Credenciales Incorrectas.");
             }
 
                 return session;
@@ -211,7 +216,8 @@ namespace IngSoft.ApplicationServices.Implementation
                 CantidadIntentos = usuario.CantidadIntentos,
                 FechaModificacion = DateTime.Now,
                 TipoOperacion = tipoOperacion,
-                UsuarioModificador = usuarioModificador
+                UsuarioModificador = usuarioModificador,
+                FechaEliminado = usuario.FechaEliminado
             });
         }
     }

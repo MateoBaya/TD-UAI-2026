@@ -171,5 +171,15 @@ namespace IngSoft.UI
                 MultidiomaManager.CambiarIdiomaControles(this, controles.Cast<IControlIdioma>().ToList());
             }
         }
+
+        private void eliminarUsuarioToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Point dgvPosition = new Point(this.Size.Width / 16, this.Size.Height / 16);
+            Size listSize = new Size(this.Size.Width / 2-this.Size.Width/16, this.Size.Height - this.Height/6);
+            Point txtPosition = new Point(this.Size.Width / 2+this.Size.Width/6, this.Size.Height / 4);
+            Point buttonPosition = new Point(txtPosition.X,txtPosition.Y+50);
+            EliminarControlesAdicionalesUsuario();
+            FrmUsuarioFlexiblizador.EliminarUsuarioCreator(dgvPosition, listSize, txtPosition, buttonPosition);
+        }
     }
 }

@@ -198,7 +198,7 @@ namespace IngSoft.DBConnection
 
                 oneCommand.ExecuteNonQuery();
             }
-        }
+            }
 
         private void MapDataRowToInstance<T>(DataRow row, T instance)
         {

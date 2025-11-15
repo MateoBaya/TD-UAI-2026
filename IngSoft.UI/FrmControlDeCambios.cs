@@ -30,18 +30,23 @@ namespace IngSoft.UI
 
         private void btnBuscar_Click(object sender, EventArgs e)
         {
-            if(cboEntidades.SelectedItem is null) 
+            if (cboEntidades.SelectedItem is null)
             {
                 MessageBox.Show("Seleccione una entidad para buscar.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
-            if(txtUserName.Text == "")
+            if (txtUserName.Text == "")
             {
                 MessageBox.Show("Ingrese un nombre de usuario para buscar.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
 
+            ActualizarGridView();
+        }
+
+        private void ActualizarGridView()
+        {
             var historico = _usuarioHistoricoServices.ObtenerUsuarioHistorico(txtUserName.Text);
             dgvControlCambios.DataSource = historico;
             dgvControlCambios.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
@@ -75,6 +80,7 @@ namespace IngSoft.UI
             dgvControlCambios.Columns["FechaModificacion"].HeaderText = "Fecha";
             dgvControlCambios.Columns["UsuarioModificador"].HeaderText = "Modificado Por";
         }
+
         private void DgvControlCambios_CellFormatting(object sender, DataGridViewCellFormattingEventArgs e)
         {
             // Verificar si es la columna Bloqueado
@@ -105,7 +111,7 @@ namespace IngSoft.UI
                 MessageBox.Show("Seleccione un registro para restaurar.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-
+            
             var usuarioARevertir = new Usuario
             {
                 IdUsuario = usuarioHistorico.IdUsuario,
@@ -114,10 +120,11 @@ namespace IngSoft.UI
                 Email = usuarioHistorico.Email,
                 UserName = usuarioHistorico.UserName,
                 Bloqueado = usuarioHistorico.Bloqueado,
-                CantidadIntentos = usuarioHistorico.CantidadIntentos
+                CantidadIntentos = usuarioHistorico.CantidadIntentos,
+                FechaEliminado = usuarioHistorico.FechaEliminado
             };
-
             _usuarioServices.ModificarUsuario(usuarioARevertir);
+            ActualizarGridView();
         }
         private UsuarioHistorico ObtenerUsuarioHistoricoSeleccionado()
         {
