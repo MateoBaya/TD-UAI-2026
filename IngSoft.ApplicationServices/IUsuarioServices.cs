@@ -9,7 +9,6 @@ namespace IngSoft.ApplicationServices
     {
         void ModificarUsuario(Usuario usuario);
         void EliminarUsuario(Usuario usuario);
-        void GuardarUsuario(Usuario usuario);
         void SetRegistradoBitacora(Action<Usuario, string, string, Domain.Enums.TipoEvento> registrarEnBitacora);
         List<Usuario> ObtenerUsuarios();
         List<Usuario> ObtenerUsuarioFiltrados(string filtro);

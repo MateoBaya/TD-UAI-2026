@@ -13,7 +13,7 @@ namespace IngSoft.ApplicationServices.Implementation
         private readonly IDigitoVerificadorRepository _digitoVerificadorRepository;
         private readonly IBitacoraRepository _bitacoraRepository;
         
-        public DigitoVerificadorServices(IDigitoVerificadorRepository digitoVerificadorRepository, IBitacoraRepository bitacoraRepository)
+        internal DigitoVerificadorServices(IDigitoVerificadorRepository digitoVerificadorRepository, IBitacoraRepository bitacoraRepository)
         {
             _digitoVerificadorRepository = digitoVerificadorRepository ?? FactoryRepository.CreateDigitoVerificadorRepository();
             _bitacoraRepository = bitacoraRepository ?? FactoryRepository.CreateBitacoraRepository();

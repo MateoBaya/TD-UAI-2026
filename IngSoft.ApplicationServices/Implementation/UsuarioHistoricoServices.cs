@@ -12,7 +12,7 @@ namespace IngSoft.ApplicationServices.Implementation
         private readonly IUsuarioHistoricoRepository _usuarioHistoricoRepository;
         private readonly IBitacoraRepository _bitacoraRepository;
 
-        public UsuarioHistoricoServices(IUsuarioHistoricoRepository usuarioHistoricoRepository, IBitacoraRepository bitacoraRepository)
+        internal UsuarioHistoricoServices(IUsuarioHistoricoRepository usuarioHistoricoRepository, IBitacoraRepository bitacoraRepository)
         {
             _usuarioHistoricoRepository = usuarioHistoricoRepository ?? FactoryRepository.CreateUsuarioHistoricoRepository();
             _bitacoraRepository = bitacoraRepository ?? FactoryRepository.CreateBitacoraRepository();

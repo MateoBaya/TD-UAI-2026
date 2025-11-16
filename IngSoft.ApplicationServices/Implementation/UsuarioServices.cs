@@ -66,29 +66,6 @@ namespace IngSoft.ApplicationServices.Implementation
             }
         }
 
-        public void GuardarUsuario(Usuario usuario)
-        {
-            try
-            {
-                var usuarioStored = ObtenerUsuario(usuario.UserName);
-                if (usuarioStored == null)
-                {
-                    CrearUsuario(usuario);
-                }
-                else
-                {
-                    ModificarUsuario(usuario);
-                    GuardarUsuarioHistorico(usuario, TipoOperacion.UPDATE, SessionManager.GetUsuario().UserName);
-                }
-                //_usuarioRepository.GuardarUsuario(usuario);
-                //_registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, "Usuario creado/modificado exitosamente", "GuardarUsuario", TipoEvento.Message);
-            }
-            catch (Exception)
-            {
-                //_registrarEnBitacora(new Usuario { IdUsuario = SessionManager.GetUsuario().IdUsuario }, "Error al crear/modificar usuario", "GuardarUsuario", TipoEvento.Error);
-                throw;
-            }
-        }
         public SessionManager LoginUser(Usuario usuario)
         {
             SessionManager session = SessionManager.GetInstance();
@@ -165,7 +142,7 @@ namespace IngSoft.ApplicationServices.Implementation
                 _registrarEnBitacora(SessionManager.GetUsuario() as Usuario ?? usuario, "Error inesperado: " + e.Message, "Login", TipoEvento.Warning);
                 throw;
             }*/
-            catch (Exception e)
+            catch (Exception)
             {
                 //_registrarEnBitacora(SessionManager.GetUsuario() as Usuario ?? usuario, "Error inesperado: " + e.Message, "Login", TipoEvento.Error);
                 throw;

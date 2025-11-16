@@ -51,7 +51,7 @@ namespace IngSoft.UI
             IUsuarioServices usuarioServices = ServicesFactory.CreateUsuarioServices();
             try
             {
-                usuarioServices.GuardarUsuario(new Usuario
+                usuarioServices.CrearUsuario(new Usuario
                 {
                     IdUsuario = 0,
                     UserName = FrmUsuario.ActiveForm.Controls.Find("txtUserName", true).FirstOrDefault() is TextBox txtUsuario ? txtUsuario.Text : string.Empty,

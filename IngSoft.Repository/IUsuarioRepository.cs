@@ -5,8 +5,6 @@ namespace IngSoft.Repository
 {
     public interface IUsuarioRepository
     {
-        void ModificarUsuarioPrueba(Usuario usuario);
-        void GuardarUsuario(Usuario usuario);
         List<Usuario> ObtenerUsuarios();
         List<Usuario> ObtenerUsuariosFiltrados(string filtro);
         Usuario AumentarIntentosFallidos(Usuario usuario);
