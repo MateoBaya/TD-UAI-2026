@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using IngSoft.ApplicationServices.Dto;
 using IngSoft.Domain;
 using IngSoft.Domain.Enums;
@@ -17,6 +18,20 @@ namespace IngSoft.ApplicationServices.Implementation
         {
             _digitoVerificadorRepository = digitoVerificadorRepository ?? FactoryRepository.CreateDigitoVerificadorRepository();
             _bitacoraRepository = bitacoraRepository ?? FactoryRepository.CreateBitacoraRepository();
+        }
+
+        public void RecaulcularDigitosVerificadores()
+        {
+            try
+            {
+                _digitoVerificadorRepository.RecalcularDigitosVerificadores();
+                GuardarBitacora("Dígitos verificadores recalculados correctamente", TipoEvento.Message);
+            }
+            catch (Exception ex)
+            {
+                GuardarBitacora("Error al recalcular dígitos verificadores", TipoEvento.Error);
+                throw;
+            }
         }
 
         public ResultadoIntegridad ValidarIntegridad()

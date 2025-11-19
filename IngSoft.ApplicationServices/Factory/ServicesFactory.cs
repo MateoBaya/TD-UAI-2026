@@ -42,5 +42,11 @@ namespace IngSoft.ApplicationServices.Factory
             IPermisoRepository permisoRepository = FactoryRepository.CreatePermisoRepository();
             return new PermisoServices(permisoRepository);
         }
+        public static IBackupServices CreateBackupServices()
+        {
+            var backupRepository = FactoryRepository.CreateBackupRepository();
+            var bitacoraRepository = FactoryRepository.CreateBitacoraRepository();
+            return new BackupServices(backupRepository, bitacoraRepository);
+        }
     }
 }

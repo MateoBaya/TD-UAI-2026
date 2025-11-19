@@ -5,5 +5,6 @@ namespace IngSoft.ApplicationServices
     public interface IDigitoVerificadorServices
     {
         ResultadoIntegridad ValidarIntegridad();
+        void RecaulcularDigitosVerificadores();
     }
 }

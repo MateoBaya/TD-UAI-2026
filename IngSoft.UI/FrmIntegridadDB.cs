@@ -15,12 +15,14 @@ namespace IngSoft.UI
     {
         private ResultadoIntegridad _integridadDB;
         private readonly IMultidiomaServices _multidiomaServices;
+        private readonly IDigitoVerificadorServices _digitoVerificadorServices;
         public FrmIntegridadDB(ResultadoIntegridad integridadDB)
         {
             InitializeComponent();
             _integridadDB = integridadDB;
 
             _multidiomaServices = ServicesFactory.CreateMultidiomaServices();
+            _digitoVerificadorServices = ServicesFactory.CreateDigitoVerificadorServices();
         }
 
         private void FrmIntegridadDB_Load(object sender, EventArgs e)
@@ -72,8 +74,9 @@ namespace IngSoft.UI
 
         private void btnRecalcular_Click(object sender, EventArgs e)
         {
-            var digitoVerificadorServices = ServicesFactory.CreateDigitoVerificadorServices();
-
+            _digitoVerificadorServices.RecaulcularDigitosVerificadores();
+            MessageBox.Show("Dígitos verificadores recalculados correctamente.");
+            this.Close();
         }
     }
 }

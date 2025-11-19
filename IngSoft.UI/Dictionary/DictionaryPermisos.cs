@@ -23,6 +23,7 @@ namespace IngSoft.UI.Dictionary
             {  "multidiomasToolStripMenuItem", "Multidiomas" },
             {  "crearIdiomaToolStripMenuItem", "CrearIdioma" },
             {  "modificarIdiomaToolStripMenuItem", "ModificarIdioma" },
+            {  "backupsToolStripMenuItem", "Backup" },
         };
     }
 

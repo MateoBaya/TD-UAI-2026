@@ -155,5 +155,11 @@ namespace IngSoft.UI
         {
             FrmPrincipalFlexibilizador.ActualizarMenuSegunEstadoSesion();
         }
+
+        private void backupsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            var frmBackUp = new FrmBackUp();
+            frmBackUp.ShowDialog();
+        }
     }
 }

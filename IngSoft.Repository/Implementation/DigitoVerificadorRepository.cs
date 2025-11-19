@@ -10,6 +10,7 @@ using IngSoft.Domain;
 using IngSoft.Repository.Dto;
 using IngSoft.Repository.Factory;
 using IngSoft.Services.Encriptadores;
+using Microsoft.Win32;
 
 namespace IngSoft.Repository.Implementation
 {
@@ -167,6 +168,44 @@ namespace IngSoft.Repository.Implementation
             return resultado;
         }
 
+        public void RecalcularDigitosVerificadores()
+        {
+            var connectionString = ConfigurationManager.ConnectionStrings["IngSoftConnection"].ConnectionString;
+            _connection.NuevaConexion(connectionString);
+            try
+            {
+                var digitosVerificadores = ObtenerDigitosVerificadoresSinConexion();
+
+                var datosTablas = new Dictionary<string, List<object>>();
+                foreach (var dv in digitosVerificadores)
+                {
+                    datosTablas[dv.NombreTabla] = ObtenerRegistrosDeTabla(dv.NombreTabla);
+                }
+
+                _connection.IniciarTransaccion();
+
+                foreach (var dv in digitosVerificadores) 
+                {
+                    var registros = datosTablas[dv.NombreTabla];
+                    RecalcularDVHPorTablaYActualizarMemoria(dv.NombreTabla, registros);
+
+                    var nuevoDvv = CrearDVVDesdeRegistros(registros);
+                    ActualizarDVVSinConexion(dv.NombreTabla, nuevoDvv);
+                }
+
+                _connection.AceptarTransaccion();
+            }
+            catch (Exception)
+            {
+                _connection.CancelarTransaccion();
+                throw;
+            }
+            finally
+            {
+                _connection.FinalizarConexion();
+            }
+        }
+
         private List<MessageErrorIntegridad> ValidarDVHPorTabla(string tabla)
         {
             var errores = new List<MessageErrorIntegridad>();
@@ -237,6 +276,99 @@ namespace IngSoft.Repository.Implementation
             }
 
             return excluidas;
+        }
+
+        private void RecalcularDVHPorTablaYActualizarMemoria(string tabla, List<object> registros)
+        {
+            foreach (var registro in registros)
+            {
+                var dvhNuevo = CrearDVH(registro);
+
+                ActualizarDVHEnBD(tabla, registro, dvhNuevo);
+
+                ActualizarDVHEnMemoria(registro, dvhNuevo);
+            }
+        }
+        private void ActualizarDVHEnMemoria(object registro, string dvhNuevo)
+        {
+            var tipo = registro.GetType();
+            var propiedadDvh = tipo.GetProperty("Dvh", BindingFlags.Public | BindingFlags.Instance);
+
+            if (propiedadDvh != null && propiedadDvh.CanWrite)
+            {
+                propiedadDvh.SetValue(registro, dvhNuevo);
+            }
+        }
+
+        private void ActualizarDVHEnBD(string tabla, object registro, string dvhNuevo)
+        {
+            var tipo = registro.GetType();
+            string nombrePropiedadId = ObtenerNombrePropiedadId(tabla);
+            var propiedadId = tipo.GetProperty(nombrePropiedadId, BindingFlags.Public | BindingFlags.Instance);
+            var identificador = propiedadId?.GetValue(registro);
+
+            if (identificador == null)
+            {
+                throw new InvalidOperationException($"No se pudo obtener el identificador del registro en la tabla {tabla}");
+            }
+
+            var parametros = new Dictionary<string, object>
+            {
+                {"@Id", identificador},
+                {"@Dvh", dvhNuevo}
+            };
+
+            var storedProcedure = $"ActualizarDVH{tabla}";
+            _connection.EjecutarSinResultado(storedProcedure, parametros);
+        }
+        private List<DigitoVerificador> ObtenerDigitosVerificadoresSinConexion()
+        {
+            try
+            {
+                var resultado = _connection.EjecutarDataSet<DigitoVerificador>("ObtenerDigitosVerificadores", new Dictionary<string, object>());
+                return resultado;
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        private void ActualizarDVVSinConexion(string tabla, string nuevoDv)
+        {
+            try
+            {
+                var parametros = new Dictionary<string, object>
+        {
+            {"@NombreTabla", tabla},
+            {"@Dvv", nuevoDv }
+        };
+
+                _connection.EjecutarSinResultado("ActualizarDVV", parametros);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+        }
+        private string CrearDVVDesdeRegistros(List<object> registros)
+        {
+            var encriptador = new EncriptadorExperto();
+            var stringBuilder = new StringBuilder();
+
+            foreach (var registro in registros)
+            {
+                var tipo = registro.GetType();
+                var propiedad = tipo.GetProperty("Dvh", BindingFlags.Public | BindingFlags.Instance);
+
+                if (propiedad != null)
+                {
+                    var dvhValue = propiedad.GetValue(registro);
+                    stringBuilder.Append(dvhValue?.ToString() ?? string.Empty);
+                }
+            }
+
+            var input = stringBuilder.ToString();
+            return encriptador.EncriptadorSecuencial(input);
         }
     }
 }

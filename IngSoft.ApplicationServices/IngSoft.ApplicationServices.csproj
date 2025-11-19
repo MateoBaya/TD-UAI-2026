@@ -44,8 +44,10 @@
     <Compile Include="Dto\MessageErrorIntegridad.cs" />
     <Compile Include="Dto\ResultadoIntegridad.cs" />
     <Compile Include="Factory\ServicesFactory.cs" />
+    <Compile Include="IBackupServices.cs" />
     <Compile Include="IBitacoraServices.cs" />
     <Compile Include="IDigitoVerificadorServices.cs" />
+    <Compile Include="Implementation\BackupServices.cs" />
     <Compile Include="Implementation\UsuarioServices.cs" />
     <Compile Include="IMultidiomaServices.cs" />
     <Compile Include="Implementation\BitacoraServices.cs" />

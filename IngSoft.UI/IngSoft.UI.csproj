@@ -48,6 +48,12 @@
   <ItemGroup>
     <Compile Include="DTOs\BitacoraGridDto.cs" />
     <Compile Include="DTOs\MultidiomaGridDto.cs" />
+    <Compile Include="FrmBackUp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmBackUp.Designer.cs">
+      <DependentUpon>FrmBackUp.cs</DependentUpon>
+    </Compile>
     <Compile Include="FrmControlDeCambios.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -115,6 +121,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="FrmBackUp.resx">
+      <DependentUpon>FrmBackUp.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmControlDeCambios.resx">
       <DependentUpon>FrmControlDeCambios.cs</DependentUpon>
     </EmbeddedResource>
@@ -132,7 +141,7 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Multidioma\FrmMultidiomas.resx">
       <DependentUpon>FrmMultidiomas.cs</DependentUpon>
-	</EmbeddedResource>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmPermiso.resx">
       <DependentUpon>FrmPermiso.cs</DependentUpon>
     </EmbeddedResource>

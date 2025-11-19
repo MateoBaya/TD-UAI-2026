@@ -44,8 +44,10 @@
   <ItemGroup>
     <Compile Include="Dto\MessageErrorIntegridad.cs" />
     <Compile Include="Dto\ResultadoIntegridad.cs" />
+    <Compile Include="IBackupRepository.cs" />
     <Compile Include="IControlIdiomaRepository.cs" />
     <Compile Include="IIdiomaRepository.cs" />
+    <Compile Include="Implementation\BackupRepository.cs" />
     <Compile Include="Implementation\ControlIdiomaRepository.cs" />
     <Compile Include="Implementation\IdiomaRepository.cs" />
     <Compile Include="Implementation\TraduccionRepository.cs" />

@@ -11,5 +11,6 @@ namespace IngSoft.Repository
         string CrearDVH(object entity);
         string CrearDVV(string tabla);
         ResultadoIntegridad ValidarIntegridad();
+        void RecalcularDigitosVerificadores();
     }
 }
