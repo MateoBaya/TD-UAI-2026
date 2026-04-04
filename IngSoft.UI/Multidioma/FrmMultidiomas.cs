@@ -1,4 +1,5 @@
-﻿using System;
+using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using IngSoft.Abstractions.Multidioma;
@@ -12,24 +13,41 @@ namespace IngSoft.UI.Multidioma
     public partial class FrmMultidiomas : Form, IObserver
     {
         private readonly IMultidiomaServices _multidiomaServices;
-        private Panel panelContenedor;
-        private Form formularioActual;
 
         public FrmMultidiomas()
         {
             InitializeComponent();
             _multidiomaServices = ServicesFactory.CreateMultidiomaServices();
-            InicializarPanelContenedor();
         }
 
-        private void modificarIdiomaToolStripMenuItem_Click(object sender, EventArgs e)
+        internal void EliminarControlesAdicionales()
         {
-            MostrarFormularioEnPanel(new Modificar_Idioma());
+            FlexibilizadorFormularios.EliminarControlesAdicionalesForm(this);
         }
 
         private void crearIdiomaToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            MostrarFormularioEnPanel(new FrmCrearIdioma());
+            EliminarControlesAdicionales();
+
+            Point ptNombre = new Point(this.Width / 3, this.Height / 4);
+            Point ptCodigo = new Point(ptNombre.X, ptNombre.Y + 60);
+            Point ptBtn = new Point(ptNombre.X, ptCodigo.Y + 60);
+
+            FrmMultidiomasFlexibilizador.CrearPantallaCrearIdioma(this, _multidiomaServices, ptNombre, ptCodigo, ptBtn);
+            AplicarIdiomaActual();
+        }
+
+        private void modificarIdiomaToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            EliminarControlesAdicionales();
+
+            Point ptCombo = new Point(this.Width / 8, this.Height / 6);
+            Point ptDgv = new Point(this.Width / 8, ptCombo.Y + 50);
+            Size szDgv = new Size(this.Width * 3 / 4, this.Height / 2 + this.Height / 8);
+            Point ptBtn = new Point(ptDgv.X, ptDgv.Y + szDgv.Height + 10);
+
+            FrmMultidiomasFlexibilizador.CrearPantallaModificarIdioma(this, _multidiomaServices, ptCombo, ptDgv, szDgv, ptBtn);
+            AplicarIdiomaActual();
         }
 
         private void FrmMultidiomas_Load(object sender, EventArgs e)
@@ -46,13 +64,12 @@ namespace IngSoft.UI.Multidioma
                 MultidiomaManager.CambiarIdiomaControles(this, controles.Cast<IControlIdioma>().ToList());
             }
         }
+
         private void SuscribirseAIdiomaActual()
         {
             var idioma = MultidiomaManager.GetIdioma();
-
             if (idioma != null)
             {
-                // Asegurarse de que sea la instancia cacheada
                 if (idioma is Idioma idiomaConcreto)
                 {
                     var idiomaCacheado = MultidiomaManager.ObtenerIdiomaCache(idiomaConcreto);
@@ -64,70 +81,14 @@ namespace IngSoft.UI.Multidioma
                 }
             }
         }
+
         private void AplicarIdiomaActual()
         {
-            // Aplicar el idioma actual al formulario
             if (MultidiomaManager.GetIdioma() != null)
             {
                 var controles = _multidiomaServices.ObtenerControlesPorIdioma(MultidiomaManager.GetIdioma().Id)
                     .Cast<IControlIdioma>().ToList();
                 MultidiomaManager.CambiarIdiomaControles(this, controles);
-            }
-        }
-        private void InicializarPanelContenedor()
-        {
-            panelContenedor = new Panel
-            {
-                Dock = DockStyle.Fill,
-                Name = "panelContenedor"
-            };
-            this.Controls.Add(panelContenedor);
-            panelContenedor.BringToFront();
-        }
-        private void MostrarFormularioEnPanel(Form formulario)
-        {
-            // Cerrar y liberar el formulario anterior si existe
-            if (formularioActual != null)
-            {
-                formularioActual.Close();
-                formularioActual.Dispose();
-            }
-
-            // Configurar el nuevo formulario para mostrarse como control
-            formulario.TopLevel = false; // Importante: permite que el Form sea un control hijo
-            formulario.FormBorderStyle = FormBorderStyle.None; // Sin bordes
-            formulario.Dock = DockStyle.Fill; // Ocupa todo el panel
-
-            // Limpiar el panel y agregar el formulario
-            panelContenedor.Controls.Clear();
-            panelContenedor.Controls.Add(formulario);
-
-            // Mostrar el formulario
-            formulario.Show();
-
-            // Guardar referencia
-            formularioActual = formulario;
-
-            // Suscribir al idioma si implementa IObserver
-            if (formulario is IObserver observer)
-            {
-                SuscribirFormularioAIdioma(observer);
-            }
-        }
-        private void SuscribirFormularioAIdioma(IObserver observer)
-        {
-            var idioma = MultidiomaManager.GetIdioma();
-            if (idioma != null)
-            {
-                if (idioma is Idioma idiomaConcreto)
-                {
-                    var idiomaCacheado = MultidiomaManager.ObtenerIdiomaCache(idiomaConcreto);
-                    idiomaCacheado.Suscribir(observer);
-                }
-                else
-                {
-                    idioma.Suscribir(observer);
-                }
             }
         }
 
