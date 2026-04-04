@@ -321,7 +321,6 @@ namespace IngSoft.Repository.Implementation
 
             var storedProcedure = $"ActualizarDVH{tabla}";
             var storedProcedure = $"ActualizarDVH";
-            
             _connection.EjecutarSinResultado(storedProcedure, parametros);
         }
         private List<DigitoVerificador> ObtenerDigitosVerificadoresSinConexion()
