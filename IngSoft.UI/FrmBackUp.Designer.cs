@@ -51,6 +51,7 @@ namespace IngSoft.UI
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FrmBackUp";
             this.Load += new System.EventHandler(this.FrmBackUp_Load);
+            this.Shown += new System.EventHandler(this.FrmBackUp_Shown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);

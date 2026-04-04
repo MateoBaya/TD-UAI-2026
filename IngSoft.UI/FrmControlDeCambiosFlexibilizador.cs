@@ -1,19 +1,18 @@
 using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using IngSoft.ApplicationServices;
+using IngSoft.ApplicationServices.Factory;
 using IngSoft.Domain;
 using IngSoft.Domain.Enums;
+using IngSoft.Services;
 
 namespace IngSoft.UI
 {
     internal static class FrmControlDeCambiosFlexibilizador
     {
-        public static void CrearVistaBusqueda(
-            FrmControlDeCambios form,
-            IUsuarioHistoricoServices historSvc,
-            IUsuarioServices usuSvc,
-            IBitacoraServices bitSvc,
+        internal static void CrearVistaBusqueda(
             Point ptTitle,
             Point ptFiltros,
             Point ptDgv,
@@ -21,6 +20,11 @@ namespace IngSoft.UI
             Point ptBtnRestaurar,
             Size szBtn)
         {
+            var parent = FrmControlDeCambios.ActiveForm;
+            IUsuarioHistoricoServices historSvc = ServicesFactory.CreateUsuarioHistoricoServices();
+            IUsuarioServices usuSvc = SingleInstancesManager.Instance.ObtenerInstancia<IUsuarioServices>();
+            IBitacoraServices bitSvc = SingleInstancesManager.Instance.ObtenerInstancia<IBitacoraServices>();
+
             // Title
             var lbl = new Label
             {
@@ -30,7 +34,7 @@ namespace IngSoft.UI
                 AutoSize = true,
                 Location = ptTitle
             };
-            form.Controls.Add(lbl);
+            parent.Controls.Add(lbl);
 
             // Entidad label + ComboBox
             var lblEntidad = new Label
@@ -41,7 +45,7 @@ namespace IngSoft.UI
                 AutoSize = true,
                 Location = ptFiltros
             };
-            form.Controls.Add(lblEntidad);
+            parent.Controls.Add(lblEntidad);
 
             var cbo = new ComboBox
             {
@@ -51,7 +55,7 @@ namespace IngSoft.UI
                 FormattingEnabled = true
             };
             cbo.Items.Add("Usuario");
-            form.Controls.Add(cbo);
+            parent.Controls.Add(cbo);
 
             // UserName label + TextBox
             var lblUser = new Label
@@ -62,7 +66,7 @@ namespace IngSoft.UI
                 AutoSize = true,
                 Location = new Point(ptFiltros.X, ptFiltros.Y + 38)
             };
-            form.Controls.Add(lblUser);
+            parent.Controls.Add(lblUser);
 
             var txt = new TextBox
             {
@@ -70,27 +74,28 @@ namespace IngSoft.UI
                 Location = new Point(ptFiltros.X + 90, ptFiltros.Y + 38),
                 Size = new Size(134, 20)
             };
-            form.Controls.Add(txt);
+            parent.Controls.Add(txt);
 
             // DataGridView
-            var dgv = FlexibilizadorFormularios.CreateDataGridView(form, "dgvControlCambios", ptDgv, szDgv);
+            var dgv = FlexibilizadorFormularios.CreateDataGridView(parent, "dgvControlCambios", ptDgv, szDgv);
             dgv.CellFormatting += DgvControlCambios_CellFormatting;
             dgv.SelectionChanged += (s, e) =>
             {
-                var btnRest = form.Controls.Find("btnRestaurar", true);
+                var btnRest = parent.Controls.Find("btnRestaurar", true);
                 if (btnRest.Length > 0) btnRest[0].Enabled = dgv.SelectedRows.Count > 0;
             };
 
             // Buscar button
             FlexibilizadorFormularios.CreateButton(
-                form, "btnBuscar",
+                parent, "btnBuscar",
                 new Point(ptFiltros.X + 90 + 134 + 8, ptFiltros.Y + 38),
                 new Size(65, 23),
                 "Buscar",
                 (s, e) =>
                 {
-                    var cboCtrl = form.Controls.Find("cboEntidades", true)[0] as ComboBox;
-                    var txtCtrl = form.Controls.Find("txtUserName", true)[0] as TextBox;
+                    var form = FrmControlDeCambios.ActiveForm;
+                    var cboCtrl = form.Controls.Find("cboEntidades", true).FirstOrDefault() as ComboBox;
+                    var txtCtrl = form.Controls.Find("txtUserName", true).FirstOrDefault() as TextBox;
 
                     if (cboCtrl?.SelectedItem is null)
                     {
@@ -103,25 +108,28 @@ namespace IngSoft.UI
                         return;
                     }
 
-                    ActualizarGridView(dgv, txtCtrl.Text, historSvc);
+                    var dgvCtrl = form.Controls.Find("dgvControlCambios", true).FirstOrDefault() as DataGridView;
+                    if (dgvCtrl != null) ActualizarGridView(dgvCtrl, txtCtrl.Text, historSvc);
                 });
 
             // Restaurar button (initially disabled)
             var btnRestaurar = FlexibilizadorFormularios.CreateButton(
-                form, "btnRestaurar",
+                parent, "btnRestaurar",
                 ptBtnRestaurar, szBtn, "Restaurar",
                 (s, e) =>
                 {
                     usuSvc.SetRegistradoBitacora((usuario, descripcion, origen, tipoEvento) =>
                         RegistrarEnBitacora(bitSvc, usuario, descripcion, origen, tipoEvento));
 
-                    if (dgv.SelectedRows.Count == 0)
+                    var form = FrmControlDeCambios.ActiveForm;
+                    var dgvCtrl = form.Controls.Find("dgvControlCambios", true).FirstOrDefault() as DataGridView;
+                    if (dgvCtrl == null || dgvCtrl.SelectedRows.Count == 0)
                     {
                         MessageBox.Show("Seleccione un registro para restaurar.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                         return;
                     }
 
-                    var usuarioHistorico = dgv.SelectedRows[0].DataBoundItem as UsuarioHistorico;
+                    var usuarioHistorico = dgvCtrl.SelectedRows[0].DataBoundItem as UsuarioHistorico;
                     if (usuarioHistorico == null) return;
 
                     var usuarioARevertir = new Usuario
@@ -137,8 +145,8 @@ namespace IngSoft.UI
                     };
                     usuSvc.ModificarUsuario(usuarioARevertir);
 
-                    var txtCtrl = form.Controls.Find("txtUserName", true)[0] as TextBox;
-                    ActualizarGridView(dgv, txtCtrl?.Text ?? string.Empty, historSvc);
+                    var txtCtrl = form.Controls.Find("txtUserName", true).FirstOrDefault() as TextBox;
+                    ActualizarGridView(dgvCtrl, txtCtrl?.Text ?? string.Empty, historSvc);
                 });
             btnRestaurar.Enabled = false;
         }

@@ -72,6 +72,7 @@
             this.Text = "FrmMultidiomas";
             this.FormClosed += new System.Windows.Forms.FormClosedEventHandler(this.FrmMultidiomas_FormClosed);
             this.Load += new System.EventHandler(this.FrmMultidiomas_Load);
+            this.Shown += new System.EventHandler(this.FrmMultidiomas_Shown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);

@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using IngSoft.Abstractions.Multidioma;
 using IngSoft.ApplicationServices;
 using IngSoft.ApplicationServices.Factory;
+using IngSoft.Domain;
 using IngSoft.Domain.Multidioma;
 using IngSoft.Services;
 
@@ -12,23 +13,22 @@ namespace IngSoft.UI
 {
     public partial class FrmControlDeCambios : Form, IObserver
     {
-        private readonly IUsuarioHistoricoServices _usuarioHistoricoServices;
-        private readonly IUsuarioServices _usuarioServices;
-        private readonly IBitacoraServices _bitacoraServices;
         private readonly IMultidiomaServices _multidiomaServices;
 
         public FrmControlDeCambios()
         {
             InitializeComponent();
-            _usuarioHistoricoServices = ServicesFactory.CreateUsuarioHistoricoServices();
-            _usuarioServices = ServicesFactory.CreateUsuarioServices();
-            _bitacoraServices = ServicesFactory.CreateBitacoraServices();
             _multidiomaServices = ServicesFactory.CreateMultidiomaServices();
         }
 
         internal void EliminarControlesAdicionales()
         {
             FlexibilizadorFormularios.EliminarControlesAdicionalesForm(this);
+        }
+
+        private void FrmControlDeCambios_Shown(object sender, EventArgs e)
+        {
+            FlexibilizadorFormularios.MenuStripHider(this.MainMenuStrip, SessionManager.GetPermisos() as PermisoComponent);
         }
 
         private void buscarCambiosToolStripMenuItem_Click(object sender, EventArgs e)
@@ -43,10 +43,6 @@ namespace IngSoft.UI
             Size szBtn = new Size(84, 28);
 
             FrmControlDeCambiosFlexibilizador.CrearVistaBusqueda(
-                this,
-                _usuarioHistoricoServices,
-                _usuarioServices,
-                _bitacoraServices,
                 ptTitle, ptFiltros, ptDgv, szDgv, ptBtnRestaurar, szBtn);
 
             AplicarIdiomaActual();

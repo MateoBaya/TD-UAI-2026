@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using IngSoft.Abstractions.Multidioma;
 using IngSoft.ApplicationServices;
 using IngSoft.ApplicationServices.Factory;
+using IngSoft.Domain;
 using IngSoft.Domain.Multidioma;
 using IngSoft.Services;
 
@@ -25,6 +26,11 @@ namespace IngSoft.UI.Multidioma
             FlexibilizadorFormularios.EliminarControlesAdicionalesForm(this);
         }
 
+        private void FrmMultidiomas_Shown(object sender, EventArgs e)
+        {
+            FlexibilizadorFormularios.MenuStripHider(this.MainMenuStrip, SessionManager.GetPermisos() as PermisoComponent);
+        }
+
         private void crearIdiomaToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EliminarControlesAdicionales();
@@ -33,7 +39,7 @@ namespace IngSoft.UI.Multidioma
             Point ptCodigo = new Point(ptNombre.X, ptNombre.Y + 60);
             Point ptBtn = new Point(ptNombre.X, ptCodigo.Y + 60);
 
-            FrmMultidiomasFlexibilizador.CrearPantallaCrearIdioma(this, _multidiomaServices, ptNombre, ptCodigo, ptBtn);
+            FrmMultidiomasFlexibilizador.CrearPantallaCrearIdioma(ptNombre, ptCodigo, ptBtn);
             AplicarIdiomaActual();
         }
 
@@ -46,7 +52,7 @@ namespace IngSoft.UI.Multidioma
             Size szDgv = new Size(this.Width * 3 / 4, this.Height / 2 + this.Height / 8);
             Point ptBtn = new Point(ptDgv.X, ptDgv.Y + szDgv.Height + 10);
 
-            FrmMultidiomasFlexibilizador.CrearPantallaModificarIdioma(this, _multidiomaServices, ptCombo, ptDgv, szDgv, ptBtn);
+            FrmMultidiomasFlexibilizador.CrearPantallaModificarIdioma(ptCombo, ptDgv, szDgv, ptBtn);
             AplicarIdiomaActual();
         }
 

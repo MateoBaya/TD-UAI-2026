@@ -52,6 +52,7 @@ namespace IngSoft.UI
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FrmControlDeCambios";
             this.Load += new System.EventHandler(this.FrmControlDeCambios_Load);
+            this.Shown += new System.EventHandler(this.FrmControlDeCambios_Shown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);

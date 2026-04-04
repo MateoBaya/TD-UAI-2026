@@ -52,6 +52,7 @@ namespace IngSoft.UI
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "FrmIntegridadDB";
             this.Load += new System.EventHandler(this.FrmIntegridadDB_Load);
+            this.Shown += new System.EventHandler(this.FrmIntegridadDB_Shown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);
