@@ -77,6 +77,7 @@
     <Compile Include="Login\FrmLogin.Designer.cs">
       <DependentUpon>FrmLogin.cs</DependentUpon>
     </Compile>
+<<<<<<< HEAD
     <Compile Include="Login\FrmLoginFlexibilizador.cs" />
     <Compile Include="Login\FrmLoginHeaderConfig.cs" />
     <Compile Include="Multidioma\FrmCrearIdioma.cs">
@@ -85,6 +86,8 @@
     <Compile Include="Multidioma\FrmCrearIdioma.Designer.cs">
       <DependentUpon>FrmCrearIdioma.cs</DependentUpon>
     </Compile>
+=======
+>>>>>>> 061785efc15c2b2663df7635f583b97330e83f82
     <Compile Include="Multidioma\FrmMultidiomas.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -112,6 +115,7 @@
     <Compile Include="Usuario\FrmUsuario.Designer.cs">
       <DependentUpon>FrmUsuario.cs</DependentUpon>
     </Compile>
+<<<<<<< HEAD
     <Compile Include="Usuario\FrmUsuarioFlexiblizador.cs" />
     <Compile Include="Multidioma\FrmModificarIdioma.cs">
       <SubType>Form</SubType>
@@ -119,6 +123,13 @@
     <Compile Include="Multidioma\FrmModificarIdioma.Designer.cs">
       <DependentUpon>FrmModificarIdioma.cs</DependentUpon>
     </Compile>
+=======
+    <Compile Include="FrmUsuarioFlexiblizador.cs" />
+    <Compile Include="FrmIntegridadDBFlexibilizador.cs" />
+    <Compile Include="FrmBackUpFlexibilizador.cs" />
+    <Compile Include="FrmControlDeCambiosFlexibilizador.cs" />
+    <Compile Include="Multidioma\FrmMultidiomasFlexibilizador.cs" />
+>>>>>>> 061785efc15c2b2663df7635f583b97330e83f82
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Usuario\FrmUsuarioHeaderConfig.cs" />
@@ -133,12 +144,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Login\FrmLogin.resx">
       <DependentUpon>FrmLogin.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Multidioma\FrmCrearIdioma.resx">
-      <DependentUpon>FrmCrearIdioma.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Multidioma\FrmModificarIdioma.resx">
-      <DependentUpon>FrmModificarIdioma.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Multidioma\FrmMultidiomas.resx">
       <DependentUpon>FrmMultidiomas.cs</DependentUpon>
