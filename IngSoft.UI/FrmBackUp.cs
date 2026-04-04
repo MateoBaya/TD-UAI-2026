@@ -1,5 +1,5 @@
-﻿using System;
-using System.Data;
+using System;
+using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
 using IngSoft.Abstractions.Multidioma;
@@ -8,53 +8,43 @@ using IngSoft.ApplicationServices.Factory;
 using IngSoft.Domain.Multidioma;
 using IngSoft.Services;
 
-namespace IngSoft.UI.Multidioma
+namespace IngSoft.UI
 {
-    public partial class FrmCrearIdioma : Form, IObserver
+    public partial class FrmBackUp : Form, IObserver
     {
+        private readonly IBackupServices _backupServices;
         private readonly IMultidiomaServices _multidiomaServices;
-        public FrmCrearIdioma()
+
+        public FrmBackUp()
         {
             InitializeComponent();
+            _backupServices = ServicesFactory.CreateBackupServices();
             _multidiomaServices = ServicesFactory.CreateMultidiomaServices();
         }
 
-        private void btnCrear_Click(object sender, EventArgs e)
+        internal void EliminarControlesAdicionales()
         {
-            if(string.IsNullOrWhiteSpace(txtIdioma.Text))
-            {
-                MessageBox.Show("El nombre del idioma no puede estar vacío.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            if(string.IsNullOrWhiteSpace(txtCodigo.Text))
-            {
-                MessageBox.Show("El código del idioma no puede estar vacío.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            var nuevoIdioma = new Idioma
-            {
-                Id = Guid.NewGuid(),
-                Nombre = txtIdioma.Text.Trim(),
-                Codigo = txtCodigo.Text.Trim()
-            };
-
-            try
-            {
-                _multidiomaServices.CrearIdioma(nuevoIdioma);
-                MessageBox.Show("Idioma creado exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                txtIdioma.Text = string.Empty;
-                txtCodigo.Text = string.Empty;
-            }
-            catch (Exception)
-            {
-                MessageBox.Show("Se quiere crear un Idioma que ya existe", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-
+            FlexibilizadorFormularios.EliminarControlesAdicionalesForm(this);
         }
 
-        private void FrmCrearIdioma_Load(object sender, EventArgs e)
+        private void gestionarBackupToolStripMenuItem_Click(object sender, EventArgs e)
         {
+            EliminarControlesAdicionales();
+
+            Point ptTitle = new Point(this.Width / 2 - 110, this.Height / 14);
+            Point ptDgv = new Point(this.Width / 16, this.Height / 5);
+            Size szDgv = new Size(this.Width * 3 / 4, this.Height * 3 / 4 - this.Height / 5);
+            Point ptBtnCrear = new Point(ptDgv.X + szDgv.Width + 20, ptDgv.Y);
+            Point ptBtnRestaurar = new Point(ptBtnCrear.X, ptBtnCrear.Y + 60);
+            Size szBtn = new Size(123, 40);
+
+            FrmBackUpFlexibilizador.CrearVistaBackup(this, _backupServices, ptTitle, ptDgv, szDgv, ptBtnCrear, ptBtnRestaurar, szBtn);
+            AplicarIdiomaActual();
+        }
+
+        private void FrmBackUp_Load(object sender, EventArgs e)
+        {
+            gestionarBackupToolStripMenuItem_Click(null, null);
             SuscribirseAIdiomaActual();
             AplicarIdiomaActual();
         }
@@ -71,10 +61,8 @@ namespace IngSoft.UI.Multidioma
         private void SuscribirseAIdiomaActual()
         {
             var idioma = MultidiomaManager.GetIdioma();
-
             if (idioma != null)
             {
-                // Asegurarse de que sea la instancia cacheada
                 if (idioma is Idioma idiomaConcreto)
                 {
                     var idiomaCacheado = MultidiomaManager.ObtenerIdiomaCache(idiomaConcreto);
@@ -89,7 +77,6 @@ namespace IngSoft.UI.Multidioma
 
         private void AplicarIdiomaActual()
         {
-            // Aplicar el idioma actual al formulario
             if (MultidiomaManager.GetIdioma() != null)
             {
                 var controles = _multidiomaServices.ObtenerControlesPorIdioma(MultidiomaManager.GetIdioma().Id)
