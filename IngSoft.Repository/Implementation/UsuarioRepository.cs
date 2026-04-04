@@ -35,12 +35,14 @@ namespace IngSoft.Repository.Implementation
         public Usuario EliminarUsuario(Usuario usuario)
         {
             _connection.NuevaConexion(connectionString);
+            usuario.FechaEliminado = DateTime.Today;
             try
             {
                 _connection.IniciarTransaccion();
                 var parametros = new Dictionary<string, object>
                 {
-                    {"@UserName", usuario.UserName }
+                    {"@UserName", usuario.UserName },
+                    {"@Dvh", DigitoVerificadorRepository.CrearDVH(usuario)}
                 };
                 Usuario usuarioInterno = ObtenerUsuarioInterno(usuario.UserName); // Verifica si el usuario existe
                 if(usuarioInterno == null)

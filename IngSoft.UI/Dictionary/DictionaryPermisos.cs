@@ -1,18 +1,20 @@
-﻿using System.Collections.Generic;
+﻿using IngSoft.UI.Multidioma;
+using System;
+using System.Collections.Generic;
+using System.Windows.Forms;
 
-namespace IngSoft.UI.Dictionary
+namespace IngSoft.UI.Dictionaries
 {
     public static class DictionaryPermisos
     {
         public static Dictionary<string, string> PermisoControl = new Dictionary<string, string>()
         {
-            //Necesito dar vuelta el diccionario para que funcione bien
 
             { "usuariosToolStripMenuItem", "Usuarios" },
             { "agregarNuevoToolStripMenuItem","AltaUsuario" },
             { "modificarUsuarioToolStripMenuItem","ModificarUsuarios" },
             { "verTodosToolStripMenuItem","VerTodosUsuarios" },
-            //{  "Eliminar Usuario","BajaUsuario" },
+            { "eliminarUsuarioToolStripMenuItem","BajaUsuario" },
             { "permisosToolStripMenuItem", "Permisos" },
             {  "agregarPermisoToolStripMenuItem","AltaPermiso" },
             { "asignarPermisoToolStripMenuItem", "AsignarPermisos" },
@@ -26,5 +28,4 @@ namespace IngSoft.UI.Dictionary
             {  "backupsToolStripMenuItem", "Backup" },
         };
     }
-
 }

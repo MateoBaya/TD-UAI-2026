@@ -46,14 +46,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Pagination\DataGridViewPaginationDecorator.cs" />
     <Compile Include="DTOs\BitacoraGridDto.cs" />
     <Compile Include="DTOs\MultidiomaGridDto.cs" />
-    <Compile Include="FrmBackUp.cs">
+    <Compile Include="Backup\FrmBackUp.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmBackUp.Designer.cs">
+    <Compile Include="Backup\FrmBackUp.Designer.cs">
       <DependentUpon>FrmBackUp.cs</DependentUpon>
     </Compile>
+    <Compile Include="BitacoraUI\FrmBitacoraFlexibilizador.cs" />
+    <Compile Include="BitacoraUI\FrmBitacoraHeaderConfig.cs" />
     <Compile Include="FrmControlDeCambios.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -68,12 +71,14 @@
     </Compile>
     <Compile Include="Dictionary\DictionaryPermisos.cs" />
     <Compile Include="FlexibilizadorFormularios.cs" />
-    <Compile Include="FrmLogin.cs">
+    <Compile Include="Login\FrmLogin.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmLogin.Designer.cs">
+    <Compile Include="Login\FrmLogin.Designer.cs">
       <DependentUpon>FrmLogin.cs</DependentUpon>
     </Compile>
+    <Compile Include="Login\FrmLoginFlexibilizador.cs" />
+    <Compile Include="Login\FrmLoginHeaderConfig.cs" />
     <Compile Include="Multidioma\FrmCrearIdioma.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -86,33 +91,28 @@
     <Compile Include="Multidioma\FrmMultidiomas.Designer.cs">
       <DependentUpon>FrmMultidiomas.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmPermiso.cs">
+    <Compile Include="Permisos\FrmPermiso.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmPermiso.Designer.cs">
+    <Compile Include="Permisos\FrmPermiso.Designer.cs">
       <DependentUpon>FrmPermiso.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmPermisosFlexibilizador.cs" />
+    <Compile Include="Permisos\FrmPermisosFlexibilizador.cs" />
     <Compile Include="FrmPrincipal.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FrmPrincipal.Designer.cs">
       <DependentUpon>FrmPrincipal.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmBitacora.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmBitacora.Designer.cs">
-      <DependentUpon>FrmBitacora.cs</DependentUpon>
-    </Compile>
     <Compile Include="FrmPrincipalFlexibilizador.cs" />
-    <Compile Include="FrmUsuario.cs">
+    <Compile Include="Permisos\FrmPermisosHeaderConfig.cs" />
+    <Compile Include="Usuario\FrmUsuario.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="FrmUsuario.Designer.cs">
+    <Compile Include="Usuario\FrmUsuario.Designer.cs">
       <DependentUpon>FrmUsuario.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmUsuarioFlexiblizador.cs" />
+    <Compile Include="Usuario\FrmUsuarioFlexiblizador.cs" />
     <Compile Include="Multidioma\FrmModificarIdioma.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -121,7 +121,8 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <EmbeddedResource Include="FrmBackUp.resx">
+    <Compile Include="Usuario\FrmUsuarioHeaderConfig.cs" />
+    <EmbeddedResource Include="Backup\FrmBackUp.resx">
       <DependentUpon>FrmBackUp.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmControlDeCambios.resx">
@@ -130,7 +131,7 @@
     <EmbeddedResource Include="FrmIntegridadDB.resx">
       <DependentUpon>FrmIntegridadDB.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmLogin.resx">
+    <EmbeddedResource Include="Login\FrmLogin.resx">
       <DependentUpon>FrmLogin.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Multidioma\FrmCrearIdioma.resx">
@@ -142,16 +143,13 @@
     <EmbeddedResource Include="Multidioma\FrmMultidiomas.resx">
       <DependentUpon>FrmMultidiomas.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmPermiso.resx">
+    <EmbeddedResource Include="Permisos\FrmPermiso.resx">
       <DependentUpon>FrmPermiso.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmPrincipal.resx">
       <DependentUpon>FrmPrincipal.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmBitacora.resx">
-      <DependentUpon>FrmBitacora.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="FrmUsuario.resx">
+    <EmbeddedResource Include="Usuario\FrmUsuario.resx">
       <DependentUpon>FrmUsuario.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -163,6 +161,7 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="App.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -172,9 +171,6 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\IngSoft.Abstractions\IngSoft.Abstractions.csproj">
@@ -194,5 +190,6 @@
       <Name>IngSoft.Services</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

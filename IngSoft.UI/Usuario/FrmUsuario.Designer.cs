@@ -55,7 +55,7 @@
             this.modificarUsuarioToolStripMenuItem.Name = "modificarUsuarioToolStripMenuItem";
             this.modificarUsuarioToolStripMenuItem.Size = new System.Drawing.Size(141, 24);
             this.modificarUsuarioToolStripMenuItem.Text = "Modificar Usuario";
-            this.modificarUsuarioToolStripMenuItem.Click += new System.EventHandler(this.modificarUsuarioToolStripMenuItem_Click);
+            //this.modificarUsuarioToolStripMenuItem.Click += new System.EventHandler(this.modificarUsuarioToolStripMenuItem_Click);
             // 
             // agregarNuevoToolStripMenuItem
             // 
@@ -76,7 +76,7 @@
             this.eliminarUsuarioToolStripMenuItem.Name = "eliminarUsuarioToolStripMenuItem";
             this.eliminarUsuarioToolStripMenuItem.Size = new System.Drawing.Size(131, 24);
             this.eliminarUsuarioToolStripMenuItem.Text = "Eliminar Usuario";
-            this.eliminarUsuarioToolStripMenuItem.Click += new System.EventHandler(this.eliminarUsuarioToolStripMenuItem_Click);
+            //this.eliminarUsuarioToolStripMenuItem.Click += new System.EventHandler(this.eliminarUsuarioToolStripMenuItem_Click);
             // 
             // FrmUsuario
             // 
@@ -88,8 +88,8 @@
             this.Name = "FrmUsuario";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             this.Text = "FrmUsuario";
-            this.Load += new System.EventHandler(this.FrmUsuario_Load);
-            this.Shown += new System.EventHandler(this.FrmUsuario_Shown);
+            //this.Load += new System.EventHandler(this.FrmUsuario_Load);
+            //this.Shown += new System.EventHandler(this.FrmUsuario_Shown);
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
             this.ResumeLayout(false);

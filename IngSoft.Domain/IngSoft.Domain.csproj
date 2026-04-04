@@ -44,6 +44,8 @@
     <Compile Include="Backups.cs" />
     <Compile Include="Bitacora.cs" />
     <Compile Include="DigitoVerificador.cs" />
+    <Compile Include="DigitoVerificadorAbstract.cs" />
+    <Compile Include="DigitoVerificadorHorizontal.cs" />
     <Compile Include="Entity.cs" />
     <Compile Include="Enums\TipoEvento.cs" />
     <Compile Include="Enums\TipoOperacion.cs" />

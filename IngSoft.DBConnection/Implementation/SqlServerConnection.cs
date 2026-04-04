@@ -35,7 +35,8 @@ namespace IngSoft.DBConnection
 
         public void CancelarTransaccion()
         {
-            _oneTransaction.Rollback();
+            if(_oneTransaction != null)
+                _oneTransaction.Rollback();
         }
         public List<T> EjecutarDataSet<T>(string storeProcedure, Dictionary<string, object> parametros) where T : new()
         {

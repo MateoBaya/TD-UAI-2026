@@ -27,7 +27,7 @@ namespace IngSoft.ApplicationServices.Implementation
                 _digitoVerificadorRepository.RecalcularDigitosVerificadores();
                 GuardarBitacora("Dígitos verificadores recalculados correctamente", TipoEvento.Message);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 GuardarBitacora("Error al recalcular dígitos verificadores", TipoEvento.Error);
                 throw;

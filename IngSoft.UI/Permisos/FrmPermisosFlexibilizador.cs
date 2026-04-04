@@ -11,17 +11,18 @@ using IngSoft.Services;
 
 namespace IngSoft.UI
 {
-    internal static class FrmPermisosFlexibilizador
+    internal class FrmPermisosFlexibilizador
     {
-        private static PermisoComponent permisosSistema;
-        private static PermisoComponent permisosUsuario;
-        private static string usuarioSeleccionadoActual;
+        private  PermisoComponent permisosSistema;
+        private  PermisoComponent permisosUsuario;
+        private  string usuarioSeleccionadoActual;
+        private FrmPrincipal form = SingleInstancesManager.Instance.ObtenerInstancia<FrmPrincipal>();
 
         // Crea y retorna un TreeView con dimensiones similares al DataGridView usado en FrmUsuarioFlexiblizador
         // Si se proporciona permisoRoot, carga el TreeView con los permisos usando FlexibilizadorFormularios.LoadTreeViewFromPermisos
-        internal static TreeView PermisosTreeViewCreator(string name,Point position, Size size,PermisoComponent permisoRoot = null)
+        internal  TreeView PermisosTreeViewCreator(string name,Point position, Size size,PermisoComponent permisoRoot = null)
         {
-            var parent = FrmPermiso.ActiveForm;
+            var parent = form.GetPanelMain;
 
             var tree = FlexibilizadorFormularios.CreateTreeView(parent,name, position, size);
 
@@ -36,22 +37,22 @@ namespace IngSoft.UI
         }
 
         // Crea árbol vacío para pendientes de asignar
-        internal static TreeView PermisosPendientesAsignarTreeViewCreator(Point position, Size size)
+        internal  TreeView PermisosPendientesAsignarTreeViewCreator(Point position, Size size)
         {
-            var parent = FrmPermiso.ActiveForm;
+            var parent = form.GetPanelMain;
             return FlexibilizadorFormularios.CreateTreeView(parent, "treeViewPermisosPendientesAsignar", position, size);
         }
 
         // Crea árbol vacío para pendientes de remover
-        internal static TreeView PermisosPendientesRemoverTreeViewCreator(Point position, Size size)
+        internal  TreeView PermisosPendientesRemoverTreeViewCreator(Point position, Size size)
         {
-            var parent = FrmPermiso.ActiveForm;
+            var parent = form.GetPanelMain;
             return FlexibilizadorFormularios.CreateTreeView(parent, "treeViewPermisosPendientesRemover", position, size);
         }
 
-        internal static void ListaConTodosUsuarios(Point position, Size size, Point positionArbol, Size sizeArbol)
+        internal  void ListaConTodosUsuarios(Point position, Size size, Point positionArbol, Size sizeArbol)
         {
-            var parent = FrmPermiso.ActiveForm;
+            var parent = form.GetPanelMain;
             UsuarioServices _usuarioServices = SingleInstancesManager.Instance.ObtenerInstancia<UsuarioServices>();
             if(_usuarioServices != null)
             {
@@ -67,7 +68,7 @@ namespace IngSoft.UI
             }
         }
 
-        private static EventHandler listUsuarioChangedSelectionHandler(Point position, Size size)
+        private  EventHandler listUsuarioChangedSelectionHandler(Point position, Size size)
         {
             EventHandler onSelected = (s, e) =>
             {
@@ -80,13 +81,13 @@ namespace IngSoft.UI
             return onSelected;
         }
 
-        internal static void AsignarPermisosVerTodosDelSistema(Point position, Size size)
+        internal  void AsignarPermisosVerTodosDelSistema(Point position, Size size)
         {
             IPermisoServices _permisoServices = ServicesFactory.CreatePermisoServices();
             permisosSistema =_permisoServices.ObtenerTodosLosPermisos();
             PermisosTreeViewCreator("treeViewPermisos",position, size, permisosSistema);
         }
-        internal static TreeView AsignarPermisosVerTodosDelUsuarioSeleccionado(Point position,Size size, string usuarioSeleccionado= null)
+        internal  TreeView AsignarPermisosVerTodosDelUsuarioSeleccionado(Point position,Size size, string usuarioSeleccionado= null)
         {
             IPermisoServices _permisosServices = ServicesFactory.CreatePermisoServices();
             if(usuarioSeleccionado != null)
@@ -97,12 +98,11 @@ namespace IngSoft.UI
         }
 
         // Crea botón para asignar permisos seleccionados del sistema a pendientes asignar
-        internal static void BotonAsignarPermisosCreator(Point position, Size size)
+        internal  void BotonAsignarPermisosCreator(Point position, Size size)
         {
-            var parent = FrmPermiso.ActiveForm;
+            var parent = form.GetPanelMain;
             EventHandler onClick = (s, e) =>
             {
-                var form = FrmPermiso.ActiveForm;
                 var treeSistema = form.Controls.Find("treeViewPermisos", true).FirstOrDefault() as TreeView;
                 var treePendientes = form.Controls.Find("treeViewPermisosPendientesAsignar", true).FirstOrDefault() as TreeView;
                 if (treeSistema == null || treePendientes == null)
@@ -148,12 +148,11 @@ namespace IngSoft.UI
         }
 
         // Crea botón para quitar permisos seleccionados del usuario a pendientes remover
-        internal static void BotonQuitarPermisosCreator(Point position, Size size)
+        internal  void BotonQuitarPermisosCreator(Point position, Size size)
         {
-            var parent = FrmPermiso.ActiveForm;
+            var parent = form.GetPanelMain;
             EventHandler onClick = (s, e) =>
             {
-                var form = FrmPermiso.ActiveForm;
                 var treeUsuario = form.Controls.Find("treeViewPermisosUsuario", true).FirstOrDefault() as TreeView;
                 var treePendientesRem = form.Controls.Find("treeViewPermisosPendientesRemover", true).FirstOrDefault() as TreeView;
                 if (treeUsuario == null || treePendientesRem == null)
@@ -188,9 +187,9 @@ namespace IngSoft.UI
         }
 
         // Crea botón para guardar todos los cambios pendientes: primero remover, luego asignar
-        internal static void BotonGuardarCambiosPermisosCreator(Point position, Size size)
+        internal  void BotonGuardarCambiosPermisosCreator(Point position, Size size)
         {
-            var parent = FrmPermiso.ActiveForm;
+            var parent = form.GetPanelMain;
             EventHandler onClick = (s, e) =>
             {
                 if (string.IsNullOrEmpty(usuarioSeleccionadoActual))
@@ -199,7 +198,6 @@ namespace IngSoft.UI
                     return;
                 }
 
-                var form = FrmPermiso.ActiveForm;
                 var treeRem = form.Controls.Find("treeViewPermisosPendientesRemover", true).FirstOrDefault() as TreeView;
                 var treeAssign = form.Controls.Find("treeViewPermisosPendientesAsignar", true).FirstOrDefault() as TreeView;
 
@@ -279,9 +277,9 @@ namespace IngSoft.UI
         }
 
         // Crea la UI para agregar un permiso: two textboxes and a button
-        internal static void PantallaAgregarPermisoCreator(Point positionNombre, Point positionPadre, Point positionButton)
+        internal  void PantallaAgregarPermisoCreator(Point positionNombre, Point positionPadre, Point positionButton)
         {
-            var parent = FrmPermiso.ActiveForm;
+            var parent = form.GetPanelMain;
             if (parent == null) return;
 
             // Crear TextBoxes usando FlexibilizadorFormularios
@@ -352,9 +350,9 @@ namespace IngSoft.UI
         }
 
         // Crea la UI para modificar un permiso: nombre actual, nombre nuevo, padre (opcional) y botón
-        internal static void PantallaModificarPermisoCreator(Point positionNombre, Point positionNombreNuevo, Point positionPadre, Point positionButton)
+        internal  void PantallaModificarPermisoCreator(Point positionNombre, Point positionNombreNuevo, Point positionPadre, Point positionButton)
         {
-            var parent = FrmPermiso.ActiveForm;
+            var parent = form.GetPanelMain;
             if (parent == null) return;
 
             var txtNombre = FlexibilizadorFormularios.CreateTextBox(parent, "NombrePermiso", positionNombre);
@@ -404,9 +402,9 @@ namespace IngSoft.UI
         }
 
         // Crea la UI para eliminar un permiso: nombre y botón
-        internal static void PantallaEliminarPermisoCreator(Point positionNombre, Point positionButton)
+        internal  void PantallaEliminarPermisoCreator(Point positionNombre, Point positionButton)
         {
-            var parent = FrmPermiso.ActiveForm;
+            var parent = form.GetPanelMain;
             if (parent == null) return;
 
             var txtNombre = FlexibilizadorFormularios.CreateTextBox(parent, "NombrePermiso", positionNombre);
@@ -444,9 +442,9 @@ namespace IngSoft.UI
         }
 
         // Crea un árbol con todos los permisos y asigna un delegado que al seleccionar nodo llena los textboxes NombrePermiso y PermisoPadre
-        internal static TreeView CrearArbolPermisosConSelector(Point position, Size size, TreeViewEventHandler evento)
+        internal  TreeView CrearArbolPermisosConSelector(Point position, Size size, TreeViewEventHandler evento)
         {
-            var parent = FrmPermiso.ActiveForm;
+            var parent = form.GetPanelMain;
             if (parent == null) return null;
 
             // Crear/actualizar árbol
@@ -458,11 +456,11 @@ namespace IngSoft.UI
             return tree;
         }
 
-        internal static void Tree_AfterSelect_FillTextboxes_Modify(object sender, TreeViewEventArgs e)
+        internal  void Tree_AfterSelect_FillTextboxes_Modify(object sender, TreeViewEventArgs e)
         {
             var node = e.Node;
             if (node == null) return;
-            var form = FrmPermiso.ActiveForm;
+            var form = Services.SingleInstancesManager.Instance.ObtenerInstancia<FrmPrincipal>();
             if (form == null) return;
             // Buscar textboxes
             var txtNombre = form.Controls.Find("txtNombrePermiso", true).FirstOrDefault() as TextBox;
@@ -474,11 +472,11 @@ namespace IngSoft.UI
                 txtPadre.Text = node != null ? node.Parent.Text : string.Empty;
             }
         }
-        internal static void Tree_AfterSelect_FillTextboxes_Delete(object sender, TreeViewEventArgs e)
+        internal  void Tree_AfterSelect_FillTextboxes_Delete(object sender, TreeViewEventArgs e)
         {
             var node = e.Node;
             if (node == null) return;
-            var form = FrmPermiso.ActiveForm;
+            var form = Services.SingleInstancesManager.Instance.ObtenerInstancia<FrmPrincipal>();
             if (form == null) return;
             // Buscar textbox
             var txtNombre = form.Controls.Find("txtNombrePermiso", true).FirstOrDefault() as TextBox;
@@ -487,11 +485,11 @@ namespace IngSoft.UI
                 txtNombre.Text = node != null ? node.Text : string.Empty;
             }
         }
-        internal static void Tree_AfterSelect_FillTextboxes(object sender, TreeViewEventArgs e)
+        internal  void Tree_AfterSelect_FillTextboxes(object sender, TreeViewEventArgs e)
         {
             var node = e.Node;
             if (node == null) return;
-            var form = FrmPermiso.ActiveForm;
+            var form = Services.SingleInstancesManager.Instance.ObtenerInstancia<FrmPrincipal>();
             if (form == null) return;
 
             // Buscar textboxes
@@ -503,6 +501,11 @@ namespace IngSoft.UI
             {
                 txtPadre.Text = node != null ? node.Text : string.Empty;
             }
+        }
+
+        internal void EliminarControlesAdicionales()
+        {
+            FlexibilizadorFormularios.EliminarControlesAdicionalesForm(form.GetPanelMain,form.ControlesSalvar());
         }
 
     }

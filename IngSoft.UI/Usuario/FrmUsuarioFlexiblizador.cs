@@ -1,22 +1,34 @@
 ﻿using IngSoft.ApplicationServices;
 using IngSoft.ApplicationServices.Factory;
+using IngSoft.ApplicationServices.Implementation;
 using IngSoft.Domain;
-using IngSoft.Services;
 using IngSoft.Domain.Enums;
+using IngSoft.Services;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using IngSoft.ApplicationServices.Implementation;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TextBox;
 
 namespace IngSoft.UI
 {
     internal  class FrmUsuarioFlexiblizador
     {
         // Delegado para registrar en la bitácora
-        internal static void RegistrarEnBitacora(Usuario usuario, string descripcion, string origen, TipoEvento tipoEvento)
+        private List<Usuario> _usuarios;
+        private FrmPrincipal form = SingleInstancesManager.Instance.ObtenerInstancia<FrmPrincipal>();
+        private readonly IUsuarioServices _usuarioServices = SingleInstancesManager.Instance.ObtenerInstancia<IUsuarioServices>();
+        private readonly IMultidiomaServices _multidiomaServices = ServicesFactory.CreateMultidiomaServices();
+
+        public List<Usuario> Usuarios { get => _usuarios; set => _usuarios = value; }
+
+        public IUsuarioServices UsuarioServices => _usuarioServices;
+
+        public IMultidiomaServices MultidiomaServices => _multidiomaServices;
+
+        internal   void RegistrarEnBitacora(Usuario usuario, string descripcion, string origen, TipoEvento tipoEvento)
         {
             IBitacoraServices bitacoraServices = SingleInstancesManager.Instance.ObtenerInstancia<IBitacoraServices>();
             var bitacora = new Bitacora
@@ -30,22 +42,22 @@ namespace IngSoft.UI
             };
             bitacoraServices.GuardarBitacora(bitacora);
         }
-        internal static void ActualizarMenuSegunPermisosUsuario()
+        internal   void ActualizarMenuSegunPermisosUsuario()
         {
-            FlexibilizadorFormularios.MenuStripHider(FrmUsuario.ActiveForm.MainMenuStrip, SessionManager.GetPermisos() as PermisoComponent);
+            FlexibilizadorFormularios.MenuStripHider(form.MainMenuStrip, SessionManager.GetPermisos() as PermisoComponent);
         }
 
-        internal static void TextBoxCreator(string param, Point position)
+        internal   void TextBoxCreator(string param, Point position)
         {
             // Delegar la creación de TextBox + Label a FlexibilizadorFormularios
-            FlexibilizadorFormularios.CreateTextBox(FrmUsuario.ActiveForm, param, position);
+            FlexibilizadorFormularios.CreateTextBox(form.GetPanelMain, param, position);
         }
-        internal static void CheckboxCreator(string param, Point position)
+        internal   void CheckboxCreator(string param, Point position)
         {
             // Delegar la creación de Checkbox + Label a FlexibilizadorFormularios
-            FlexibilizadorFormularios.CreateCheckBox(FrmUsuario.ActiveForm, param, position);
+            FlexibilizadorFormularios.CreateCheckBox(form.GetPanelMain, param, position);
         }
-        private static void btnGuardar_Click(object sender, EventArgs e)
+        private   void btnGuardar_Click(object sender, EventArgs e)
         {
             // Lógica para manejar el evento de clic del botón Guardar Usuario
             IUsuarioServices usuarioServices = ServicesFactory.CreateUsuarioServices();
@@ -54,21 +66,21 @@ namespace IngSoft.UI
                 usuarioServices.CrearUsuario(new Usuario
                 {
                     IdUsuario = 0,
-                    UserName = FrmUsuario.ActiveForm.Controls.Find("txtUserName", true).FirstOrDefault() is TextBox txtUsuario ? txtUsuario.Text : string.Empty,
-                    Nombre = FrmUsuario.ActiveForm.Controls.Find("txtNombre", true).FirstOrDefault() is TextBox txtNombre ? txtNombre.Text : string.Empty,
-                    Apellido = FrmUsuario.ActiveForm.Controls.Find("txtApellido", true).FirstOrDefault() is TextBox txtApellido ? txtApellido.Text : string.Empty,
-                    Email = FrmUsuario.ActiveForm.Controls.Find("txtEmail", true).FirstOrDefault() is TextBox txtEmail ? txtEmail.Text : string.Empty,
-                    Contrasena = FrmUsuario.ActiveForm.Controls.Find("txtContraseña", true).FirstOrDefault() is TextBox txtContraseña ? txtContraseña.Text : string.Empty
+                    UserName = form.GetPanelMain.Controls.Find("txtUserName", true).FirstOrDefault() is TextBox txtUsuario ? txtUsuario.Text : string.Empty,
+                    Nombre = form.GetPanelMain.Controls.Find("txtNombre", true).FirstOrDefault() is TextBox txtNombre ? txtNombre.Text : string.Empty,
+                    Apellido = form.GetPanelMain.Controls.Find("txtApellido", true).FirstOrDefault() is TextBox txtApellido ? txtApellido.Text : string.Empty,
+                    Email = form.GetPanelMain.Controls.Find("txtEmail", true).FirstOrDefault() is TextBox txtEmail ? txtEmail.Text : string.Empty,
+                    Contrasena = form.GetPanelMain.Controls.Find("txtContraseña", true).FirstOrDefault() is TextBox txtContraseña ? txtContraseña.Text : string.Empty
                 });
                 MessageBox.Show("Usuario guardado con éxito.");
-                new FrmUsuario().EliminarControlesAdicionalesUsuario();
+                EliminarControlesAdicionalesUsuario();
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Error al guardar el usuario: {ex.Message}");
             }
         }
-        private static void btnModificar_Click(object sender, EventArgs e)
+        private   void btnModificar_Click(object sender, EventArgs e)
         {
             // Lógica para manejar el evento de clic del botón Modificar Usuario
             IUsuarioServices usuarioServices = ServicesFactory.CreateUsuarioServices();
@@ -76,12 +88,12 @@ namespace IngSoft.UI
             {
                 usuarioServices.ModificarUsuario(new Usuario
                 {
-                    UserName = FrmUsuario.ActiveForm.Controls.Find("txtUserName", true).FirstOrDefault() is TextBox txtUsuario ? txtUsuario.Text : string.Empty,
-                    Nombre = FrmUsuario.ActiveForm.Controls.Find("txtNombre", true).FirstOrDefault() is TextBox txtNombre ? txtNombre.Text : string.Empty,
-                    Apellido = FrmUsuario.ActiveForm.Controls.Find("txtApellido", true).FirstOrDefault() is TextBox txtApellido ? txtApellido.Text : string.Empty,
-                    Email = FrmUsuario.ActiveForm.Controls.Find("txtEmail", true).FirstOrDefault() is TextBox txtEmail ? txtEmail.Text : string.Empty,
-                    Contrasena = FrmUsuario.ActiveForm.Controls.Find("txtContraseña", true).FirstOrDefault() is TextBox txtContraseña ? txtContraseña.Text : string.Empty,
-                    Bloqueado = FrmUsuario.ActiveForm.Controls.Find("chkBloqueado", true).FirstOrDefault() is CheckBox chkBloqueado ? chkBloqueado.Checked : false
+                    UserName = form.GetPanelMain.Controls.Find("txtUserName", true).FirstOrDefault() is TextBox txtUsuario ? txtUsuario.Text : string.Empty,
+                    Nombre = form.GetPanelMain.Controls.Find("txtNombre", true).FirstOrDefault() is TextBox txtNombre ? txtNombre.Text : string.Empty,
+                    Apellido = form.GetPanelMain.Controls.Find("txtApellido", true).FirstOrDefault() is TextBox txtApellido ? txtApellido.Text : string.Empty,
+                    Email = form.GetPanelMain.Controls.Find("txtEmail", true).FirstOrDefault() is TextBox txtEmail ? txtEmail.Text : string.Empty,
+                    Contrasena = form.GetPanelMain.Controls.Find("txtContraseña", true).FirstOrDefault() is TextBox txtContraseña ? txtContraseña.Text : string.Empty,
+                    Bloqueado = form.GetPanelMain.Controls.Find("chkBloqueado", true).FirstOrDefault() is CheckBox chkBloqueado ? chkBloqueado.Checked : false
                 });
                 MessageBox.Show("Usuario modificado con éxito.");
                 new FrmUsuario().EliminarControlesAdicionalesUsuario();
@@ -91,7 +103,7 @@ namespace IngSoft.UI
                 MessageBox.Show($"Error al modificar el usuario: {ex.Message}");
             }
         }
-        private static void BtnLogin_Click(object sender, EventArgs e)
+        private   void BtnLogin_Click(object sender, EventArgs e)
         {
             IUsuarioServices usuarioServices = ServicesFactory.CreateUsuarioServices();
             // Inyecta el delegado al servicio
@@ -100,8 +112,8 @@ namespace IngSoft.UI
 
             Usuario mUsuarioActual = new Usuario
             {
-                UserName = FrmUsuario.ActiveForm.Controls.Find("txtUserName", true).FirstOrDefault() is TextBox txtUsuario ? txtUsuario.Text : string.Empty,
-                Contrasena = FrmUsuario.ActiveForm.Controls.Find("txtContraseña", true).FirstOrDefault() is TextBox txtContraseña ? txtContraseña.Text : string.Empty
+                UserName = form.GetPanelMain.Controls.Find("txtUserName", true).FirstOrDefault() is TextBox txtUsuario ? txtUsuario.Text : string.Empty,
+                Contrasena = form.GetPanelMain.Controls.Find("txtContraseña", true).FirstOrDefault() is TextBox txtContraseña ? txtContraseña.Text : string.Empty
             };
             try
             {
@@ -117,21 +129,21 @@ namespace IngSoft.UI
                 MessageBox.Show($"Error al iniciar sesión: {ex.Message}");
             }
         }
-        internal static void GuardarUsuarioButtonCreator()
+        internal   void GuardarUsuarioButtonCreator()
         {
-            var position = new Point((FrmUsuario.ActiveForm.Width / 2) - 100, (FrmUsuario.ActiveForm.Height / 2 + FrmUsuario.ActiveForm.Height / 4));
-            FlexibilizadorFormularios.CreateButton(FrmUsuario.ActiveForm, "btnGuardarUsuario", position, new Size(200,30), "Guardar Usuario", btnGuardar_Click);
+            var position = new Point((form.GetPanelMain.Width / 2) - 100, (form.GetPanelMain.Height / 2 + form.GetPanelMain.Height / 4));
+            FlexibilizadorFormularios.CreateButton(form.GetPanelMain, "btnGuardarUsuario", position, new Size(200,30), "Guardar Usuario", btnGuardar_Click);
         }
-        internal static void ModificarUsuarioButtonCreator(Point position)
+        internal   void ModificarUsuarioButtonCreator(Point position)
         {
-            FlexibilizadorFormularios.CreateButton(FrmUsuario.ActiveForm, "btnModificarUsuario", position, new Size(200,30), "Modificar Usuario", btnModificar_Click);
+            FlexibilizadorFormularios.CreateButton(form.GetPanelMain, "btnModificarUsuario", position, new Size(200,30), "Modificar Usuario", btnModificar_Click);
         }
-        internal static void LoginButtonCreator()
+        internal   void LoginButtonCreator()
         {
-            var position = new Point((FrmUsuario.ActiveForm.Width / 2) - 100, (FrmUsuario.ActiveForm.Height / 2 + FrmUsuario.ActiveForm.Height / 4));
-            FlexibilizadorFormularios.CreateButton(FrmUsuario.ActiveForm, "btnLogin", position, new Size(200,30), "Login", BtnLogin_Click);
+            var position = new Point((form.GetPanelMain.Width / 2) - 100, (form.GetPanelMain.Height / 2 + form.GetPanelMain.Height / 4));
+            FlexibilizadorFormularios.CreateButton(form.GetPanelMain, "btnLogin", position, new Size(200,30), "Login", BtnLogin_Click);
         }
-        internal static DataGridView DataGridViewUsuarioCreator(List<Usuario> pUsuarios, Point position, Size size)
+        internal   DataGridView DataGridViewUsuarioCreator(List<Usuario> pUsuarios, Point position, Size size)
         {
 
                 
@@ -146,7 +158,7 @@ namespace IngSoft.UI
                 { "FechaEliminado", typeof(DateTime) }
             };
 
-            return FlexibilizadorFormularios.CreateDataGridView<Usuario>(FrmUsuario.ActiveForm, "dataGridViewUsuarios", position, size,columnDefinitions, pUsuarios);
+            return FlexibilizadorFormularios.CreateDataGridView<Usuario>(form.GetPanelMain, "dataGridViewUsuarios", position, size,columnDefinitions, pUsuarios);
         }
         public DataGridView dataGridViewWithSelectionChanged(List<Usuario> pUsuario,Point position, Size size)
         {
@@ -176,7 +188,7 @@ namespace IngSoft.UI
                             if (column.DataType == typeof(bool))
                             {
                                 string checkBoxName = $"chk{column.ColumnName}";
-                                Control[] controls = FrmUsuario.ActiveForm.Controls.Find(checkBoxName, true);
+                                Control[] controls = form.GetPanelMain.Controls.Find(checkBoxName, true);
                                 if (controls.Length > 0 && controls[0] is CheckBox checkBox)
                                 {
                                     checkBox.Checked = Convert.ToBoolean(row[column]);
@@ -185,7 +197,7 @@ namespace IngSoft.UI
                             else
                             {
                                 string textBoxName = $"txt{column.ColumnName}";
-                                Control[] controls = FrmUsuario.ActiveForm.Controls.Find(textBoxName, true);
+                                Control[] controls = form.GetPanelMain.Controls.Find(textBoxName, true);
                                 if (controls.Length > 0 && controls[0] is TextBox textBox)
                                 {
                                     textBox.Text = row[column].ToString();
@@ -196,37 +208,14 @@ namespace IngSoft.UI
                 }
             };
         }
-        internal static void EliminarUsuarioCreator(Point listPos, Size listSize, Point txtPos, Point btnPos)
+        internal void EliminarUsuarioButtonCreator(Point listPos, Size listSize, Point txtPos, Point btnPos)
         {
-            var parent = FrmUsuario.ActiveForm;
-            if (parent == null) return;
-
-            // Get users
-            IUsuarioServices usuarioServices = ServicesFactory.CreateUsuarioServices();
-            List<Usuario> usuarios = new List<Usuario>();
-            try
-            {
-                usuarios = usuarioServices.ObtenerUsuarios();
-            }
-            catch(Exception)
-            {
-                MessageBox.Show("Error al obtener la lista de usuarios."); 
-                return;
-            }
-
-            // Create DataGridView with users (so selection fills textboxes similarly to modify flow)
-            var flex = new FrmUsuarioFlexiblizador();
-            flex.dataGridViewWithSelectionChanged(usuarios, listPos, listSize);
-
-            // Create textbox for username (will be filled by the DataGridView selection handler)
-            FlexibilizadorFormularios.CreateTextBox(parent, "UserName", txtPos);
-
-            FlexibilizadorFormularios.CreateButton(parent, "btnEliminarUsuario", btnPos, new Size(200, 30), "Eliminar Usuario", btnEliminar_Click);
+            Button btnEliminador = FlexibilizadorFormularios.CreateButton(form.GetPanelMain, "btnEliminarUsuario", btnPos, new Size(200, 30), "Eliminar Usuario", btnEliminar_Click);
         }
 
-        private static void btnEliminar_Click(object sender, EventArgs e)
+        private void btnEliminar_Click(object sender, EventArgs e)
         {
-            var txt = FrmUsuario.ActiveForm.Controls.Find("txtUserName", true).FirstOrDefault() as TextBox;
+            var txt = form.GetPanelMain.Controls.Find("txtUserName", true).FirstOrDefault() as TextBox;
             if (txt == null) return;
             string username = txt.Text?.Trim();
             if (string.IsNullOrEmpty(username))
@@ -244,7 +233,7 @@ namespace IngSoft.UI
                 // clear textbox
                 if (txt != null) txt.Text = string.Empty;
 
-                new FrmUsuario().EliminarControlesAdicionalesUsuario();
+                EliminarControlesAdicionalesUsuario();
                 
             }
             catch (Exception ex)
@@ -253,6 +242,10 @@ namespace IngSoft.UI
             }
 
             return;
+        }
+        internal void EliminarControlesAdicionalesUsuario()
+        {
+            FlexibilizadorFormularios.EliminarControlesAdicionalesForm(form.GetPanelMain, form.ControlesSalvar());
         }
     }
 }
