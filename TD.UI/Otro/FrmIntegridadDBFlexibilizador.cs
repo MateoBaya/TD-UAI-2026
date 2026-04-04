@@ -3,7 +3,6 @@ using System.Drawing;
 using System.Windows.Forms;
 using IngSoft.ApplicationServices;
 using IngSoft.ApplicationServices.Dto;
-using IngSoft.Services;
 
 namespace IngSoft.UI
 {

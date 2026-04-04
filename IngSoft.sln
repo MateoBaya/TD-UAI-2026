@@ -1,10 +1,8 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 17
-VisualStudioVersion = 17.14.36408.4
+# Visual Studio Version 18
+VisualStudioVersion = 18.3.11520.95
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IngSoft.UI", "IngSoft.UI\IngSoft.UI.csproj", "{A85D6925-4B61-41A5-A2FE-AF00279388DD}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IngSoft.Services", "IngSoft.Services\IngSoft.Services.csproj", "{F328C993-8886-49D3-B0AE-BB6A43BD8C83}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IngSoft.Domain", "IngSoft.Domain\IngSoft.Domain.csproj", "{CDAAC3D8-6977-4712-B892-EF025B7C264D}"
@@ -17,16 +15,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IngSoft.DBConnection", "Ing
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IngSoft.ApplicationServices", "IngSoft.ApplicationServices\IngSoft.ApplicationServices.csproj", "{A5BF4364-1CAB-4940-A13F-CE68E2601A68}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "IngSoft.UI", "IngSoft.UI\IngSoft.UI.csproj", "{A85D6925-4B61-41A5-A2FE-AF00279388DD}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{A85D6925-4B61-41A5-A2FE-AF00279388DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A85D6925-4B61-41A5-A2FE-AF00279388DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A85D6925-4B61-41A5-A2FE-AF00279388DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A85D6925-4B61-41A5-A2FE-AF00279388DD}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F328C993-8886-49D3-B0AE-BB6A43BD8C83}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F328C993-8886-49D3-B0AE-BB6A43BD8C83}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F328C993-8886-49D3-B0AE-BB6A43BD8C83}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -51,6 +47,10 @@ Global
 		{A5BF4364-1CAB-4940-A13F-CE68E2601A68}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A5BF4364-1CAB-4940-A13F-CE68E2601A68}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A5BF4364-1CAB-4940-A13F-CE68E2601A68}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A85D6925-4B61-41A5-A2FE-AF00279388DD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A85D6925-4B61-41A5-A2FE-AF00279388DD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A85D6925-4B61-41A5-A2FE-AF00279388DD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A85D6925-4B61-41A5-A2FE-AF00279388DD}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

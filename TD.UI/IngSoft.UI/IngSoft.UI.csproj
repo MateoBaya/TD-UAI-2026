@@ -46,50 +46,54 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BitacoraUI\FrmBitacoraFlexibilizador.cs" />
-    <Compile Include="BitacoraUI\FrmBitacoraHeaderConfig.cs" />
-    <Compile Include="Dictionary\DictionaryPermisos.cs" />
+    <Compile Include="Pagination\DataGridViewPaginationDecorator.cs" />
     <Compile Include="DTOs\BitacoraGridDto.cs" />
     <Compile Include="DTOs\MultidiomaGridDto.cs" />
-    <Compile Include="Backup\FlexibilizadorFormularios.cs" />
-    <Compile Include="Backup\FrmBackUpFlexibilizador.cs" />
+    <Compile Include="Backup\FrmBackUp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Backup\FrmBackUp.Designer.cs">
+      <DependentUpon>FrmBackUp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="BitacoraUI\FrmBitacoraFlexibilizador.cs" />
+    <Compile Include="BitacoraUI\FrmBitacoraHeaderConfig.cs" />
     <Compile Include="FrmControlDeCambios.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FrmControlDeCambios.Designer.cs">
       <DependentUpon>FrmControlDeCambios.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmControlDeCambiosFlexibilizador.cs" />
     <Compile Include="FrmIntegridadDB.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="FrmIntegridadDB.Designer.cs">
       <DependentUpon>FrmIntegridadDB.cs</DependentUpon>
     </Compile>
-    <Compile Include="FrmIntegridadDBFlexibilizador.cs" />
-    <Compile Include="FrmPrincipal.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="FrmPrincipal.Designer.cs">
-      <DependentUpon>FrmPrincipal.cs</DependentUpon>
-    </Compile>
-    <Compile Include="FrmPrincipalFlexibilizador.cs" />
+    <Compile Include="Dictionary\DictionaryPermisos.cs" />
+    <Compile Include="FlexibilizadorFormularios.cs" />
     <Compile Include="Login\FrmLogin.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Login\FrmLogin.Designer.cs">
       <DependentUpon>FrmLogin.cs</DependentUpon>
     </Compile>
+<<<<<<< HEAD
     <Compile Include="Login\FrmLoginFlexibilizador.cs" />
     <Compile Include="Login\FrmLoginHeaderConfig.cs" />
+    <Compile Include="Multidioma\FrmCrearIdioma.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Multidioma\FrmCrearIdioma.Designer.cs">
+      <DependentUpon>FrmCrearIdioma.cs</DependentUpon>
+    </Compile>
+=======
+>>>>>>> 061785efc15c2b2663df7635f583b97330e83f82
     <Compile Include="Multidioma\FrmMultidiomas.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Multidioma\FrmMultidiomas.Designer.cs">
       <DependentUpon>FrmMultidiomas.cs</DependentUpon>
     </Compile>
-    <Compile Include="Multidioma\FrmMultidiomasFlexibilizador.cs" />
-    <Compile Include="Pagination\DataGridViewPaginationDecorator.cs" />
     <Compile Include="Permisos\FrmPermiso.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -97,36 +101,61 @@
       <DependentUpon>FrmPermiso.cs</DependentUpon>
     </Compile>
     <Compile Include="Permisos\FrmPermisosFlexibilizador.cs" />
+    <Compile Include="FrmPrincipal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FrmPrincipal.Designer.cs">
+      <DependentUpon>FrmPrincipal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FrmPrincipalFlexibilizador.cs" />
     <Compile Include="Permisos\FrmPermisosHeaderConfig.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Usuario\FrmUsuario.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="Usuario\FrmUsuario.Designer.cs">
       <DependentUpon>FrmUsuario.cs</DependentUpon>
     </Compile>
+<<<<<<< HEAD
     <Compile Include="Usuario\FrmUsuarioFlexiblizador.cs" />
+    <Compile Include="Multidioma\FrmModificarIdioma.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Multidioma\FrmModificarIdioma.Designer.cs">
+      <DependentUpon>FrmModificarIdioma.cs</DependentUpon>
+    </Compile>
+=======
+    <Compile Include="FrmUsuarioFlexiblizador.cs" />
+    <Compile Include="FrmIntegridadDBFlexibilizador.cs" />
+    <Compile Include="FrmBackUpFlexibilizador.cs" />
+    <Compile Include="FrmControlDeCambiosFlexibilizador.cs" />
+    <Compile Include="Multidioma\FrmMultidiomasFlexibilizador.cs" />
+>>>>>>> 061785efc15c2b2663df7635f583b97330e83f82
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Usuario\FrmUsuarioHeaderConfig.cs" />
+    <EmbeddedResource Include="Backup\FrmBackUp.resx">
+      <DependentUpon>FrmBackUp.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="FrmControlDeCambios.resx">
       <DependentUpon>FrmControlDeCambios.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="FrmIntegridadDB.resx">
       <DependentUpon>FrmIntegridadDB.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="FrmPrincipal.resx">
-      <DependentUpon>FrmPrincipal.cs</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="Login\FrmLogin.resx">
       <DependentUpon>FrmLogin.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Multidioma\FrmCrearIdioma.resx" />
-    <EmbeddedResource Include="Multidioma\FrmModificarIdioma.resx" />
     <EmbeddedResource Include="Multidioma\FrmMultidiomas.resx">
       <DependentUpon>FrmMultidiomas.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Permisos\FrmPermiso.resx">
       <DependentUpon>FrmPermiso.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FrmPrincipal.resx">
+      <DependentUpon>FrmPrincipal.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Usuario\FrmUsuario.resx">
+      <DependentUpon>FrmUsuario.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
@@ -137,9 +166,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <EmbeddedResource Include="Usuario\FrmUsuario.resx">
-      <DependentUpon>FrmUsuario.cs</DependentUpon>
-    </EmbeddedResource>
     <None Include="App.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
