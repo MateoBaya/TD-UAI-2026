@@ -3,28 +3,33 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using IngSoft.Abstractions.Multidioma;
 using IngSoft.ApplicationServices;
+using IngSoft.ApplicationServices.Factory;
 using IngSoft.Domain.Multidioma;
+using IngSoft.Services;
 using IngSoft.UI.DTOs;
 
 namespace IngSoft.UI.Multidioma
 {
     internal static class FrmMultidiomasFlexibilizador
     {
-        public static void CrearPantallaCrearIdioma(
-            FrmMultidiomas form,
-            IMultidiomaServices svc,
+        internal static void CrearPantallaCrearIdioma(
             Point ptNombre,
             Point ptCodigo,
             Point ptBtn)
         {
-            FlexibilizadorFormularios.CreateTextBox(form, "IdiomaNombre", ptNombre);
-            FlexibilizadorFormularios.CreateTextBox(form, "IdiomaCodigo", ptCodigo);
+            var parent = FrmMultidiomas.ActiveForm;
+            IMultidiomaServices multidiomaServices = ServicesFactory.CreateMultidiomaServices();
 
-            FlexibilizadorFormularios.CreateButton(form, "btnCrearIdioma", ptBtn, new Size(120, 35), "Crear Idioma", (s, e) =>
+            FlexibilizadorFormularios.CreateTextBox(parent, "IdiomaNombre", ptNombre);
+            FlexibilizadorFormularios.CreateTextBox(parent, "IdiomaCodigo", ptCodigo);
+
+            FlexibilizadorFormularios.CreateButton(parent, "btnCrearIdioma", ptBtn, new Size(120, 35), "Crear Idioma", (s, e) =>
             {
-                var txtNombre = form.Controls.Find("txtIdiomaNombre", true)[0] as TextBox;
-                var txtCodigo = form.Controls.Find("txtIdiomaCodigo", true)[0] as TextBox;
+                var form = FrmMultidiomas.ActiveForm;
+                var txtNombre = form.Controls.Find("txtIdiomaNombre", true).FirstOrDefault() as TextBox;
+                var txtCodigo = form.Controls.Find("txtIdiomaCodigo", true).FirstOrDefault() as TextBox;
 
                 if (string.IsNullOrWhiteSpace(txtNombre?.Text))
                 {
@@ -46,7 +51,7 @@ namespace IngSoft.UI.Multidioma
 
                 try
                 {
-                    svc.CrearIdioma(nuevoIdioma);
+                    multidiomaServices.CrearIdioma(nuevoIdioma);
                     MessageBox.Show("Idioma creado exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     txtNombre.Text = string.Empty;
                     txtCodigo.Text = string.Empty;
@@ -58,14 +63,15 @@ namespace IngSoft.UI.Multidioma
             });
         }
 
-        public static void CrearPantallaModificarIdioma(
-            FrmMultidiomas form,
-            IMultidiomaServices svc,
+        internal static void CrearPantallaModificarIdioma(
             Point ptCombo,
             Point ptDgv,
             Size szDgv,
             Point ptBtn)
         {
+            var parent = FrmMultidiomas.ActiveForm;
+            IMultidiomaServices multidiomaServices = ServicesFactory.CreateMultidiomaServices();
+
             var lblCombo = new Label
             {
                 Name = "lblIdiomas",
@@ -73,7 +79,7 @@ namespace IngSoft.UI.Multidioma
                 AutoSize = true,
                 Location = new Point(ptCombo.X, ptCombo.Y - 20)
             };
-            form.Controls.Add(lblCombo);
+            parent.Controls.Add(lblCombo);
 
             var cbo = new ComboBox
             {
@@ -84,32 +90,36 @@ namespace IngSoft.UI.Multidioma
                 DisplayMember = "Nombre"
             };
 
-            var idiomas = svc.ObtenerIdiomas().Cast<IIdioma>().ToList();
+            var idiomas = multidiomaServices.ObtenerIdiomas().Cast<IIdioma>().ToList();
             var idiomasCacheados = MultidiomaManager.ObtenerIdiomasCache(idiomas);
             cbo.DataSource = idiomasCacheados;
 
-            form.Controls.Add(cbo);
+            parent.Controls.Add(cbo);
 
-            var dgv = FlexibilizadorFormularios.CreateDataGridView(form, "dgvTraducciones", ptDgv, szDgv);
+            var dgv = FlexibilizadorFormularios.CreateDataGridView(parent, "dgvTraducciones", ptDgv, szDgv);
             dgv.ReadOnly = false;
 
             cbo.SelectedIndexChanged += (s, e) =>
             {
                 var idiomaSeleccionado = cbo.SelectedItem as IIdioma;
                 if (idiomaSeleccionado != null)
-                    CargarTraducciones(cbo, dgv, svc);
+                    CargarTraducciones(cbo, dgv, multidiomaServices);
             };
 
             if (cbo.Items.Count > 0)
-                CargarTraducciones(cbo, dgv, svc);
+                CargarTraducciones(cbo, dgv, multidiomaServices);
 
-            FlexibilizadorFormularios.CreateButton(form, "btnGuardarTraducciones", ptBtn, new Size(120, 35), "Guardar", (s, e) =>
+            FlexibilizadorFormularios.CreateButton(parent, "btnGuardarTraducciones", ptBtn, new Size(120, 35), "Guardar", (s, e) =>
             {
-                var idiomaSeleccionado = cbo.SelectedItem as IIdioma;
-                var traduccionesActuales = dgv.DataSource as List<MultidiomaGridDto>;
+                var form = FrmMultidiomas.ActiveForm;
+                var cboCtrl = form.Controls.Find("cboIdiomas", true).FirstOrDefault() as ComboBox;
+                var dgvCtrl = form.Controls.Find("dgvTraducciones", true).FirstOrDefault() as DataGridView;
+
+                var idiomaSeleccionado = cboCtrl?.SelectedItem as IIdioma;
+                var traduccionesActuales = dgvCtrl?.DataSource as List<MultidiomaGridDto>;
                 if (idiomaSeleccionado == null || traduccionesActuales == null) return;
 
-                var controlIdioma = svc.ObtenerControlesPorIdioma(idiomaSeleccionado.Id);
+                var controlIdioma = multidiomaServices.ObtenerControlesPorIdioma(idiomaSeleccionado.Id);
 
                 foreach (var traduccionDto in traduccionesActuales)
                 {
@@ -121,7 +131,7 @@ namespace IngSoft.UI.Multidioma
                             IdControlIdioma = traduccionDto.IdControlIdioma,
                             TextoTraducido = traduccionDto.TextoTraducido
                         };
-                        svc.ActualizarTraduccion(traduccion);
+                        multidiomaServices.ActualizarTraduccion(traduccion);
                     }
                     else
                     {
@@ -132,12 +142,12 @@ namespace IngSoft.UI.Multidioma
                             IdControlIdioma = traduccionDto.IdControlIdioma,
                             TextoTraducido = traduccionDto.TextoTraducido
                         };
-                        svc.CrearTraduccion(traduccion);
+                        multidiomaServices.CrearTraduccion(traduccion);
                     }
                 }
 
                 MessageBox.Show("Traducciones guardadas correctamente.", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                CargarTraducciones(cbo, dgv, svc);
+                CargarTraducciones(cboCtrl, dgvCtrl, multidiomaServices);
             });
         }
 

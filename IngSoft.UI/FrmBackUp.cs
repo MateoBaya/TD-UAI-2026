@@ -5,6 +5,7 @@ using System.Windows.Forms;
 using IngSoft.Abstractions.Multidioma;
 using IngSoft.ApplicationServices;
 using IngSoft.ApplicationServices.Factory;
+using IngSoft.Domain;
 using IngSoft.Domain.Multidioma;
 using IngSoft.Services;
 
@@ -12,19 +13,22 @@ namespace IngSoft.UI
 {
     public partial class FrmBackUp : Form, IObserver
     {
-        private readonly IBackupServices _backupServices;
         private readonly IMultidiomaServices _multidiomaServices;
 
         public FrmBackUp()
         {
             InitializeComponent();
-            _backupServices = ServicesFactory.CreateBackupServices();
             _multidiomaServices = ServicesFactory.CreateMultidiomaServices();
         }
 
         internal void EliminarControlesAdicionales()
         {
             FlexibilizadorFormularios.EliminarControlesAdicionalesForm(this);
+        }
+
+        private void FrmBackUp_Shown(object sender, EventArgs e)
+        {
+            FlexibilizadorFormularios.MenuStripHider(this.MainMenuStrip, SessionManager.GetPermisos() as PermisoComponent);
         }
 
         private void gestionarBackupToolStripMenuItem_Click(object sender, EventArgs e)
@@ -38,7 +42,7 @@ namespace IngSoft.UI
             Point ptBtnRestaurar = new Point(ptBtnCrear.X, ptBtnCrear.Y + 60);
             Size szBtn = new Size(123, 40);
 
-            FrmBackUpFlexibilizador.CrearVistaBackup(this, _backupServices, ptTitle, ptDgv, szDgv, ptBtnCrear, ptBtnRestaurar, szBtn);
+            FrmBackUpFlexibilizador.CrearVistaBackup(ptTitle, ptDgv, szDgv, ptBtnCrear, ptBtnRestaurar, szBtn);
             AplicarIdiomaActual();
         }
 
