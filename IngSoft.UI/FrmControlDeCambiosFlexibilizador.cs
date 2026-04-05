@@ -25,6 +25,11 @@ namespace IngSoft.UI
             IUsuarioServices usuSvc = SingleInstancesManager.Instance.ObtenerInstancia<IUsuarioServices>();
             IBitacoraServices bitSvc = SingleInstancesManager.Instance.ObtenerInstancia<IBitacoraServices>();
 
+            var parent = FrmControlDeCambios.ActiveForm;
+            IUsuarioHistoricoServices historSvc = ServicesFactory.CreateUsuarioHistoricoServices();
+            IUsuarioServices usuSvc = SingleInstancesManager.Instance.ObtenerInstancia<IUsuarioServices>();
+            IBitacoraServices bitSvc = SingleInstancesManager.Instance.ObtenerInstancia<IBitacoraServices>();
+
             // Title
             var lbl = new Label
             {
@@ -77,7 +82,7 @@ namespace IngSoft.UI
             parent.Controls.Add(txt);
 
             // DataGridView
-            var dgv = FlexibilizadorFormularios.CreateDataGridView(parent, "dgvControlCambios", ptDgv, szDgv);
+            var dgv = FlexibilizadorFormularios.CreateDataGridView(form, "dgvControlCambios", ptDgv, szDgv);
             dgv.CellFormatting += DgvControlCambios_CellFormatting;
             dgv.SelectionChanged += (s, e) =>
             {
@@ -114,7 +119,7 @@ namespace IngSoft.UI
 
             // Restaurar button (initially disabled)
             var btnRestaurar = FlexibilizadorFormularios.CreateButton(
-                parent, "btnRestaurar",
+                form, "btnRestaurar",
                 ptBtnRestaurar, szBtn, "Restaurar",
                 (s, e) =>
                 {
