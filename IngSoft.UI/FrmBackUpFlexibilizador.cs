@@ -60,6 +60,7 @@ namespace IngSoft.UI
                         MessageBox.Show("Backup creado exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
                         var dgvActual = form.Controls.Find("dgvBackup", true)[0] as DataGridView;
+                        if (dgvActual != null) CargarHistorialBackups(dgvActual, svc);
                     }
                 }
                 catch (Exception ex)
@@ -106,6 +107,7 @@ namespace IngSoft.UI
                         if (btn != null) btn.Enabled = false;
 
                         svc.RestaurarBackup(backupSeleccionado.RutaCompleta);
+                        
                         MessageBox.Show("Backup restaurado exitosamente.\n\n", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         form.Close();
                     }
