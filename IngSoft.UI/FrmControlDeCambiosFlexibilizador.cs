@@ -1,9 +1,12 @@
 using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using IngSoft.ApplicationServices;
+using IngSoft.ApplicationServices.Factory;
 using IngSoft.Domain;
 using IngSoft.Domain.Enums;
+using IngSoft.Services;
 
 namespace IngSoft.UI
 {

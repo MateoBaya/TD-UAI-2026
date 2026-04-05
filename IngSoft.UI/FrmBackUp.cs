@@ -11,11 +11,11 @@ using IngSoft.Services;
 
 namespace IngSoft.UI
 {
-    public partial class FrmControlDeCambios : Form, IObserver
+    public partial class FrmBackUp : Form, IObserver
     {
         private readonly IMultidiomaServices _multidiomaServices;
 
-        public FrmControlDeCambios()
+        public FrmBackUp()
         {
             InitializeComponent();
             _multidiomaServices = ServicesFactory.CreateMultidiomaServices();
@@ -26,30 +26,28 @@ namespace IngSoft.UI
             FlexibilizadorFormularios.EliminarControlesAdicionalesForm(this);
         }
 
-        private void FrmControlDeCambios_Shown(object sender, EventArgs e)
+        private void FrmBackUp_Shown(object sender, EventArgs e)
         {
             FlexibilizadorFormularios.MenuStripHider(this.MainMenuStrip, SessionManager.GetPermisos() as PermisoComponent);
-            buscarCambiosToolStripMenuItem_Click(null, null);
+            gestionarBackupToolStripMenuItem_Click(null, null);
         }
 
-        private void buscarCambiosToolStripMenuItem_Click(object sender, EventArgs e)
+        private void gestionarBackupToolStripMenuItem_Click(object sender, EventArgs e)
         {
             EliminarControlesAdicionales();
 
-            Point ptTitle = new Point(this.Width / 2 - 120, this.Height / 20);
-            Point ptFiltros = new Point(this.Width / 16, this.Height / 8);
-            Point ptDgv = new Point(this.Width / 40, this.Height / 4);
-            Size szDgv = new Size(this.Width * 5 / 6, this.Height / 2 + this.Height / 8);
-            Point ptBtnRestaurar = new Point(ptDgv.X + szDgv.Width + 10, ptDgv.Y + 15);
-            Size szBtn = new Size(84, 28);
+            Point ptTitle = new Point(this.Width / 2 - 110, this.Height / 14);
+            Point ptDgv = new Point(this.Width / 16, this.Height / 5);
+            Size szDgv = new Size(this.Width * 3 / 4, this.Height * 3 / 4 - this.Height / 5);
+            Point ptBtnCrear = new Point(ptDgv.X + szDgv.Width + 20, ptDgv.Y);
+            Point ptBtnRestaurar = new Point(ptBtnCrear.X, ptBtnCrear.Y + 60);
+            Size szBtn = new Size(123, 40);
 
-            FrmControlDeCambiosFlexibilizador.CrearVistaBusqueda(
-                ptTitle, ptFiltros, ptDgv, szDgv, ptBtnRestaurar, szBtn);
-
+            FrmBackUpFlexibilizador.CrearVistaBackup(ptTitle, ptDgv, szDgv, ptBtnCrear, ptBtnRestaurar, szBtn);
             AplicarIdiomaActual();
         }
 
-        private void FrmControlDeCambios_Load(object sender, EventArgs e)
+        private void FrmBackUp_Load(object sender, EventArgs e)
         {
             SuscribirseAIdiomaActual();
             AplicarIdiomaActual();

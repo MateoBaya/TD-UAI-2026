@@ -32,6 +32,7 @@ namespace IngSoft.UI
         private void FrmIntegridadDB_Shown(object sender, EventArgs e)
         {
             FlexibilizadorFormularios.MenuStripHider(this.MainMenuStrip, SessionManager.GetPermisos() as PermisoComponent);
+            verIntegridadToolStripMenuItem_Click(null, null);
         }
 
         private void verIntegridadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -51,7 +52,6 @@ namespace IngSoft.UI
 
         private void FrmIntegridadDB_Load(object sender, EventArgs e)
         {
-            verIntegridadToolStripMenuItem_Click(null, null);
             SuscribirseAIdiomaActual();
             AplicarIdiomaActual();
         }

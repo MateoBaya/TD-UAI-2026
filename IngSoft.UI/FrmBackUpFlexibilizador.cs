@@ -111,8 +111,8 @@ namespace IngSoft.UI
                         var btn = form.Controls.Find("btnRestaurar", true).FirstOrDefault() as Button;
                         if (btn != null) btn.Enabled = false;
 
-                        svc.RestaurarBackup(backupSeleccionado.RutaCompleta);
-                        
+                        backupServices.RestaurarBackup(backupSeleccionado.RutaCompleta);
+
                         MessageBox.Show("Backup restaurado exitosamente.\n\n", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
                         form.Close();
                     }
