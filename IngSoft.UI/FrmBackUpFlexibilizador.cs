@@ -19,8 +19,6 @@ namespace IngSoft.UI
             Point ptBtnRestaurar,
             Size szBtn)
         {
-
-
             var lbl = new Label
             {
                 Name = "lblBackUp",
