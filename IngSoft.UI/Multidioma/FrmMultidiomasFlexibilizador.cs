@@ -1,190 +1,182 @@
+using IngSoft.Abstractions.Multidioma;
+using IngSoft.ApplicationServices;
+using IngSoft.ApplicationServices.Factory;
+using IngSoft.Domain;
+using IngSoft.Domain.Multidioma;
+using IngSoft.Services;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using IngSoft.Abstractions.Multidioma;
-using IngSoft.ApplicationServices;
-using IngSoft.ApplicationServices.Factory;
-using IngSoft.Domain.Multidioma;
-using IngSoft.Services;
-using IngSoft.UI.DTOs;
 
 namespace IngSoft.UI.Multidioma
 {
-    internal static class FrmMultidiomasFlexibilizador
+    /// <summary>
+    /// Instance-based Flexibilizador for Multidiomas. Creates all UI controls
+    /// dynamically inside FrmPrincipal.GetPanelMain, following the same pattern
+    /// as FrmUsuarioFlexiblizador. Replaces the former static class of the same name.
+    /// </summary>
+    internal class FrmMultidiomasFlexibilizador
     {
-        internal static void CrearPantallaCrearIdioma(
-            Point ptNombre,
-            Point ptCodigo,
-            Point ptBtn)
+        private readonly FrmPrincipal _form = SingleInstancesManager.Instance.ObtenerInstancia<FrmPrincipal>();
+        private readonly IMultidiomaServices _multidiomaServices = ServicesFactory.CreateMultidiomaServices();
+
+        public IMultidiomaServices MultidiomaServices => _multidiomaServices;
+
+        internal void EliminarControlesAdicionales()
         {
-            var parent = FrmMultidiomas.ActiveForm;
-            IMultidiomaServices multidiomaServices = ServicesFactory.CreateMultidiomaServices();
-
-            FlexibilizadorFormularios.CreateTextBox(parent, "IdiomaNombre", ptNombre);
-            FlexibilizadorFormularios.CreateTextBox(parent, "IdiomaCodigo", ptCodigo);
-
-            FlexibilizadorFormularios.CreateButton(parent, "btnCrearIdioma", ptBtn, new Size(120, 35), "Crear Idioma", (s, e) =>
-            {
-                var form = FrmMultidiomas.ActiveForm;
-                var txtNombre = form.Controls.Find("txtIdiomaNombre", true).FirstOrDefault() as TextBox;
-                var txtCodigo = form.Controls.Find("txtIdiomaCodigo", true).FirstOrDefault() as TextBox;
-
-                if (string.IsNullOrWhiteSpace(txtNombre?.Text))
-                {
-                    MessageBox.Show("El nombre del idioma no puede estar vacío.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-                if (string.IsNullOrWhiteSpace(txtCodigo?.Text))
-                {
-                    MessageBox.Show("El código del idioma no puede estar vacío.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
-                var nuevoIdioma = new Idioma
-                {
-                    Id = Guid.NewGuid(),
-                    Nombre = txtNombre.Text.Trim(),
-                    Codigo = txtCodigo.Text.Trim()
-                };
-
-                try
-                {
-                    multidiomaServices.CrearIdioma(nuevoIdioma);
-                    MessageBox.Show("Idioma creado exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    txtNombre.Text = string.Empty;
-                    txtCodigo.Text = string.Empty;
-                }
-                catch (Exception)
-                {
-                    MessageBox.Show("Se quiere crear un Idioma que ya existe", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                }
-            });
+            FlexibilizadorFormularios.EliminarControlesAdicionalesForm(
+                _form.GetPanelMain, _form.ControlesSalvar());
         }
 
-        internal static void CrearPantallaModificarIdioma(
-            Point ptCombo,
-            Point ptDgv,
-            Size szDgv,
-            Point ptBtn)
+        // ── Crear Idioma ────────────────────────────────────────────────────────
+
+        internal void TextBoxCreator(string param, Point position)
         {
-            var parent = FrmMultidiomas.ActiveForm;
-            IMultidiomaServices multidiomaServices = ServicesFactory.CreateMultidiomaServices();
+            FlexibilizadorFormularios.CreateTextBox(_form.GetPanelMain, param, position);
+        }
 
-            var lblCombo = new Label
-            {
-                Name = "lblIdiomas",
-                Text = "Idioma",
-                AutoSize = true,
-                Location = new Point(ptCombo.X, ptCombo.Y - 20)
-            };
-            parent.Controls.Add(lblCombo);
+        internal void CrearIdiomaButtonCreator(Point position)
+        {
+            FlexibilizadorFormularios.CreateButton(
+                _form.GetPanelMain, "btnCrearIdioma", position,
+                new Size(200, 30), "Crear Idioma", BtnCrearIdioma_Click);
+        }
 
-            var cbo = new ComboBox
+        private void BtnCrearIdioma_Click(object sender, EventArgs e)
+        {
+            try
             {
-                Name = "cboIdiomas",
-                Location = ptCombo,
-                Size = new Size(200, 25),
+                string nombre = GetTextBoxValue("txtNombre");
+                string codigo = GetTextBoxValue("txtCodigo");
+
+                // NOTE: assumes IMultidiomaServices exposes CrearIdioma(Idioma)
+                _multidiomaServices.CrearIdioma(new Idioma { Nombre = nombre, Codigo = codigo });
+                MessageBox.Show("Idioma creado con éxito.");
+                EliminarControlesAdicionales();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al crear idioma: {ex.Message}");
+            }
+        }
+
+        // ── Modificar Idioma ────────────────────────────────────────────────────
+
+        /// <summary>
+        /// Adds a ComboBox populated with all idiomas. Selecting one auto-fills the DGV.
+        /// </summary>
+        internal ComboBox ComboBoxIdiomaCreator(Point position)
+        {
+            // NOTE: assumes IMultidiomaServices exposes ObtenerIdiomas()
+            var idiomas = _multidiomaServices.ObtenerIdiomas().ToList();
+            var cmb = new ComboBox
+            {
+                Name          = "cmbIdioma",
+                Location      = position,
+                Size          = new Size(220, 25),
                 DropDownStyle = ComboBoxStyle.DropDownList,
-                DisplayMember = "Nombre"
+                DataSource    = idiomas,
+                DisplayMember = "Nombre",
+                ValueMember   = "Id"
             };
+            cmb.SelectedIndexChanged += OnIdiomaSeleccionado;
+            _form.GetPanelMain.Controls.Add(cmb);
+            return cmb;
+        }
 
-            var idiomas = multidiomaServices.ObtenerIdiomas().Cast<IIdioma>().ToList();
-            var idiomasCacheados = MultidiomaManager.ObtenerIdiomasCache(idiomas);
-            cbo.DataSource = idiomasCacheados;
+        private void OnIdiomaSeleccionado(object sender, EventArgs e)
+        {
+            if (!(sender is ComboBox cmb) || !(cmb.SelectedItem is Idioma idioma))
+                return;
 
-            parent.Controls.Add(cbo);
+            var controles = _multidiomaServices
+                .ObtenerControlesPorIdioma(idioma.Id)
+                .Cast<IControlIdioma>()
+                .ToList();
 
-            var dgv = FlexibilizadorFormularios.CreateDataGridView(parent, "dgvTraducciones", ptDgv, szDgv);
-            dgv.ReadOnly = false;
+            var dgv = _form.GetPanelMain.Controls
+                          .Find("dgvControlesIdioma", true)
+                          .FirstOrDefault() as DataGridView;
 
-            cbo.SelectedIndexChanged += (s, e) =>
+            if (dgv != null)
+                dgv.DataSource = controles;
+        }
+
+        internal DataGridView DataGridViewControlesCreator(Point position, Size size)
+        {
+            var cols = new Dictionary<string, Type>
             {
-                var idiomaSeleccionado = cbo.SelectedItem as IIdioma;
-                if (idiomaSeleccionado != null)
-                    CargarTraducciones(cbo, dgv, multidiomaServices);
+                { "Nombre", typeof(string) },
+                { "Valor",  typeof(string) }
             };
+            // Empty list: selection in the ComboBox fills it via OnIdiomaSeleccionado
+            return FlexibilizadorFormularios.CreateDataGridView<IControlIdioma>(
+                _form.GetPanelMain, "dgvControlesIdioma", position, size, cols,
+                new List<IControlIdioma>());
+        }
 
-            if (cbo.Items.Count > 0)
-                CargarTraducciones(cbo, dgv, multidiomaServices);
+        internal void GuardarIdiomaButtonCreator(Point position)
+        {
+            FlexibilizadorFormularios.CreateButton(
+                _form.GetPanelMain, "btnGuardarIdioma", position,
+                new Size(200, 30), "Guardar Cambios", BtnGuardarIdioma_Click);
+        }
 
-            FlexibilizadorFormularios.CreateButton(parent, "btnGuardarTraducciones", ptBtn, new Size(120, 35), "Guardar", (s, e) =>
+        private void BtnGuardarIdioma_Click(object sender, EventArgs e)
+        {
+            try
             {
-                var form = FrmMultidiomas.ActiveForm;
-                var cboCtrl = form.Controls.Find("cboIdiomas", true).FirstOrDefault() as ComboBox;
-                var dgvCtrl = form.Controls.Find("dgvTraducciones", true).FirstOrDefault() as DataGridView;
+                var dgv = _form.GetPanelMain.Controls
+                               .Find("dgvControlesIdioma", true)
+                               .FirstOrDefault() as DataGridView;
 
-                var idiomaSeleccionado = cboCtrl?.SelectedItem as IIdioma;
-                var traduccionesActuales = dgvCtrl?.DataSource as List<MultidiomaGridDto>;
-                if (idiomaSeleccionado == null || traduccionesActuales == null) return;
-
-                var controlIdioma = multidiomaServices.ObtenerControlesPorIdioma(idiomaSeleccionado.Id);
-
-                foreach (var traduccionDto in traduccionesActuales)
+                if (dgv?.DataSource is List<IControlIdioma> controles)
                 {
-                    if (controlIdioma.Count() > 0)
+                    // Persist each translation: create or update Traduccion for each ControlIdioma
+                    foreach (var ctrl in controles)
                     {
-                        var traduccion = new Traduccion
+                        try
                         {
-                            IdIdioma = idiomaSeleccionado.Id,
-                            IdControlIdioma = traduccionDto.IdControlIdioma,
-                            TextoTraducido = traduccionDto.TextoTraducido
-                        };
-                        multidiomaServices.ActualizarTraduccion(traduccion);
-                    }
-                    else
-                    {
-                        var traduccion = new Traduccion
+                            var existing = _multidiomaServices.ObtenerTraduccionPorIdiomaYControlIdioma(ctrl.IdIdioma, ctrl.Id);
+                            if (existing == null)
+                            {
+                                var nueva = new Traduccion
+                                {
+                                    IdIdioma = ctrl.IdIdioma,
+                                    IdControlIdioma = ctrl.Id,
+                                    TextoTraducido = ctrl.TextoTraducido
+                                };
+                                _multidiomaServices.CrearTraduccion(nueva);
+                            }
+                            else
+                            {
+                                existing.TextoTraducido = ctrl.TextoTraducido;
+                                _multidiomaServices.ActualizarTraduccion(existing);
+                            }
+                        }
+                        catch (Exception)
                         {
-                            Id = Guid.NewGuid(),
-                            IdIdioma = idiomaSeleccionado.Id,
-                            IdControlIdioma = traduccionDto.IdControlIdioma,
-                            TextoTraducido = traduccionDto.TextoTraducido
-                        };
-                        multidiomaServices.CrearTraduccion(traduccion);
+                            // ignore individual failures and continue saving others
+                        }
                     }
                 }
 
-                MessageBox.Show("Traducciones guardadas correctamente.", "Exito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                CargarTraducciones(cboCtrl, dgvCtrl, multidiomaServices);
-            });
-        }
-
-        private static void CargarTraducciones(ComboBox cbo, DataGridView dgv, IMultidiomaServices svc)
-        {
-            var idiomaSeleccionado = cbo.SelectedItem as IIdioma;
-            if (idiomaSeleccionado == null) return;
-
-            var idiomaPorDefecto = svc.ObtenerIdiomaPorDefecto();
-            var traduccionesPorDefecto = svc.ObtenerControlesPorIdioma(idiomaPorDefecto.Id);
-            var traducciones = svc.ObtenerControlesPorIdioma(idiomaSeleccionado.Id);
-
-            var listaMultidioma = new List<MultidiomaGridDto>();
-            foreach (var traduccionDefecto in traduccionesPorDefecto)
-            {
-                var traduccionExistente = traducciones.FirstOrDefault(t => t.NombreControl == traduccionDefecto.NombreControl);
-                var dto = new MultidiomaGridDto
-                {
-                    NombreControl = traduccionDefecto.NombreControl,
-                    TextoPorDefecto = traduccionDefecto.TextoTraducido,
-                    IdControlIdioma = traduccionDefecto.Id,
-                    TextoTraducido = traduccionExistente != null
-                        ? traduccionExistente.TextoTraducido
-                        : "[" + traduccionDefecto.TextoTraducido + "]"
-                };
-                listaMultidioma.Add(dto);
+                MessageBox.Show("Cambios guardados con éxito.");
+                EliminarControlesAdicionales();
             }
-
-            dgv.DataSource = listaMultidioma;
-
-            if (dgv.Columns.Count > 0)
+            catch (Exception ex)
             {
-                if (dgv.Columns["NombreControl"] != null) { dgv.Columns["NombreControl"].HeaderText = "Control"; dgv.Columns["NombreControl"].ReadOnly = true; dgv.Columns["NombreControl"].AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells; }
-                if (dgv.Columns["TextoPorDefecto"] != null) { dgv.Columns["TextoPorDefecto"].HeaderText = "Texto Original"; dgv.Columns["TextoPorDefecto"].ReadOnly = true; dgv.Columns["TextoPorDefecto"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; }
-                if (dgv.Columns["TextoTraducido"] != null) { dgv.Columns["TextoTraducido"].HeaderText = "Traducción"; dgv.Columns["TextoTraducido"].ReadOnly = false; dgv.Columns["TextoTraducido"].AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill; }
-                if (dgv.Columns["IdControlIdioma"] != null) dgv.Columns["IdControlIdioma"].Visible = false;
+                MessageBox.Show($"Error al guardar cambios: {ex.Message}");
             }
         }
+
+        // ── Helpers ─────────────────────────────────────────────────────────────
+
+        private string GetTextBoxValue(string name) =>
+            _form.GetPanelMain.Controls.Find(name, true).FirstOrDefault() is TextBox tb
+                ? tb.Text
+                : string.Empty;
     }
 }

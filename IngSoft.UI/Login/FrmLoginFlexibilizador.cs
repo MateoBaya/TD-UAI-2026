@@ -99,8 +99,9 @@ namespace IngSoft.UI
 
                 if (!integridadDB.EsValida && isAdmin != null)
                 {
-                    var frmIntegridadDB = new FrmIntegridadDB(integridadDB);
-                    frmIntegridadDB.ShowDialog();
+                    // Mostrar la pantalla de Integridad DB usando el HeaderConfig
+                    // (injecta la UI en pnlMain y ejecuta la carga inicial)
+                    new FrmIntegridadDBHeaderConfig();
                 }
 
                 // Notify the header config that login succeeded

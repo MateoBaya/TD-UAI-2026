@@ -71,12 +71,13 @@ namespace IngSoft.UI
         {
             return new Dictionary<string, EventHandler>
             {
-                { "usuariosToolStripMenuItem",        usuarioOnclick },
-                { "bitacoraToolStripMenuItem",         bitacoraOnclick },
-                { "permisosToolStripMenuItem",         permisosOnclick },
-                { "multidiomasToolStripMenuItem",      multidiomasOnclick },
-                { "backupsToolStripMenuItem",          backupsOnclick },
-                { "controlDeCambiosToolStripMenuItem", controlDeCambiosOnclick },
+                { "usuariosToolStripMenuItem",         usuarioOnclick },
+                { "bitacoraToolStripMenuItem",          bitacoraOnclick },
+                { "permisosToolStripMenuItem",          permisosOnclick },
+                { "multidiomasToolStripMenuItem",       multidiomasOnclick },
+                { "backupsToolStripMenuItem",           backupsOnclick },
+                { "controlDeCambiosToolStripMenuItem",  controlDeCambiosOnclick },
+                //{ "integridadDBToolStripMenuItem",      integridadDBOnclick },   // ← NEW
             };
         }
 
@@ -84,12 +85,13 @@ namespace IngSoft.UI
         {
             return new Dictionary<string, string>
             {
-                { "usuariosToolStripMenuItem",        "Usuarios" },
-                { "bitacoraToolStripMenuItem",         "Bitacora" },
-                { "permisosToolStripMenuItem",         "Permisos" },
-                { "multidiomasToolStripMenuItem",      "Multidiomas" },
-                { "backupsToolStripMenuItem",          "Backup" },
-                { "controlDeCambiosToolStripMenuItem", "Control de Cambios" },
+                { "usuariosToolStripMenuItem",         "Usuarios" },
+                { "bitacoraToolStripMenuItem",          "Bitacora" },
+                { "permisosToolStripMenuItem",          "Permisos" },
+                { "multidiomasToolStripMenuItem",       "Multidiomas" },
+                { "backupsToolStripMenuItem",           "Backup" },
+                { "controlDeCambiosToolStripMenuItem",  "Control de Cambios" },
+                //{ "integridadDBToolStripMenuItem",      "Integridad DB" },        // ← NEW
             };
         }
 
@@ -97,12 +99,12 @@ namespace IngSoft.UI
 
         static EventHandler usuarioOnclick = (sender, e) =>
         {
-            FrmUsuarioHeaderConfig   headerConfig   = new FrmUsuarioHeaderConfig();
-            FrmUsuarioFlexiblizador  flexibilizador = new FrmUsuarioFlexiblizador();
+            FrmUsuarioHeaderConfig  headerConfig   = new FrmUsuarioHeaderConfig();
+            FrmUsuarioFlexiblizador flexibilizador = new FrmUsuarioFlexiblizador();
         };
 
         /// <summary>
-        /// Bitacora is now injected into pnlMain via FrmBitacoraHeaderConfig,
+        /// Bitacora is injected into pnlMain via FrmBitacoraHeaderConfig,
         /// replacing the old ShowDialog call.
         /// </summary>
         static EventHandler bitacoraOnclick = (sender, e) =>
@@ -112,27 +114,49 @@ namespace IngSoft.UI
 
         static EventHandler permisosOnclick = (sender, e) =>
         {
-            FrmPermisosHeaderConfig  headerConfig   = new FrmPermisosHeaderConfig();
+            FrmPermisosHeaderConfig   headerConfig   = new FrmPermisosHeaderConfig();
             FrmPermisosFlexibilizador flexibilizador = new FrmPermisosFlexibilizador();
         };
 
-        static EventHandler controlDeCambiosOnclick = (sender, e) =>
-        {
-            var frmControlCambios = new FrmControlDeCambios();
-            frmControlCambios.ShowDialog();
-        };
+        // ── Migrated from ShowDialog ─────────────────────────────────────────────
 
+        /// <summary>
+        /// Previously: new FrmMultidiomas().ShowDialog()
+        /// Now: injects UI into FrmPrincipal.pnlMain via HeaderConfig.
+        /// </summary>
         static EventHandler multidiomasOnclick = (sender, e) =>
         {
-            var frmMultidiomas = new FrmMultidiomas();
-            frmMultidiomas.ShowDialog();
+            new FrmMultidiomasHeaderConfig();
         };
 
+        /// <summary>
+        /// Previously: new FrmBackUp().ShowDialog()
+        /// Now: injects UI into FrmPrincipal.pnlMain via HeaderConfig.
+        /// </summary>
         static EventHandler backupsOnclick = (sender, e) =>
         {
-            var frmBackups = new FrmBackUp();
-            frmBackups.ShowDialog();
+            new FrmBackUpHeaderConfig();
         };
+
+        /// <summary>
+        /// Previously: new FrmControlDeCambios().ShowDialog()
+        /// Now: injects UI into FrmPrincipal.pnlMain via HeaderConfig.
+        /// </summary>
+        static EventHandler controlDeCambiosOnclick = (sender, e) =>
+        {
+            new FrmControlDeCambiosHeaderConfig();
+        };
+
+        /// <summary>
+        /// Previously not wired in the side panel (FrmIntegridadDB was opened elsewhere).
+        /// Now fully integrated into the main panel like the other modules.
+        /// </summary>
+        static EventHandler integridadDBOnclick = (sender, e) =>
+        {
+            new FrmIntegridadDBHeaderConfig();
+        };
+
+        // ── Utilities ────────────────────────────────────────────────────────────
 
         internal static void CerrarMenuLateral()
         {

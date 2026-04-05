@@ -42,11 +42,6 @@
             this.sesionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.iniciarSesionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.cerrarSesionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.bitacoraToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.controlDeCambiosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.multidiomasToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.permisosToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.backupsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlMain = new System.Windows.Forms.Panel();
             this.pnlNavBar.SuspendLayout();
             this.menuStripSidePanel.SuspendLayout();
@@ -125,12 +120,7 @@
             this.xToolStripMenuItem,
             this.maximizeToolStripMenuItem,
             this.minimizeToolStripMenuItem,
-            this.sesionToolStripMenuItem,
-            this.bitacoraToolStripMenuItem,
-            this.controlDeCambiosToolStripMenuItem,
-            this.multidiomasToolStripMenuItem,
-            this.permisosToolStripMenuItem,
-            this.backupsToolStripMenuItem});
+            this.sesionToolStripMenuItem});
             this.menuPrincipal.Location = new System.Drawing.Point(0, 0);
             this.menuPrincipal.Name = "menuPrincipal";
             this.menuPrincipal.Padding = new System.Windows.Forms.Padding(2, 0, 0, 2);
@@ -239,11 +229,6 @@
         private System.Windows.Forms.ToolStripMenuItem iniciarSesionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem cerrarSesionToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem minimizeToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem bitacoraToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem controlDeCambiosToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem multidiomasToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem permisosToolStripMenuItem;
-        private System.Windows.Forms.ToolStripMenuItem backupsToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem menuToolStripMenuItem;
         private System.Windows.Forms.Panel pnlMain;
         private System.Windows.Forms.ToolStripMenuItem xToolStripMenuItem;

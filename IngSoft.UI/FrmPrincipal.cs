@@ -172,17 +172,14 @@ namespace IngSoft.UI
 
         private void controlDeCambiosToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var FrmControlCambios = new FrmControlDeCambios();
-            FrmControlCambios.ShowDialog();
+            // Inject Control de Cambios UI into pnlMain via HeaderConfig
+            new FrmControlDeCambiosHeaderConfig();
         }
 
         private void multidiomasToolStripMenuItem_Click(object sender, EventArgs e)
         {
-            var frmMultidioma = new FrmMultidiomas();
-            if (frmMultidioma.ShowDialog() == DialogResult.OK)
-            {
-                CargarIdiomas();
-            }
+            // Inject Multidiomas UI into pnlMain via HeaderConfig
+            new Multidioma.FrmMultidiomasHeaderConfig();
         }
 
         private void cboIdiomas_SelectedIndexChanged(object sender, EventArgs e)
@@ -262,11 +259,6 @@ namespace IngSoft.UI
             FrmPrincipalFlexibilizador.ActualizarMenuSegunEstadoSesion();
         }
 
-        private void backupsToolStripMenuItem_Click(object sender, EventArgs e)
-        {
-            var frmBackUp = new FrmBackUp();
-            frmBackUp.ShowDialog();
-        }
 
         private void menuToolStripMenuItem_Click(object sender, EventArgs e)
         {
