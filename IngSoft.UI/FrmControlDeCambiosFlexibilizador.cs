@@ -1,12 +1,9 @@
 using System;
 using System.Drawing;
-using System.Linq;
 using System.Windows.Forms;
 using IngSoft.ApplicationServices;
-using IngSoft.ApplicationServices.Factory;
 using IngSoft.Domain;
 using IngSoft.Domain.Enums;
-using IngSoft.Services;
 
 namespace IngSoft.UI
 {
@@ -20,11 +17,6 @@ namespace IngSoft.UI
             Point ptBtnRestaurar,
             Size szBtn)
         {
-            var parent = FrmControlDeCambios.ActiveForm;
-            IUsuarioHistoricoServices historSvc = ServicesFactory.CreateUsuarioHistoricoServices();
-            IUsuarioServices usuSvc = SingleInstancesManager.Instance.ObtenerInstancia<IUsuarioServices>();
-            IBitacoraServices bitSvc = SingleInstancesManager.Instance.ObtenerInstancia<IBitacoraServices>();
-
             var parent = FrmControlDeCambios.ActiveForm;
             IUsuarioHistoricoServices historSvc = ServicesFactory.CreateUsuarioHistoricoServices();
             IUsuarioServices usuSvc = SingleInstancesManager.Instance.ObtenerInstancia<IUsuarioServices>();
@@ -82,7 +74,7 @@ namespace IngSoft.UI
             parent.Controls.Add(txt);
 
             // DataGridView
-            var dgv = FlexibilizadorFormularios.CreateDataGridView(form, "dgvControlCambios", ptDgv, szDgv);
+            var dgv = FlexibilizadorFormularios.CreateDataGridView(parent, "dgvControlCambios", ptDgv, szDgv);
             dgv.CellFormatting += DgvControlCambios_CellFormatting;
             dgv.SelectionChanged += (s, e) =>
             {
@@ -119,7 +111,7 @@ namespace IngSoft.UI
 
             // Restaurar button (initially disabled)
             var btnRestaurar = FlexibilizadorFormularios.CreateButton(
-                form, "btnRestaurar",
+                parent, "btnRestaurar",
                 ptBtnRestaurar, szBtn, "Restaurar",
                 (s, e) =>
                 {
