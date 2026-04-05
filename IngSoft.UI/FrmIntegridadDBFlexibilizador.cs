@@ -3,36 +3,42 @@ using System.Drawing;
 using System.Windows.Forms;
 using IngSoft.ApplicationServices;
 using IngSoft.ApplicationServices.Dto;
-using IngSoft.Services;
+using IngSoft.ApplicationServices.Factory;
 
 namespace IngSoft.UI
 {
     internal static class FrmIntegridadDBFlexibilizador
     {
-        public static void CrearVistaIntegridad(FrmIntegridadDB form, ResultadoIntegridad resultado, Point ptDgv, Size szDgv)
+        internal static void CrearVistaIntegridad(Point ptDgv, Size szDgv)
         {
+            var parent = FrmIntegridadDB.ActiveForm;
+            var integridadDB = ((FrmIntegridadDB)parent).IntegridadDB;
+
             var lbl = new Label
             {
                 Name = "lblIntegridadDBTitulo",
                 Text = "INTEGRIDAD BASE DE DATOS",
                 Font = new Font("Microsoft Sans Serif", 14.25F),
                 AutoSize = true,
-                Location = new Point(form.Width / 2 - 180, 20)
+                Location = new Point(parent.Width / 2 - 180, 20)
             };
-            form.Controls.Add(lbl);
+            parent.Controls.Add(lbl);
 
-            var dgv = FlexibilizadorFormularios.CreateDataGridView(form, "dgvIntegridad", ptDgv, szDgv);
-            dgv.DataSource = resultado.Errores;
+            var dgv = FlexibilizadorFormularios.CreateDataGridView(parent, "dgvIntegridad", ptDgv, szDgv);
+            dgv.DataSource = integridadDB.Errores;
             dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
         }
 
-        public static void CrearBotonRecalcular(FrmIntegridadDB form, IDigitoVerificadorServices svc, Point pt, Size sz)
+        internal static void CrearBotonRecalcular(Point pt, Size sz)
         {
-            FlexibilizadorFormularios.CreateButton(form, "btnRecalcular", pt, sz, "Recalcular DV", (s, e) =>
+            var parent = FrmIntegridadDB.ActiveForm;
+            var digitoVerificadorServices = ServicesFactory.CreateDigitoVerificadorServices();
+
+            FlexibilizadorFormularios.CreateButton(parent, "btnRecalcular", pt, sz, "Recalcular DV", (s, e) =>
             {
-                svc.RecaulcularDigitosVerificadores();
+                digitoVerificadorServices.RecaulcularDigitosVerificadores();
                 MessageBox.Show("Dígitos verificadores recalculados correctamente.");
-                form.Close();
+                parent.Close();
             });
         }
     }

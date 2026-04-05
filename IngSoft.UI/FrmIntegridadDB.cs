@@ -6,7 +6,7 @@ using IngSoft.Abstractions.Multidioma;
 using IngSoft.ApplicationServices;
 using IngSoft.ApplicationServices.Dto;
 using IngSoft.ApplicationServices.Factory;
-using IngSoft.ApplicationServices.Implementation;
+using IngSoft.Domain;
 using IngSoft.Domain.Multidioma;
 using IngSoft.Services;
 
@@ -14,21 +14,24 @@ namespace IngSoft.UI
 {
     public partial class FrmIntegridadDB : Form, IObserver
     {
-        private ResultadoIntegridad _integridadDB;
+        internal ResultadoIntegridad IntegridadDB;
         private readonly IMultidiomaServices _multidiomaServices;
-        private readonly IDigitoVerificadorServices _digitoVerificadorServices;
 
         public FrmIntegridadDB(ResultadoIntegridad integridadDB)
         {
             InitializeComponent();
-            _integridadDB = integridadDB;
+            IntegridadDB = integridadDB;
             _multidiomaServices = ServicesFactory.CreateMultidiomaServices();
-            _digitoVerificadorServices = ServicesFactory.CreateDigitoVerificadorServices();
         }
 
         internal void EliminarControlesAdicionales()
         {
             FlexibilizadorFormularios.EliminarControlesAdicionalesForm(this);
+        }
+
+        private void FrmIntegridadDB_Shown(object sender, EventArgs e)
+        {
+            FlexibilizadorFormularios.MenuStripHider(this.MainMenuStrip, SessionManager.GetPermisos() as PermisoComponent);
         }
 
         private void verIntegridadToolStripMenuItem_Click(object sender, EventArgs e)
@@ -37,11 +40,11 @@ namespace IngSoft.UI
 
             Point ptDgv = new Point(this.Width / 16, this.Height / 6);
             Size szDgv = new Size(this.Width - this.Width / 8, this.Height / 2 + this.Height / 4);
-            FrmIntegridadDBFlexibilizador.CrearVistaIntegridad(this, _integridadDB, ptDgv, szDgv);
+            FrmIntegridadDBFlexibilizador.CrearVistaIntegridad(ptDgv, szDgv);
 
             Point ptBtn = new Point(this.Width / 16, this.Height / 14);
             Size szBtn = new Size(187, 41);
-            FrmIntegridadDBFlexibilizador.CrearBotonRecalcular(this, _digitoVerificadorServices, ptBtn, szBtn);
+            FrmIntegridadDBFlexibilizador.CrearBotonRecalcular(ptBtn, szBtn);
 
             AplicarIdiomaActual();
         }
