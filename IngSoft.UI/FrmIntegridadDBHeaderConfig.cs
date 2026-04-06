@@ -8,62 +8,55 @@ using System.Windows.Forms;
 namespace IngSoft.UI
 {
     /// <summary>
-    /// Sets up the MenuStrip header for Integridad DB and delegates UI creation
-    /// to FrmIntegridadDBFlexibilizador. Auto-loads the integrity view on construction,
-    /// matching the original FrmIntegridadDB_Load behaviour.
+    /// Configures the main MenuStrip for the Integridad DB module and injects the
+    /// UI into pnlMain via FrmIntegridadDBFlexibilizador.
+    ///
+    /// Event wiring summary (mirrors FrmBitacoraHeaderConfig):
+    ///   pnlMain_Resize  →  LastAction = ResizeControls   (dragged resize)
+    ///   FrmPrincipal.Resize  →  _onFormResize = ResizeControls  (maximize / restore)
+    ///   Both are subscribed inside IntegridadDBCreator and removed in
+    ///   EliminarControlesAdicionales to avoid ghost handlers.
+    ///
+    ///   "Ver Integridad" menu click → RecalcularIntegridad()
+    ///       re-fetches data without rebuilding controls, so it does NOT trigger
+    ///       a full panel teardown + rebuild on what is already the active view.
     /// </summary>
     internal class FrmIntegridadDBHeaderConfig
     {
         private readonly FrmPrincipal _formulario;
         private readonly FrmIntegridadDBFlexibilizador _flexibilizador;
 
-        private readonly EventHandler _verIntegridadOnClick;
-
         public FrmIntegridadDBHeaderConfig()
         {
-            _formulario          = Services.SingleInstancesManager.Instance.ObtenerInstancia<FrmPrincipal>();
-            _flexibilizador      = new FrmIntegridadDBFlexibilizador();
-            _verIntegridadOnClick = VerIntegridadEventHandler;
+            _formulario     = Services.SingleInstancesManager.Instance.ObtenerInstancia<FrmPrincipal>();
+            _flexibilizador = new FrmIntegridadDBFlexibilizador();
 
             MenuStrip header = _formulario.MainMenuStrip;
-            if (header == null) return;
+            if (header != null)
+            {
+                var menuVerIntegridad = new ToolStripMenuItem("Ver Integridad")
+                                            { Name = "verIntegridadToolStripMenuItem" };
 
-            var menuVerIntegridad = new ToolStripMenuItem("Ver Integridad")
-                                        { Name = "verIntegridadToolStripMenuItem" };
-            menuVerIntegridad.Click += _verIntegridadOnClick;
+                // Clicking the menu item refreshes data — it does NOT rebuild controls,
+                // so it behaves the same as the Recalcular button rather than navigating
+                // away and back. This avoids an unwanted re-verification on every resize.
+                menuVerIntegridad.Click += (s, e) => _flexibilizador.RecalcularIntegridad();
 
-            FrmPrincipalFlexibilizador.HeaderClearer(header);
-            header.Items.Add(menuVerIntegridad);
+                FrmPrincipalFlexibilizador.HeaderClearer(header);
+                header.Items.Add(menuVerIntegridad);
 
-            FlexibilizadorFormularios.MenuStripHider(
-                header, SessionManager.GetPermisos() as PermisoComponent);
+                FlexibilizadorFormularios.MenuStripHider(
+                    header, SessionManager.GetPermisos() as PermisoComponent);
 
-            _formulario.AplicarIdiomaActual();
+                _formulario.AplicarIdiomaActual();
+            }
 
-            // Auto-load on open (mirrors verIntegridadToolStripMenuItem_Click in FrmIntegridadDB_Load)
-            VerIntegridadEventHandler(this, EventArgs.Empty);
-        }
-
-        // ── Event handlers ───────────────────────────────────────────────────────
-
-        private void VerIntegridadEventHandler(object sender, EventArgs e)
-        {
-            var panel = _formulario.GetPanelMain;
+            // Build controls + subscribe Form.Resize + load data once
             _flexibilizador.EliminarControlesAdicionales();
+            _flexibilizador.IntegridadDBCreator();
 
-            // Mirrors the coordinate calculation in FrmIntegridadDB.verIntegridadToolStripMenuItem_Click
-            Point ptDgv = new Point(panel.Width / 16, panel.Height / 6);
-            Size  szDgv = new Size(panel.Width - panel.Width / 8,
-                                   panel.Height / 2 + panel.Height / 4);
-
-            Point ptBtn = new Point(panel.Width / 16, panel.Height / 14);
-            Size  szBtn = new Size(187, 41);
-
-            _flexibilizador.RecalcularButtonCreator(ptBtn, szBtn);
-            _flexibilizador.DataGridViewIntegridadCreator(ptDgv, szDgv);
-
-            _formulario.AplicarIdiomaActual();
-            _formulario.LastAction = VerIntegridadEventHandler;
+            // LastAction handles dragged pnlMain resize — only repositions, never refetches
+            _formulario.LastAction = (s, e) => _flexibilizador.ResizeControls();
         }
     }
 }
