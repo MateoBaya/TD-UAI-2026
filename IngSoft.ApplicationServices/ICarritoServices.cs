@@ -17,5 +17,8 @@ namespace IngSoft.ApplicationServices
         bool AprobarCarrito();
         bool RechazarCarrito();
         bool FinalizarCarrito();
+        List<Carrito> ObtenerCarritosPendientes();
+        List<CarritoItem> MostrarDetalleCarrito(Guid carritoId);
+        bool AprobarCarrito(Guid carritoId);
     }
 }

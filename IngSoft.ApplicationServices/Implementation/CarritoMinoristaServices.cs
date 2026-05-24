@@ -142,5 +142,54 @@ namespace IngSoft.ApplicationServices.Implementation
                 throw;
             }
         }
+
+        public override List<Carrito> ObtenerCarritosPendientes()
+        {
+            try
+            {
+                return _carritoMinoristaRepository.ObtenerCarritosPendientes();
+            }
+            catch (Exception)
+            {
+                _registrarEnBitacora(SessionManager.GetUsuario() as Usuario,
+                    "Error al obtener carritos pendientes minorista",
+                    "ObtenerCarritosPendientes", TipoEvento.Error);
+                throw;
+            }
+        }
+
+        public override List<CarritoItem> MostrarDetalleCarrito(Guid carritoId)
+        {
+            try
+            {
+                return _carritoMinoristaRepository.MostrarDetalleCarritoPorId(carritoId);
+            }
+            catch (Exception)
+            {
+                _registrarEnBitacora(SessionManager.GetUsuario() as Usuario,
+                    "Error al mostrar detalle de carrito minorista por Id",
+                    "MostrarDetalleCarrito", TipoEvento.Error);
+                throw;
+            }
+        }
+
+        public override bool AprobarCarrito(Guid carritoId)
+        {
+            try
+            {
+                var resultado = _carritoMinoristaRepository.AceptarCarritoPorId(carritoId);
+                _registrarEnBitacora(SessionManager.GetUsuario() as Usuario,
+                    $"Carrito minorista aceptado por Id: {carritoId}",
+                    "AprobarCarrito", TipoEvento.Message);
+                return resultado;
+            }
+            catch (Exception)
+            {
+                _registrarEnBitacora(SessionManager.GetUsuario() as Usuario,
+                    "Error al aceptar carrito minorista por Id",
+                    "AprobarCarrito", TipoEvento.Error);
+                throw;
+            }
+        }
     }
 }

@@ -96,5 +96,20 @@ namespace IngSoft.ApplicationServices.Implementation
         public abstract bool AprobarCarrito();
         public abstract bool RechazarCarrito();
         public abstract bool FinalizarCarrito();
+
+        public virtual List<Carrito> ObtenerCarritosPendientes()
+        {
+            throw new NotSupportedException("Este tipo de carrito no soporta la operacion ObtenerCarritosPendientes.");
+        }
+
+        public virtual List<CarritoItem> MostrarDetalleCarrito(Guid carritoId)
+        {
+            throw new NotSupportedException("Este tipo de carrito no soporta la operacion MostrarDetalleCarrito por Id.");
+        }
+
+        public virtual bool AprobarCarrito(Guid carritoId)
+        {
+            throw new NotSupportedException("Este tipo de carrito no soporta la operacion AprobarCarrito por Id.");
+        }
     }
 }

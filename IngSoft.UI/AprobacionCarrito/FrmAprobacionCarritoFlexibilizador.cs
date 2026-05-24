@@ -7,6 +7,7 @@ using System.Data;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using IngSoft.Services;
 
 namespace IngSoft.UI
 {
@@ -245,10 +246,7 @@ namespace IngSoft.UI
         {
             try
             {
-                _carritos = _carritoServices.BuscarCarritosFiltrados(
-                    null,
-                    DateTime.Today.AddYears(-1),
-                    DateTime.Today.AddDays(1)) ?? new List<Carrito>();
+                _carritos = _carritoServices.ObtenerCarritosPendientes() ?? new List<Carrito>();
             }
             catch (Exception)
             {
@@ -260,7 +258,7 @@ namespace IngSoft.UI
         {
             try
             {
-                _detalle = _carritoServices.MostrarDetalleCarrito() ?? new List<CarritoItem>();
+                _detalle = _carritoServices.MostrarDetalleCarrito(_carritoSeleccionado.Id) ?? new List<CarritoItem>();
             }
             catch (Exception)
             {
@@ -325,7 +323,7 @@ namespace IngSoft.UI
 
             try
             {
-                var resultado = _carritoServices.AprobarCarrito();
+                var resultado = _carritoServices.AprobarCarrito(_carritoSeleccionado.Id);
                 if (resultado)
                 {
                     MessageBox.Show("Carrito aceptado correctamente.", "Aprobacion",
