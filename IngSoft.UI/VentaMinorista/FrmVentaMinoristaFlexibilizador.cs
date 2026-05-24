@@ -13,7 +13,7 @@ namespace IngSoft.UI
     internal class FrmVentaMinoristaFlexibilizador
     {
         private readonly FrmPrincipal form = SingleInstancesManager.Instance.ObtenerInstancia<FrmPrincipal>();
-        private readonly ICarritoMinoristaServices _carritoServices = ServicesFactory.CreateCarritoMinoristaServices();
+        private readonly ICarritoServices _carritoServices = ServicesFactory.CreateCarritoMinoristaServices();
         private readonly IProductoServices _productoServices = ServicesFactory.CreateProductoServices();
         private List<Producto> _productos;
 
@@ -86,10 +86,9 @@ namespace IngSoft.UI
                 if (productoId == Guid.Empty || cantidad <= 0)
                     throw new ArgumentException("Datos inválidos: seleccione un producto e ingrese una cantidad mayor a 0.");
 
-                var producto = new Producto { Id = productoId };
                 var item = new CarritoItem
                 {
-                    Producto = producto,
+                    Producto = new Producto { Id = productoId },
                     Cantidad = cantidad
                 };
 

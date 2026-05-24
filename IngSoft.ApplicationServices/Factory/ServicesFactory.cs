@@ -1,4 +1,4 @@
-﻿using IngSoft.ApplicationServices.Implementation;
+using IngSoft.ApplicationServices.Implementation;
 using IngSoft.Repository;
 using IngSoft.Repository.Factory;
 
@@ -53,11 +53,22 @@ namespace IngSoft.ApplicationServices.Factory
             var productoRepository = FactoryRepository.CreateProductoRepository();
             return new ProductoServices(productoRepository);
         }
-        public static ICarritoMinoristaServices CreateCarritoMinoristaServices()
+        public static ICarritoServices CreateCarritoMinoristaServices()
         {
-            var carritoRepository = FactoryRepository.CreateCarritoMinoristaRepository();
-            var productoRepository = FactoryRepository.CreateProductoRepository();
-            return new CarritoMinoristaServices(carritoRepository, productoRepository);
+            var carritoRepository = FactoryRepository.CreateCarritoRepository();
+            var carritoMinoristaRepository = FactoryRepository.CreateCarritoMinoristaRepository();
+            return new CarritoMinoristaServices(carritoRepository, carritoMinoristaRepository);
+        }
+        public static ICarritoServices CreateCarritoMayoristaServices()
+        {
+            var carritoRepository = FactoryRepository.CreateCarritoRepository();
+            var carritoMayoristaRepository = FactoryRepository.CreateCarritoMayoristaRepository();
+            return new CarritoMayoristaServices(carritoRepository, carritoMayoristaRepository);
+        }
+        public static IVentaServices CreateVentaServices()
+        {
+            var ventaRepository = FactoryRepository.CreateVentaRepository();
+            return new VentaServices(ventaRepository);
         }
     }
 }

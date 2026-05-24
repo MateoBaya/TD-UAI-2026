@@ -8,26 +8,26 @@ using System.Collections.Generic;
 
 namespace IngSoft.ApplicationServices.Implementation
 {
-    public class CarritoMinoristaServices : CarritoServices
+    public class CarritoMayoristaServices : CarritoServices
     {
-        private readonly ICarritoMinoristaRepository _carritoMinoristaRepository;
+        private readonly ICarritoMayoristaRepository _carritoMayoristaRepository;
 
-        public CarritoMinoristaServices(ICarritoRepository carritoRepository, ICarritoMinoristaRepository carritoMinoristaRepository)
+        public CarritoMayoristaServices(ICarritoRepository carritoRepository, ICarritoMayoristaRepository carritoMayoristaRepository)
             : base(carritoRepository)
         {
-            _carritoMinoristaRepository = carritoMinoristaRepository ?? FactoryRepository.CreateCarritoMinoristaRepository();
+            _carritoMayoristaRepository = carritoMayoristaRepository ?? FactoryRepository.CreateCarritoMayoristaRepository();
         }
 
         public override List<CarritoItem> MostrarDetalleCarrito()
         {
             try
             {
-                return _carritoMinoristaRepository.MostrarDetalleCarrito();
+                return _carritoMayoristaRepository.MostrarDetalleCarrito();
             }
             catch (Exception)
             {
                 _registrarEnBitacora(SessionManager.GetUsuario() as Usuario,
-                    "Error al mostrar detalle carrito minorista",
+                    "Error al mostrar detalle carrito mayorista",
                     "MostrarDetalleCarrito", TipoEvento.Error);
                 throw;
             }
@@ -37,16 +37,16 @@ namespace IngSoft.ApplicationServices.Implementation
         {
             try
             {
-                _carritoMinoristaRepository.CrearCarrito();
+                _carritoMayoristaRepository.CrearCarrito();
                 Carrito = new Carrito { FechaInsert = DateTime.Now };
                 _registrarEnBitacora(SessionManager.GetUsuario() as Usuario,
-                    "Carrito minorista creado",
+                    "Carrito mayorista creado",
                     "CrearCarrito", TipoEvento.Message);
             }
             catch (Exception)
             {
                 _registrarEnBitacora(SessionManager.GetUsuario() as Usuario,
-                    "Error al crear carrito minorista",
+                    "Error al crear carrito mayorista",
                     "CrearCarrito", TipoEvento.Error);
                 throw;
             }
@@ -56,16 +56,16 @@ namespace IngSoft.ApplicationServices.Implementation
         {
             try
             {
-                _carritoMinoristaRepository.CrearCarrito(item);
+                _carritoMayoristaRepository.CrearCarrito(item);
                 Carrito = new Carrito { FechaInsert = DateTime.Now };
                 _registrarEnBitacora(SessionManager.GetUsuario() as Usuario,
-                    "Carrito minorista creado con item",
+                    "Carrito mayorista creado con item",
                     "CrearCarrito", TipoEvento.Message);
             }
             catch (Exception)
             {
                 _registrarEnBitacora(SessionManager.GetUsuario() as Usuario,
-                    "Error al crear carrito minorista con item",
+                    "Error al crear carrito mayorista con item",
                     "CrearCarrito", TipoEvento.Error);
                 throw;
             }
@@ -75,12 +75,12 @@ namespace IngSoft.ApplicationServices.Implementation
         {
             try
             {
-                return _carritoMinoristaRepository.ValidarItem(item);
+                return _carritoMayoristaRepository.ValidarItem(item);
             }
             catch (Exception)
             {
                 _registrarEnBitacora(SessionManager.GetUsuario() as Usuario,
-                    "Error al validar item minorista",
+                    "Error al validar item mayorista",
                     "ValidarItem", TipoEvento.Error);
                 throw;
             }
@@ -90,16 +90,16 @@ namespace IngSoft.ApplicationServices.Implementation
         {
             try
             {
-                var resultado = _carritoMinoristaRepository.AceptarCarrito();
+                var resultado = _carritoMayoristaRepository.AceptarCarrito();
                 _registrarEnBitacora(SessionManager.GetUsuario() as Usuario,
-                    "Carrito minorista aceptado",
+                    "Carrito mayorista aceptado",
                     "AprobarCarrito", TipoEvento.Message);
                 return resultado;
             }
             catch (Exception)
             {
                 _registrarEnBitacora(SessionManager.GetUsuario() as Usuario,
-                    "Error al aceptar carrito minorista",
+                    "Error al aceptar carrito mayorista",
                     "AprobarCarrito", TipoEvento.Error);
                 throw;
             }
@@ -109,16 +109,16 @@ namespace IngSoft.ApplicationServices.Implementation
         {
             try
             {
-                var resultado = _carritoMinoristaRepository.RechazarCarrito();
+                var resultado = _carritoMayoristaRepository.RechazarCarrito();
                 _registrarEnBitacora(SessionManager.GetUsuario() as Usuario,
-                    "Carrito minorista rechazado",
+                    "Carrito mayorista rechazado",
                     "RechazarCarrito", TipoEvento.Message);
                 return resultado;
             }
             catch (Exception)
             {
                 _registrarEnBitacora(SessionManager.GetUsuario() as Usuario,
-                    "Error al rechazar carrito minorista",
+                    "Error al rechazar carrito mayorista",
                     "RechazarCarrito", TipoEvento.Error);
                 throw;
             }
@@ -128,16 +128,16 @@ namespace IngSoft.ApplicationServices.Implementation
         {
             try
             {
-                var resultado = _carritoMinoristaRepository.FinalizarCarrito();
+                var resultado = _carritoMayoristaRepository.FinalizarCarrito();
                 _registrarEnBitacora(SessionManager.GetUsuario() as Usuario,
-                    "Carrito minorista finalizado correctamente",
+                    "Carrito mayorista finalizado",
                     "FinalizarCarrito", TipoEvento.Message);
                 return resultado;
             }
             catch (Exception)
             {
                 _registrarEnBitacora(SessionManager.GetUsuario() as Usuario,
-                    "Error al finalizar carrito minorista",
+                    "Error al finalizar carrito mayorista",
                     "FinalizarCarrito", TipoEvento.Error);
                 throw;
             }

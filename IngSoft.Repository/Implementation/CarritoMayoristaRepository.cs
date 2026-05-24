@@ -6,12 +6,12 @@ using System.Collections.Generic;
 
 namespace IngSoft.Repository.Implementation
 {
-    public class CarritoMinoristaRepository : ICarritoMinoristaRepository
+    public class CarritoMayoristaRepository : ICarritoMayoristaRepository
     {
         private readonly IConnection _connection;
         private static readonly string connectionString = System.Configuration.ConfigurationManager.ConnectionStrings["IngSoftConnection"].ConnectionString;
 
-        public CarritoMinoristaRepository(IConnection connection)
+        public CarritoMayoristaRepository(IConnection connection)
         {
             _connection = connection ?? ConnectionFactory.CreateSqlServerConnection();
         }
@@ -21,7 +21,7 @@ namespace IngSoft.Repository.Implementation
             _connection.NuevaConexion(connectionString);
             try
             {
-                return _connection.EjecutarDataSet<CarritoItem>("MostrarDetalleCarritoMinorista", new Dictionary<string, object>());
+                return _connection.EjecutarDataSet<CarritoItem>("MostrarDetalleCarritoMayorista", new Dictionary<string, object>());
             }
             finally
             {
@@ -40,7 +40,7 @@ namespace IngSoft.Repository.Implementation
                     { "@Id", Guid.NewGuid() },
                     { "@FechaInsert", DateTime.Now }
                 };
-                _connection.EjecutarSinResultado("CrearCarritoMinorista", parametros);
+                _connection.EjecutarSinResultado("CrearCarritoMayorista", parametros);
                 _connection.AceptarTransaccion();
             }
             catch (Exception)
@@ -68,7 +68,7 @@ namespace IngSoft.Repository.Implementation
                     { "@Cantidad", item.Cantidad },
                     { "@Precio", item.Precio }
                 };
-                _connection.EjecutarSinResultado("CrearCarritoMinoristaConItem", parametros);
+                _connection.EjecutarSinResultado("CrearCarritoMayoristaConItem", parametros);
                 _connection.AceptarTransaccion();
             }
             catch (Exception)
@@ -95,7 +95,7 @@ namespace IngSoft.Repository.Implementation
                     { "@ProductoId", item.Producto.Id },
                     { "@Cantidad", item.Cantidad }
                 };
-                var resultado = _connection.EjecutarEscalar("ValidarItemMinorista", parametros);
+                var resultado = _connection.EjecutarEscalar("ValidarItemMayorista", parametros);
                 return resultado != null && Convert.ToBoolean(resultado);
             }
             finally
@@ -110,7 +110,7 @@ namespace IngSoft.Repository.Implementation
             try
             {
                 _connection.IniciarTransaccion();
-                var resultado = _connection.EjecutarEscalar("AceptarCarritoMinorista", new Dictionary<string, object>());
+                var resultado = _connection.EjecutarEscalar("AceptarCarritoMayorista", new Dictionary<string, object>());
                 _connection.AceptarTransaccion();
                 return resultado != null && Convert.ToBoolean(resultado);
             }
@@ -131,7 +131,7 @@ namespace IngSoft.Repository.Implementation
             try
             {
                 _connection.IniciarTransaccion();
-                var resultado = _connection.EjecutarEscalar("RechazarCarritoMinorista", new Dictionary<string, object>());
+                var resultado = _connection.EjecutarEscalar("RechazarCarritoMayorista", new Dictionary<string, object>());
                 _connection.AceptarTransaccion();
                 return resultado != null && Convert.ToBoolean(resultado);
             }
@@ -152,7 +152,7 @@ namespace IngSoft.Repository.Implementation
             try
             {
                 _connection.IniciarTransaccion();
-                var resultado = _connection.EjecutarEscalar("FinalizarCarritoMinorista", new Dictionary<string, object>());
+                var resultado = _connection.EjecutarEscalar("FinalizarCarritoMayorista", new Dictionary<string, object>());
                 _connection.AceptarTransaccion();
                 return resultado != null && Convert.ToBoolean(resultado);
             }

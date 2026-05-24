@@ -1,4 +1,4 @@
-﻿using IngSoft.DBConnection;
+using IngSoft.DBConnection;
 using IngSoft.DBConnection.Factory;
 using IngSoft.Repository.Implementation;
 
@@ -16,7 +16,7 @@ namespace IngSoft.Repository.Factory
             IConnection connection = ConnectionFactory.CreateSqlServerConnection();
             return new UsuarioRepository(connection);
         }
-        public static IDigitoVerificadorRepository CreateDigitoVerificadorRepository() 
+        public static IDigitoVerificadorRepository CreateDigitoVerificadorRepository()
         {
             IConnection connection = ConnectionFactory.CreateSqlServerConnection();
             IBitacoraRepository bitacoraRepository = CreateBitacoraRepository();
@@ -48,12 +48,6 @@ namespace IngSoft.Repository.Factory
             IConnection connection = ConnectionFactory.CreateSqlServerConnection();
             return new PermisoRepository(connection);
         }
-
-        //public static IRolRepository CreateRolRepository()
-        //{
-        //    IConnection connection = ConnectionFactory.CreateSqlServerConnection();
-        //    return new RolRepository(connection);
-        //}
         public static IBackupRepository CreateBackupRepository()
         {
             IConnection connection = ConnectionFactory.CreateSqlServerConnection();
@@ -64,10 +58,25 @@ namespace IngSoft.Repository.Factory
             IConnection connection = ConnectionFactory.CreateSqlServerConnection();
             return new ProductoRepository(connection);
         }
+        public static ICarritoRepository CreateCarritoRepository()
+        {
+            IConnection connection = ConnectionFactory.CreateSqlServerConnection();
+            return new CarritoRepository(connection);
+        }
         public static ICarritoMinoristaRepository CreateCarritoMinoristaRepository()
         {
             IConnection connection = ConnectionFactory.CreateSqlServerConnection();
             return new CarritoMinoristaRepository(connection);
+        }
+        public static ICarritoMayoristaRepository CreateCarritoMayoristaRepository()
+        {
+            IConnection connection = ConnectionFactory.CreateSqlServerConnection();
+            return new CarritoMayoristaRepository(connection);
+        }
+        public static IVentaRepository CreateVentaRepository()
+        {
+            IConnection connection = ConnectionFactory.CreateSqlServerConnection();
+            return new VentaRepository(connection);
         }
     }
 }

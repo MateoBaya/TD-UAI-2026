@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace IngSoft.Repository
 {
-    public interface ICarritoMinoristaRepository
+    public interface ICarritoMayoristaRepository
     {
         List<CarritoItem> MostrarDetalleCarrito();
         void CrearCarrito();
