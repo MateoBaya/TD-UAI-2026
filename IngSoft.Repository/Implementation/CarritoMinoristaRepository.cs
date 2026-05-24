@@ -212,7 +212,7 @@ namespace IngSoft.Repository.Implementation
             }
         }
 
-        public bool AceptarCarritoPorId(Guid carritoId)
+        public bool AceptarCarritoPorId(Guid carritoId, DateTime fechaEntrega)
         {
             _connection.NuevaConexion(connectionString);
             try
@@ -221,8 +221,9 @@ namespace IngSoft.Repository.Implementation
                 var usuario = SessionManager.GetUsuario() as Usuario;
                 var parametros = new Dictionary<string, object>
                 {
-                    { "@CarritoId", carritoId },
-                    { "@UsuarioId", usuario?.Id ?? Guid.Empty }
+                    { "@CarritoId",    carritoId },
+                    { "@UsuarioId",    usuario?.Id ?? Guid.Empty },
+                    { "@FechaEntrega", fechaEntrega }
                 };
                 var resultado = _connection.EjecutarEscalar("AceptarCarritoPorId", parametros);
                 _connection.AceptarTransaccion();

@@ -32,17 +32,21 @@ namespace IngSoft.UI
         private Label _lblInfoFecha;
         private DataGridView _dgvDetalle;
         private Label _lblTotal;
+        private Label _lblFechaEntrega;
+        private DateTimePicker _dtpFechaEntrega;
         private Button _btnAceptar;
 
         // ── Resize ───────────────────────────────────────────────────────────────
         private EventHandler _onFormResize;
 
         // ── Constantes de layout ──────────────────────────────────────────────────
-        private const int CardH        = 56;
-        private const int TopPad       = 8;
-        private const int CartDgvRelY  = TopPad + CardH + 32;
-        private const int TotalFromBot = 68;
-        private const int BtnFromBot   = 42;
+        private const int CardH           = 56;
+        private const int TopPad          = 8;
+        private const int CartDgvRelY     = TopPad + CardH + 32;
+        private const int TotalFromBot    = 126;   // lblTotal
+        private const int FechaLblFromBot = 100;   // lblFechaEntrega
+        private const int FechaFromBot    = 76;    // dtpFechaEntrega
+        private const int BtnFromBot      = 42;    // btnAceptar
 
         // ── Geometría ────────────────────────────────────────────────────────────
 
@@ -116,6 +120,22 @@ namespace IngSoft.UI
                 "Total:  $ 0,00",
                 new Font("Arial", 10, FontStyle.Bold), ContentAlignment.MiddleRight);
 
+            _lblFechaEntrega = FlexibilizadorFormularios.CreateDisplayLabel(_pnlRight, "lblFechaEntrega",
+                new Point(8, panelH - FechaLblFromBot), new Size(rightW - 18, 20),
+                "Fecha de entrega:", new Font("Arial", 9, FontStyle.Bold));
+
+            _dtpFechaEntrega = new DateTimePicker
+            {
+                Name     = "dtpFechaEntrega",
+                Location = new Point(8, panelH - FechaFromBot),
+                Size     = new Size(rightW - 18, 28),
+                Format   = DateTimePickerFormat.Short,
+                Value    = DateTime.Today.AddDays(7),
+                MinDate  = DateTime.Today,
+                Enabled  = false
+            };
+            _pnlRight.Controls.Add(_dtpFechaEntrega);
+
             _btnAceptar = FlexibilizadorFormularios.CreateButton(_pnlRight, "btnAceptarCarrito",
                 new Point(8, panelH - BtnFromBot), new Size(rightW - 18, 34),
                 "Aceptar carrito",
@@ -162,6 +182,18 @@ namespace IngSoft.UI
             {
                 _lblTotal.Location = new Point(8, panelH - TotalFromBot);
                 _lblTotal.Width    = rightW - 18;
+            }
+
+            if (_lblFechaEntrega != null)
+            {
+                _lblFechaEntrega.Location = new Point(8, panelH - FechaLblFromBot);
+                _lblFechaEntrega.Width    = rightW - 18;
+            }
+
+            if (_dtpFechaEntrega != null)
+            {
+                _dtpFechaEntrega.Location = new Point(8, panelH - FechaFromBot);
+                _dtpFechaEntrega.Width    = rightW - 18;
             }
 
             if (_btnAceptar != null)
@@ -277,6 +309,7 @@ namespace IngSoft.UI
             _lblTotal.Text = "Total:  $ 0,00";
             if (_lblInfoNroCarrito != null) _lblInfoNroCarrito.Text = "—";
             if (_lblInfoFecha     != null) _lblInfoFecha.Text     = "—";
+            if (_dtpFechaEntrega  != null) { _dtpFechaEntrega.Value = DateTime.Today.AddDays(7); _dtpFechaEntrega.Enabled = false; }
             _btnAceptar.Enabled = false;
         }
 
@@ -302,6 +335,7 @@ namespace IngSoft.UI
             if (_lblInfoFecha     != null) _lblInfoFecha.Text      = _carritoSeleccionado.FechaInsert.ToString("dd/MM/yyyy HH:mm");
 
             CargarDetalle();
+            if (_dtpFechaEntrega != null) _dtpFechaEntrega.Enabled = true;
             _btnAceptar.Enabled = true;
         }
 
@@ -316,14 +350,16 @@ namespace IngSoft.UI
                 return;
             }
 
+            var fechaEntrega = _dtpFechaEntrega?.Value ?? DateTime.Today.AddDays(7);
+
             var confirm = MessageBox.Show(
-                $"¿Aceptar el carrito Nro. {_carritoSeleccionado.NroCarrito}? Esta accion confirma que el pago fue recibido.",
+                $"¿Aceptar el carrito Nro. {_carritoSeleccionado.NroCarrito}? Esta accion confirma que el pago fue recibido.\nFecha de entrega: {fechaEntrega:dd/MM/yyyy}",
                 "Confirmar aceptacion", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (confirm != DialogResult.Yes) return;
 
             try
             {
-                var resultado = _carritoServices.AprobarCarrito(_carritoSeleccionado.Id);
+                var resultado = _carritoServices.AprobarCarrito(_carritoSeleccionado.Id, fechaEntrega);
                 if (resultado)
                 {
                     MessageBox.Show("Carrito aceptado correctamente.", "Aprobacion",

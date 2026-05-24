@@ -19,6 +19,6 @@ namespace IngSoft.ApplicationServices
         bool FinalizarCarrito();
         List<Carrito> ObtenerCarritosPendientes();
         List<CarritoItem> MostrarDetalleCarrito(Guid carritoId);
-        bool AprobarCarrito(Guid carritoId);
+        bool AprobarCarrito(Guid carritoId, DateTime fechaEntrega);
     }
 }

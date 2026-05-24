@@ -443,8 +443,12 @@ GO
 
 -- ============================================================
 -- SP: AceptarCarritoPorId
--- Cambia el estado de un carrito especifico a 'Aceptado' y
--- registra al usuario que realizó la acción.
+-- Cambia el estado de un carrito especifico a 'Aceptado',
+-- registra al usuario que realizó la acción e inserta el
+-- registro correspondiente en la tabla Venta, todo en una
+-- única transacción.
+-- @FechaEntrega: fecha de entrega acordada con el comprador,
+-- ingresada por el vendedor en la pantalla de aprobacion.
 -- Retorna 1 si fue exitoso, 0 si el carrito no existe o ya
 -- no está en estado Pendiente.
 -- ============================================================
@@ -454,8 +458,9 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 CREATE PROCEDURE [dbo].[AceptarCarritoPorId]
-    @CarritoId UNIQUEIDENTIFIER,
-    @UsuarioId UNIQUEIDENTIFIER
+    @CarritoId    UNIQUEIDENTIFIER,
+    @UsuarioId    UNIQUEIDENTIFIER,
+    @FechaEntrega DATETIME
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -482,6 +487,9 @@ BEGIN
             UsuarioAprobadorId = @UsuarioId,
             FechaUpdate        = GETDATE()
         WHERE Id = @CarritoId;
+
+        INSERT INTO dbo.Venta (Id, CarritoId, UsuarioAprobadorId, EstadoId, FechaUpdate, FechaEntrega)
+        VALUES (NEWID(), @CarritoId, @UsuarioId, @EstadoAceptadoId, GETDATE(), @FechaEntrega);
 
         SELECT CAST(1 AS BIT);
     END TRY

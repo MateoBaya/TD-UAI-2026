@@ -15,6 +15,6 @@ namespace IngSoft.Repository
         bool FinalizarCarrito();
         List<Carrito> ObtenerCarritosPendientes();
         List<CarritoItem> MostrarDetalleCarritoPorId(Guid carritoId);
-        bool AceptarCarritoPorId(Guid carritoId);
+        bool AceptarCarritoPorId(Guid carritoId, DateTime fechaEntrega);
     }
 }
