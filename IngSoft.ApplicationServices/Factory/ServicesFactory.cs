@@ -48,5 +48,10 @@ namespace IngSoft.ApplicationServices.Factory
             var bitacoraRepository = FactoryRepository.CreateBitacoraRepository();
             return new BackupServices(backupRepository, bitacoraRepository);
         }
+        public static IProductoServices CreateProductoServices()
+        {
+            var productoRepository = FactoryRepository.CreateProductoRepository();
+            return new ProductoServices(productoRepository);
+        }
     }
 }

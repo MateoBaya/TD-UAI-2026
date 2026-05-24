@@ -48,12 +48,14 @@
     <Compile Include="IBitacoraServices.cs" />
     <Compile Include="IDigitoVerificadorServices.cs" />
     <Compile Include="Implementation\BackupServices.cs" />
+    <Compile Include="Implementation\ProductoServices.cs" />
     <Compile Include="Implementation\UsuarioServices.cs" />
     <Compile Include="IMultidiomaServices.cs" />
     <Compile Include="Implementation\BitacoraServices.cs" />
     <Compile Include="Implementation\DigitoVerificadorServices.cs" />
     <Compile Include="Implementation\MultidiomaServices.cs" />
     <Compile Include="Implementation\UsuarioHistoricoServices.cs" />
+    <Compile Include="IProductoServices.cs" />
     <Compile Include="IUsuarioHistoricoServices.cs" />
     <Compile Include="Implementation\GuardableEnBitacora.cs" />
     <Compile Include="Implementation\PermisoServices.cs" />

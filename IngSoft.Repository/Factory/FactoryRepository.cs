@@ -59,5 +59,10 @@ namespace IngSoft.Repository.Factory
             IConnection connection = ConnectionFactory.CreateSqlServerConnection();
             return new BackupRepository(connection);
         }
+        public static IProductoRepository CreateProductoRepository()
+        {
+            IConnection connection = ConnectionFactory.CreateSqlServerConnection();
+            return new ProductoRepository(connection);
+        }
     }
 }

@@ -26,6 +26,11 @@ namespace IngSoft.UI.Dictionaries
             {  "crearIdiomaToolStripMenuItem", "CrearIdioma" },
             {  "modificarIdiomaToolStripMenuItem", "ModificarIdioma" },
             {  "backupsToolStripMenuItem", "Backup" },
+            {  "productosToolStripMenuItem", "Productos" },
+            {  "agregarProductoToolStripMenuItem", "AltaProducto" },
+            {  "modificarProductoToolStripMenuItem", "ModificarProducto" },
+            {  "verProductosToolStripMenuItem", "VerTodosProductos" },
+            {  "eliminarProductoToolStripMenuItem", "BajaProducto" },
         };
     }
 }

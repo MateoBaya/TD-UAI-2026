@@ -50,8 +50,10 @@
     <Compile Include="Implementation\BackupRepository.cs" />
     <Compile Include="Implementation\ControlIdiomaRepository.cs" />
     <Compile Include="Implementation\IdiomaRepository.cs" />
+    <Compile Include="Implementation\ProductoRepository.cs" />
     <Compile Include="Implementation\TraduccionRepository.cs" />
     <Compile Include="Implementation\UsuarioHistoricoRepository.cs" />
+    <Compile Include="IProductoRepository.cs" />
     <Compile Include="ITraduccionRepository.cs" />
     <Compile Include="IUsuarioHistoricoRepository.cs" />
     <Compile Include="IDigitoVerificadorRepository.cs" />

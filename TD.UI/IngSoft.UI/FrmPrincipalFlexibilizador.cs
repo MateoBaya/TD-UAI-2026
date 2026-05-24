@@ -77,6 +77,7 @@ namespace IngSoft.UI
                 { "multidiomasToolStripMenuItem",      multidiomasOnclick },
                 { "backupsToolStripMenuItem",          backupsOnclick },
                 { "controlDeCambiosToolStripMenuItem", controlDeCambiosOnclick },
+                { "productosToolStripMenuItem",        productoOnclick },
             };
         }
 
@@ -90,6 +91,7 @@ namespace IngSoft.UI
                 { "multidiomasToolStripMenuItem",      "Multidiomas" },
                 { "backupsToolStripMenuItem",          "Backup" },
                 { "controlDeCambiosToolStripMenuItem", "Control de Cambios" },
+                { "productosToolStripMenuItem",        "Productos" },
             };
         }
 
@@ -126,6 +128,12 @@ namespace IngSoft.UI
         {
             var frmMultidiomas = new FrmMultidiomas();
             frmMultidiomas.ShowDialog();
+        };
+
+        static EventHandler productoOnclick = (sender, e) =>
+        {
+            FrmProductoHeaderConfig headerConfig   = new FrmProductoHeaderConfig();
+            FrmProductoFlexibilizador  flexibilizador = new FrmProductoFlexibilizador();
         };
 
         static EventHandler backupsOnclick = (sender, e) =>
