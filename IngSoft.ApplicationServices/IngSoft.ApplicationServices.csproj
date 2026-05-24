@@ -46,10 +46,15 @@
     <Compile Include="Factory\ServicesFactory.cs" />
     <Compile Include="IBackupServices.cs" />
     <Compile Include="IBitacoraServices.cs" />
+    <Compile Include="ICarritoServices.cs" />
     <Compile Include="IDigitoVerificadorServices.cs" />
     <Compile Include="Implementation\BackupServices.cs" />
+    <Compile Include="Implementation\CarritoMayoristaServices.cs" />
+    <Compile Include="Implementation\CarritoMinoristaServices.cs" />
+    <Compile Include="Implementation\CarritoServices.cs" />
     <Compile Include="Implementation\ProductoServices.cs" />
     <Compile Include="Implementation\UsuarioServices.cs" />
+    <Compile Include="Implementation\VentaServices.cs" />
     <Compile Include="IMultidiomaServices.cs" />
     <Compile Include="Implementation\BitacoraServices.cs" />
     <Compile Include="Implementation\DigitoVerificadorServices.cs" />
@@ -61,6 +66,7 @@
     <Compile Include="Implementation\PermisoServices.cs" />
     <Compile Include="IPermisoServices.cs" />
     <Compile Include="IUsuarioServices.cs" />
+    <Compile Include="IVentaServices.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -90,6 +90,8 @@
     </Compile>
     <Compile Include="Usuario\FrmUsuarioFlexiblizador.cs" />
     <Compile Include="Usuario\FrmUsuarioHeaderConfig.cs" />
+    <Compile Include="VentaMinorista\FrmVentaMinoristaFlexibilizador.cs" />
+    <Compile Include="VentaMinorista\FrmVentaMinoristaHeaderConfig.cs" />
     <EmbeddedResource Include="FrmPrincipal.resx">
       <DependentUpon>FrmPrincipal.cs</DependentUpon>
     </EmbeddedResource>

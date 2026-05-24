@@ -45,14 +45,21 @@
     <Compile Include="Dto\MessageErrorIntegridad.cs" />
     <Compile Include="Dto\ResultadoIntegridad.cs" />
     <Compile Include="IBackupRepository.cs" />
+    <Compile Include="ICarritoMayoristaRepository.cs" />
+    <Compile Include="ICarritoMinoristaRepository.cs" />
+    <Compile Include="ICarritoRepository.cs" />
     <Compile Include="IControlIdiomaRepository.cs" />
     <Compile Include="IIdiomaRepository.cs" />
     <Compile Include="Implementation\BackupRepository.cs" />
+    <Compile Include="Implementation\CarritoMayoristaRepository.cs" />
+    <Compile Include="Implementation\CarritoMinoristaRepository.cs" />
+    <Compile Include="Implementation\CarritoRepository.cs" />
     <Compile Include="Implementation\ControlIdiomaRepository.cs" />
     <Compile Include="Implementation\IdiomaRepository.cs" />
     <Compile Include="Implementation\ProductoRepository.cs" />
     <Compile Include="Implementation\TraduccionRepository.cs" />
     <Compile Include="Implementation\UsuarioHistoricoRepository.cs" />
+    <Compile Include="Implementation\VentaRepository.cs" />
     <Compile Include="IProductoRepository.cs" />
     <Compile Include="ITraduccionRepository.cs" />
     <Compile Include="IUsuarioHistoricoRepository.cs" />
@@ -65,6 +72,7 @@
     <Compile Include="Implementation\UsuarioRepository.cs" />
     <Compile Include="IPermisoRepository.cs" />
     <Compile Include="IUsuarioRepository.cs" />
+    <Compile Include="IVentaRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

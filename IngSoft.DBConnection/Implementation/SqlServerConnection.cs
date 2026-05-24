@@ -154,21 +154,22 @@ namespace IngSoft.DBConnection
             return finalResult;
         }
 
-        public object EjecutarEscalar(string query, Dictionary<string, object> parametros)
+        public object EjecutarEscalar(string storeProcedure, Dictionary<string, object> parametros)
         {
-            SqlCommand oneCommand = new SqlCommand();
-            oneCommand.Connection = _sqlConnection;
-            oneCommand.Transaction = _oneTransaction;
-
-            oneCommand.CommandText = query;
-
-            foreach (var p in parametros)
+            using (var oneCommand = new SqlCommand(storeProcedure, _sqlConnection))
             {
-                oneCommand.Parameters.AddWithValue(p.Key, p.Value);
+                oneCommand.CommandType = CommandType.StoredProcedure;
+
+                if (_oneTransaction != null)
+                    oneCommand.Transaction = _oneTransaction;
+
+                foreach (var p in parametros)
+                    oneCommand.Parameters.AddWithValue(p.Key, p.Value ?? DBNull.Value);
+
+                return oneCommand.ExecuteScalar();
             }
-            oneCommand.CommandType = CommandType.Text;
-            return oneCommand.ExecuteScalar();
         }
+
         public int ObtenerUltimoId(string tabla, string columnaId)
         {
             string query = $"SELECT MAX({columnaId}) FROM {tabla}";

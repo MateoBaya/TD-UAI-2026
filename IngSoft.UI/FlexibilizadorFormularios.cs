@@ -278,6 +278,86 @@ namespace IngSoft.UI
             string text, EventHandler onClick)
             => CreateButton(parent, name, position, new Size(200, 30), text, onClick);
 
+        // ── Panel & label helpers ────────────────────────────────────────────────
+
+        /// <summary>Crea (o reemplaza) un Panel en el control padre.</summary>
+        public static Panel CreatePanel(Control parent, string name, Point position, Size size,
+            Color? backColor = null)
+        {
+            if (parent == null) throw new ArgumentNullException(nameof(parent));
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("name no puede ser vacío", nameof(name));
+
+            var pnl = new Panel
+            {
+                Name      = name,
+                Location  = position,
+                Size      = size,
+                BackColor = backColor ?? SystemColors.Control,
+                Visible   = true
+            };
+            AddOrReplaceControl(parent, pnl);
+            return pnl;
+        }
+
+        /// <summary>Crea (o reemplaza) un Label de sólo visualización (sin input pareado).</summary>
+        public static Label CreateDisplayLabel(Control parent, string name, Point position, Size size,
+            string text = "", Font font = null,
+            ContentAlignment align = ContentAlignment.MiddleLeft)
+        {
+            if (parent == null) throw new ArgumentNullException(nameof(parent));
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("name no puede ser vacío", nameof(name));
+
+            var lbl = new Label
+            {
+                Name      = name,
+                Location  = position,
+                Size      = size,
+                Text      = text,
+                Font      = font ?? new Font("Arial", 10),
+                TextAlign = align,
+                Visible   = true
+            };
+            AddOrReplaceControl(parent, lbl);
+            return lbl;
+        }
+
+        /// <summary>Crea (o reemplaza) un label + NumericUpDown en el formulario padre.</summary>
+        public static NumericUpDown CreateNumericUpDown(Control parent, string name, Point position,
+            Size? size = null, decimal min = 1, decimal max = 9999, decimal value = 1)
+        {
+            if (parent == null) throw new ArgumentNullException(nameof(parent));
+            if (string.IsNullOrWhiteSpace(name))
+                throw new ArgumentException("name no puede ser vacío", nameof(name));
+
+            var lbl = new Label
+            {
+                Name     = $"lbl{name}",
+                Location = new Point(position.X, position.Y - 22),
+                Size     = new Size(size?.Width ?? 150, 20),
+                Text     = name,
+                Visible  = true
+            };
+
+            var nud = new NumericUpDown
+            {
+                Name     = $"nud{name}",
+                Location = position,
+                Size     = size ?? new Size(150, 28),
+                Minimum  = min,
+                Maximum  = max,
+                Value    = value,
+                Visible  = true,
+                Enabled  = true,
+                Font     = new Font("Arial", 10)
+            };
+
+            AddOrReplaceControl(parent, lbl);
+            AddOrReplaceControl(parent, nud);
+            return nud;
+        }
+
         // ── Grid helpers ─────────────────────────────────────────────────────────
 
         /// <summary>Crea (o reemplaza) un DataGridView con DataTable como DataSource.</summary>

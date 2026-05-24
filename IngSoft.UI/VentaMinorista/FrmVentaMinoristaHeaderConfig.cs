@@ -3,50 +3,48 @@ using IngSoft.Domain;
 using IngSoft.Services;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace IngSoft.UI
 {
+    /// <summary>
+    /// Configura el header para el módulo Minorista e inyecta la UI en pnlMain.
+    /// Sigue el mismo patrón que FrmBitacoraHeaderConfig:
+    ///   - No agrega ítems al header (el módulo no los necesita)
+    ///   - Llama IniciarVenta() directamente desde el constructor
+    ///   - LastAction = ResizeControls cubre resize de sidebar y ventana
+    /// </summary>
     internal class FrmVentaMinoristaHeaderConfig
     {
-        private readonly FrmPrincipal formulario;
-        private readonly FrmVentaMinoristaFlexibilizador flexibilizador;
-        private readonly EventHandler iniciarVentaOnClick;
+        private readonly FrmPrincipal _formulario;
+        private readonly FrmVentaMinoristaFlexibilizador _flex;
 
         public FrmVentaMinoristaHeaderConfig()
         {
-            formulario = SingleInstancesManager.Instance.ObtenerInstancia<FrmPrincipal>();
-            flexibilizador = new FrmVentaMinoristaFlexibilizador();
+            _formulario = SingleInstancesManager.Instance.ObtenerInstancia<FrmPrincipal>();
+            _flex       = new FrmVentaMinoristaFlexibilizador();
 
-            iniciarVentaOnClick = IniciarVentaEventHandler;
-
-            MenuStrip header = formulario.MainMenuStrip;
-            if (header == null)
-                return;
-
-            var iniciarVentaMenu = new ToolStripMenuItem("Venta Minorista")
+            var header = _formulario.MainMenuStrip;
+            if (header != null)
             {
-                Name = "iniciarVentaMinoristaToolStripMenuItem"
-            };
-            iniciarVentaMenu.Click += iniciarVentaOnClick;
+                FrmPrincipalFlexibilizador.HeaderClearer(header);
+                FlexibilizadorFormularios.MenuStripHider(
+                    header, SessionManager.GetPermisos() as PermisoComponent);
+                _formulario.AplicarIdiomaActual();
+            }
 
-            FrmPrincipalFlexibilizador.HeaderClearer(header);
-            header.Items.Add(iniciarVentaMenu);
-
-            FlexibilizadorFormularios.MenuStripHider(header, SessionManager.GetPermisos() as PermisoComponent);
-            formulario.AplicarIdiomaActual();
+            IniciarVenta();
         }
 
-        private void IniciarVentaEventHandler(object sender, EventArgs e)
+        private void IniciarVenta()
         {
-            flexibilizador.EliminarControlesAdicionalesVentaMinorista();
+            _flex.EliminarControlesAdicionalesVentaMinorista();
 
             List<Producto> productos;
             try
             {
-                var filtro = new Producto { AceptaMinorista = true };
-                productos = ServicesFactory.CreateProductoServices().BuscarProductosValidos(filtro);
+                productos = ServicesFactory.CreateProductoServices()
+                    .BuscarProductosValidos(new Producto { AceptaMinorista = true });
             }
             catch (Exception)
             {
@@ -55,34 +53,14 @@ namespace IngSoft.UI
 
             if (productos == null || productos.Count == 0)
             {
-                MessageBox.Show("Ningún producto disponible para venta minorista.");
+                MessageBox.Show("No hay productos disponibles.");
                 return;
             }
 
-            flexibilizador.Productos = productos;
+            _flex.ConstruirLayout(productos);
 
-            var dgvPosition = new Point(formulario.GetPanelMain.Width / 16, formulario.GetPanelMain.Height / 8);
-            var dgvSize = new Size(
-                formulario.GetPanelMain.Width / 2 - formulario.GetPanelMain.Width / 16,
-                formulario.GetPanelMain.Height / 2 + formulario.GetPanelMain.Height / 4);
-
-            flexibilizador.DataGridViewProductosConSeleccion(productos, dgvPosition, dgvSize);
-
-            var rightX = formulario.GetPanelMain.Width / 2 + 20;
-            var baseY = formulario.GetPanelMain.Height / 8;
-            var offset = formulario.GetPanelMain.Height / 10;
-
-            var txtId = FlexibilizadorFormularios.CreateTextBox(formulario.GetPanelMain, "Id", new Point(rightX, baseY));
-            txtId.Visible = false;
-            var lblId = formulario.GetPanelMain.Controls.Find("lblId", true);
-            if (lblId.Length > 0) lblId[0].Visible = false;
-
-            flexibilizador.TextBoxCantidadCreator(new Point(rightX, baseY + offset));
-            flexibilizador.AgregarItemButtonCreator(new Point(rightX, baseY + offset * 2));
-            flexibilizador.FinalizarCarritoButtonCreator(new Point(rightX, baseY + offset * 3));
-
-            formulario.AplicarIdiomaActual();
-            formulario.LastAction = IniciarVentaEventHandler;
+            _formulario.LastAction = (s, e) => _flex.ResizeControls();
+            _formulario.AplicarIdiomaActual();
         }
     }
 }

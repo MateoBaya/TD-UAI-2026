@@ -75,6 +75,7 @@ namespace IngSoft.UI
                 { "bitacoraToolStripMenuItem",          bitacoraOnclick },
                 { "permisosToolStripMenuItem",          permisosOnclick },
                 { "productosToolStripMenuItem",         productosOnclick },
+                { "ventaMinoristaToolStripMenuItem",    ventaMinoristaOnclick },
                 { "multidiomasToolStripMenuItem",       multidiomasOnclick },
                 { "backupsToolStripMenuItem",           backupsOnclick },
                 { "controlDeCambiosToolStripMenuItem",  controlDeCambiosOnclick },
@@ -90,6 +91,7 @@ namespace IngSoft.UI
                 { "bitacoraToolStripMenuItem",          "Bitacora" },
                 { "permisosToolStripMenuItem",          "Permisos" },
                 { "productosToolStripMenuItem",         "Productos" },
+                { "ventaMinoristaToolStripMenuItem",    "Minorista" },
                 { "multidiomasToolStripMenuItem",       "Multidiomas" },
                 { "backupsToolStripMenuItem",           "Backup" },
                 { "controlDeCambiosToolStripMenuItem",  "Control de Cambios" },
@@ -124,6 +126,11 @@ namespace IngSoft.UI
         {
             FrmProductoHeaderConfig    headerConfig   = new FrmProductoHeaderConfig();
             FrmProductoFlexibilizador  flexibilizador = new FrmProductoFlexibilizador();
+        };
+
+        static EventHandler ventaMinoristaOnclick = (sender, e) =>
+        {
+            new FrmVentaMinoristaHeaderConfig();
         };
 
         // ── Migrated from ShowDialog ─────────────────────────────────────────────
