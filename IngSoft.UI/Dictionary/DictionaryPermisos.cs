@@ -33,6 +33,7 @@ namespace IngSoft.UI.Dictionaries
             {  "eliminarProductoToolStripMenuItem", "BajaProducto" },
             {  "ventaMinoristaToolStripMenuItem", "VentaMinorista" },
             {  "iniciarVentaMinoristaToolStripMenuItem", "IniciarVentaMinorista" },
+            {  "aprobacionCarritoToolStripMenuItem", "AprobacionCarrito" },
         };
     }
 }

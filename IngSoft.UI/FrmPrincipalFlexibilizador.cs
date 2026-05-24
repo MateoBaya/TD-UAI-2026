@@ -76,6 +76,7 @@ namespace IngSoft.UI
                 { "permisosToolStripMenuItem",          permisosOnclick },
                 { "productosToolStripMenuItem",         productosOnclick },
                 { "ventaMinoristaToolStripMenuItem",    ventaMinoristaOnclick },
+                { "aprobacionCarritoToolStripMenuItem", aprobacionCarritoOnclick },
                 { "multidiomasToolStripMenuItem",       multidiomasOnclick },
                 { "backupsToolStripMenuItem",           backupsOnclick },
                 { "controlDeCambiosToolStripMenuItem",  controlDeCambiosOnclick },
@@ -92,6 +93,7 @@ namespace IngSoft.UI
                 { "permisosToolStripMenuItem",          "Permisos" },
                 { "productosToolStripMenuItem",         "Productos" },
                 { "ventaMinoristaToolStripMenuItem",    "Minorista" },
+                { "aprobacionCarritoToolStripMenuItem", "Aprobacion Carritos" },
                 { "multidiomasToolStripMenuItem",       "Multidiomas" },
                 { "backupsToolStripMenuItem",           "Backup" },
                 { "controlDeCambiosToolStripMenuItem",  "Control de Cambios" },
@@ -131,6 +133,11 @@ namespace IngSoft.UI
         static EventHandler ventaMinoristaOnclick = (sender, e) =>
         {
             new FrmVentaMinoristaHeaderConfig();
+        };
+
+        static EventHandler aprobacionCarritoOnclick = (sender, e) =>
+        {
+            new FrmAprobacionCarritoHeaderConfig();
         };
 
         // ── Migrated from ShowDialog ─────────────────────────────────────────────
