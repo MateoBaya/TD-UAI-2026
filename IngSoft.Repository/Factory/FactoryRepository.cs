@@ -64,5 +64,10 @@ namespace IngSoft.Repository.Factory
             IConnection connection = ConnectionFactory.CreateSqlServerConnection();
             return new ProductoRepository(connection);
         }
+        public static ICarritoMinoristaRepository CreateCarritoMinoristaRepository()
+        {
+            IConnection connection = ConnectionFactory.CreateSqlServerConnection();
+            return new CarritoMinoristaRepository(connection);
+        }
     }
 }

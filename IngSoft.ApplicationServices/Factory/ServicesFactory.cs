@@ -53,5 +53,11 @@ namespace IngSoft.ApplicationServices.Factory
             var productoRepository = FactoryRepository.CreateProductoRepository();
             return new ProductoServices(productoRepository);
         }
+        public static ICarritoMinoristaServices CreateCarritoMinoristaServices()
+        {
+            var carritoRepository = FactoryRepository.CreateCarritoMinoristaRepository();
+            var productoRepository = FactoryRepository.CreateProductoRepository();
+            return new CarritoMinoristaServices(carritoRepository, productoRepository);
+        }
     }
 }
