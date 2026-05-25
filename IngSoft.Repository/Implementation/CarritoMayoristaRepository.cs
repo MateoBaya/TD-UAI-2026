@@ -4,6 +4,7 @@ using IngSoft.Domain;
 using IngSoft.Services;
 using System;
 using System.Collections.Generic;
+using IngSoft.Abstractions;
 
 namespace IngSoft.Repository.Implementation
 {
@@ -109,7 +110,7 @@ namespace IngSoft.Repository.Implementation
             }
         }
 
-        public bool AceptarCarrito()
+        public bool AceptarCarrito(DateTime fechaEntrega)
         {
             _connection.NuevaConexion(connectionString);
             try
@@ -118,7 +119,8 @@ namespace IngSoft.Repository.Implementation
                 var usuario = SessionManager.GetUsuario() as Usuario;
                 var parametros = new Dictionary<string, object>
                 {
-                    { "@UsuarioId", usuario?.Id ?? Guid.Empty }
+                    { "@UsuarioId",    usuario?.Id ?? Guid.Empty },
+                    { "@FechaEntrega", fechaEntrega }
                 };
                 var resultado = _connection.EjecutarEscalar("AceptarCarritoMayorista", parametros);
                 _connection.AceptarTransaccion();

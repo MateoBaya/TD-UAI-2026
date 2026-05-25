@@ -88,8 +88,6 @@ namespace IngSoft.UI
 
             _dgvCarritos = CrearDGVCarritos(_pnlLeft,
                 new Point(8, 40), new Size(leftW - 18, panelH - 54));
-            _dgvCarritos.SelectionChanged += DGVCarritos_SelectionChanged;
-            _dgvCarritos.ClearSelection();
 
             // ── Panel derecho ─────────────────────────────────────────────────────
             _pnlRight = FlexibilizadorFormularios.CreatePanel(pnlMain, "pnlAprobRight",
@@ -142,6 +140,10 @@ namespace IngSoft.UI
                 BtnAceptarCarrito_Click);
             EstilizarBoton(_btnAceptar, Color.FromArgb(39, 174, 96));
             _btnAceptar.Enabled = false;
+
+            // Suscribir y limpiar selección después de que todos los controles existan
+            _dgvCarritos.SelectionChanged += DGVCarritos_SelectionChanged;
+            _dgvCarritos.ClearSelection();
 
             _onFormResize = (s, e) => ResizeControls();
             _form.Resize += _onFormResize;
@@ -305,12 +307,12 @@ namespace IngSoft.UI
         private void ResetDetalle()
         {
             _detalle.Clear();
-            _dgvDetalle.DataSource = BuildDetalleDataTable(_detalle);
-            _lblTotal.Text = "Total:  $ 0,00";
+            if (_dgvDetalle       != null) _dgvDetalle.DataSource = BuildDetalleDataTable(_detalle);
+            if (_lblTotal         != null) _lblTotal.Text = "Total:  $ 0,00";
             if (_lblInfoNroCarrito != null) _lblInfoNroCarrito.Text = "—";
-            if (_lblInfoFecha     != null) _lblInfoFecha.Text     = "—";
+            if (_lblInfoFecha     != null) _lblInfoFecha.Text = "—";
             if (_dtpFechaEntrega  != null) { _dtpFechaEntrega.Value = DateTime.Today.AddDays(7); _dtpFechaEntrega.Enabled = false; }
-            _btnAceptar.Enabled = false;
+            if (_btnAceptar       != null) _btnAceptar.Enabled = false;
         }
 
         // ── Seleccion ────────────────────────────────────────────────────────────

@@ -86,11 +86,11 @@ namespace IngSoft.ApplicationServices.Implementation
             }
         }
 
-        public override bool AprobarCarrito()
+        public override bool AprobarCarrito(DateTime fechaEntrega)
         {
             try
             {
-                var resultado = _carritoMinoristaRepository.AceptarCarrito();
+                var resultado = _carritoMinoristaRepository.AceptarCarrito(fechaEntrega);
                 _registrarEnBitacora(SessionManager.GetUsuario() as Usuario,
                     "Carrito minorista aceptado",
                     "AprobarCarrito", TipoEvento.Message);

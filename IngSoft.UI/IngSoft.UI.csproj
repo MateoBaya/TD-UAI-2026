@@ -46,6 +46,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AprobacionCarrito\FrmAprobacionCarritoFlexibilizador.cs" />
+    <Compile Include="AprobacionCarrito\FrmAprobacionCarritoHeaderConfig.cs" />
     <Compile Include="Backup\FrmBackUpHeaderConfig.cs" />
     <Compile Include="Multidioma\FrmMultidiomasHeaderConfig.cs" />
     <Compile Include="BitacoraUI\FrmBitacoraFlexibilizador.cs" />

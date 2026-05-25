@@ -1,4 +1,5 @@
 using IngSoft.Domain;
+using System;
 using System.Collections.Generic;
 
 namespace IngSoft.Repository
@@ -7,7 +8,7 @@ namespace IngSoft.Repository
     {
         List<CarritoItem> MostrarDetalleCarrito();
         void CrearCarrito();
-        bool AceptarCarrito();
+        bool AceptarCarrito(DateTime fechaEntrega);
         void CrearCarrito(CarritoItem item);
         bool ValidarItem(CarritoItem item);
         bool RechazarCarrito();

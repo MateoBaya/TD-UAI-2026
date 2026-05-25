@@ -3,20 +3,16 @@ GO
 
 -- ============================================================
 -- CORRECCIONES A TABLAS
+-- FechaEntrega es nullable porque al rechazar un carrito no
+-- corresponde una fecha de entrega.
 -- ============================================================
 
--- Agrega columna para registrar quién aprobó/rechazó el carrito.
--- Ejecutar una sola vez.
---ALTER TABLE [dbo].[Carrito] ADD [UsuarioAprobadorId] UNIQUEIDENTIFIER NULL
---GO
---ALTER TABLE [dbo].[Carrito] ADD CONSTRAINT [FK_Carrito_UsuarioAprobador]
---    FOREIGN KEY ([UsuarioAprobadorId]) REFERENCES [dbo].[Usuario] ([Id])
+--ALTER TABLE [dbo].[Venta] ALTER COLUMN [FechaEntrega] DATETIME NULL
 --GO
 
 
 -- ============================================================
 -- CORRECCIONES A SPs EXISTENTES
--- Todos reciben ahora el Id del usuario que realiza la acción.
 -- ============================================================
 
 -- ============================================================
@@ -103,7 +99,9 @@ GO
 
 -- ============================================================
 -- SP: AceptarCarritoMinorista (corregido)
--- Agrega @UsuarioId para registrar quién aprobó el carrito.
+-- Cambia el estado del carrito minorista activo a 'Aceptado'
+-- e inserta el registro en Venta con el usuario aprobador.
+-- @FechaEntrega: fecha acordada con el comprador.
 -- ============================================================
 SET ANSI_NULLS ON
 GO
@@ -111,7 +109,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 ALTER PROCEDURE [dbo].[AceptarCarritoMinorista]
-    @UsuarioId UNIQUEIDENTIFIER
+    @UsuarioId    UNIQUEIDENTIFIER,
+    @FechaEntrega DATETIME
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -136,10 +135,12 @@ BEGIN
 
     BEGIN TRY
         UPDATE dbo.Carrito
-        SET EstadoId          = @EstadoId,
-            UsuarioAprobadorId = @UsuarioId,
-            FechaUpdate        = GETDATE()
+        SET EstadoId    = @EstadoId,
+            FechaUpdate = GETDATE()
         WHERE Id = @CarritoId;
+
+        INSERT INTO dbo.Venta (Id, CarritoId, UsuarioAprobadorId, EstadoId, FechaUpdate, FechaEntrega)
+        VALUES (NEWID(), @CarritoId, @UsuarioId, @EstadoId, GETDATE(), @FechaEntrega);
 
         SELECT CAST(1 AS BIT);
     END TRY
@@ -151,7 +152,9 @@ GO
 
 -- ============================================================
 -- SP: RechazarCarritoMinorista (corregido)
--- Agrega @UsuarioId para registrar quién rechazó el carrito.
+-- Cambia el estado del carrito minorista activo a 'Rechazado'
+-- e inserta el registro en Venta. FechaEntrega es NULL porque
+-- no hay entrega en un rechazo.
 -- ============================================================
 SET ANSI_NULLS ON
 GO
@@ -184,10 +187,12 @@ BEGIN
 
     BEGIN TRY
         UPDATE dbo.Carrito
-        SET EstadoId          = @EstadoId,
-            UsuarioAprobadorId = @UsuarioId,
-            FechaUpdate        = GETDATE()
+        SET EstadoId    = @EstadoId,
+            FechaUpdate = GETDATE()
         WHERE Id = @CarritoId;
+
+        INSERT INTO dbo.Venta (Id, CarritoId, UsuarioAprobadorId, EstadoId, FechaUpdate, FechaEntrega)
+        VALUES (NEWID(), @CarritoId, @UsuarioId, @EstadoId, GETDATE(), NULL);
 
         SELECT CAST(1 AS BIT);
     END TRY
@@ -281,7 +286,9 @@ GO
 
 -- ============================================================
 -- SP: AceptarCarritoMayorista (corregido)
--- Agrega @UsuarioId para registrar quién aprobó el carrito.
+-- Cambia el estado del carrito mayorista activo a 'Aceptado'
+-- e inserta el registro en Venta con el usuario aprobador.
+-- @FechaEntrega: fecha acordada con el comprador.
 -- ============================================================
 SET ANSI_NULLS ON
 GO
@@ -289,7 +296,8 @@ SET QUOTED_IDENTIFIER ON
 GO
 
 ALTER PROCEDURE [dbo].[AceptarCarritoMayorista]
-    @UsuarioId UNIQUEIDENTIFIER
+    @UsuarioId    UNIQUEIDENTIFIER,
+    @FechaEntrega DATETIME
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -314,10 +322,12 @@ BEGIN
 
     BEGIN TRY
         UPDATE dbo.Carrito
-        SET EstadoId          = @EstadoId,
-            UsuarioAprobadorId = @UsuarioId,
-            FechaUpdate        = GETDATE()
+        SET EstadoId    = @EstadoId,
+            FechaUpdate = GETDATE()
         WHERE Id = @CarritoId;
+
+        INSERT INTO dbo.Venta (Id, CarritoId, UsuarioAprobadorId, EstadoId, FechaUpdate, FechaEntrega)
+        VALUES (NEWID(), @CarritoId, @UsuarioId, @EstadoId, GETDATE(), @FechaEntrega);
 
         SELECT CAST(1 AS BIT);
     END TRY
@@ -329,7 +339,9 @@ GO
 
 -- ============================================================
 -- SP: RechazarCarritoMayorista (corregido)
--- Agrega @UsuarioId para registrar quién rechazó el carrito.
+-- Cambia el estado del carrito mayorista activo a 'Rechazado'
+-- e inserta el registro en Venta. FechaEntrega es NULL porque
+-- no hay entrega en un rechazo.
 -- ============================================================
 SET ANSI_NULLS ON
 GO
@@ -362,10 +374,12 @@ BEGIN
 
     BEGIN TRY
         UPDATE dbo.Carrito
-        SET EstadoId          = @EstadoId,
-            UsuarioAprobadorId = @UsuarioId,
-            FechaUpdate        = GETDATE()
+        SET EstadoId    = @EstadoId,
+            FechaUpdate = GETDATE()
         WHERE Id = @CarritoId;
+
+        INSERT INTO dbo.Venta (Id, CarritoId, UsuarioAprobadorId, EstadoId, FechaUpdate, FechaEntrega)
+        VALUES (NEWID(), @CarritoId, @UsuarioId, @EstadoId, GETDATE(), NULL);
 
         SELECT CAST(1 AS BIT);
     END TRY
@@ -384,8 +398,6 @@ GO
 -- SP: ObtenerCarritosPendientesMinorista
 -- Retorna todos los carritos minoristas en estado Pendiente,
 -- ordenados por fecha de insercion descendente.
--- Usado en la pantalla de aprobacion para listar los carritos
--- que esperan revisión del vendedor.
 -- ============================================================
 SET ANSI_NULLS ON
 GO
@@ -416,8 +428,6 @@ GO
 -- ============================================================
 -- SP: MostrarDetalleCarritoPorId
 -- Retorna los items de un carrito especifico por su Id.
--- Usado en la pantalla de aprobacion para mostrar el contenido
--- del carrito seleccionado por el vendedor.
 -- ============================================================
 SET ANSI_NULLS ON
 GO
@@ -443,14 +453,11 @@ GO
 
 -- ============================================================
 -- SP: AceptarCarritoPorId
--- Cambia el estado de un carrito especifico a 'Aceptado',
--- registra al usuario que realizó la acción e inserta el
--- registro correspondiente en la tabla Venta, todo en una
--- única transacción.
--- @FechaEntrega: fecha de entrega acordada con el comprador,
--- ingresada por el vendedor en la pantalla de aprobacion.
--- Retorna 1 si fue exitoso, 0 si el carrito no existe o ya
--- no está en estado Pendiente.
+-- Cambia el estado de un carrito especifico a 'Aceptado' e
+-- inserta el registro en Venta con el usuario aprobador y la
+-- fecha de entrega, todo en una unica transaccion.
+-- Retorna 1 si exitoso, 0 si el carrito no existe o no esta
+-- en estado Pendiente.
 -- ============================================================
 SET ANSI_NULLS ON
 GO
@@ -483,9 +490,8 @@ BEGIN
 
     BEGIN TRY
         UPDATE dbo.Carrito
-        SET EstadoId           = @EstadoAceptadoId,
-            UsuarioAprobadorId = @UsuarioId,
-            FechaUpdate        = GETDATE()
+        SET EstadoId    = @EstadoAceptadoId,
+            FechaUpdate = GETDATE()
         WHERE Id = @CarritoId;
 
         INSERT INTO dbo.Venta (Id, CarritoId, UsuarioAprobadorId, EstadoId, FechaUpdate, FechaEntrega)

@@ -93,7 +93,7 @@ namespace IngSoft.ApplicationServices.Implementation
         public abstract void CrearCarrito();
         public abstract void CrearCarrito(CarritoItem item);
         public abstract bool ValidarItem(CarritoItem item);
-        public abstract bool AprobarCarrito();
+        public abstract bool AprobarCarrito(DateTime fechaEntrega);
         public abstract bool RechazarCarrito();
         public abstract bool FinalizarCarrito();
 

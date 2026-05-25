@@ -14,7 +14,7 @@ namespace IngSoft.ApplicationServices
         void CrearCarrito();
         void CrearCarrito(CarritoItem item);
         bool ValidarItem(CarritoItem item);
-        bool AprobarCarrito();
+        bool AprobarCarrito(DateTime fechaEntrega);
         bool RechazarCarrito();
         bool FinalizarCarrito();
         List<Carrito> ObtenerCarritosPendientes();

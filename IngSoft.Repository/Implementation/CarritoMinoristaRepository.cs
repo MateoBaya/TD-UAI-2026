@@ -41,7 +41,7 @@ namespace IngSoft.Repository.Implementation
                 {
                     { "@Id", Guid.NewGuid() },
                     { "@FechaInsert", DateTime.Now },
-                    { "@UsuarioId", usuario?.Id ?? Guid.Empty }
+                    { "@UsuarioId", usuario.IdUsuario }
                 };
                 _connection.EjecutarSinResultado("CrearCarritoMinorista", parametros);
                 _connection.AceptarTransaccion();
@@ -68,7 +68,7 @@ namespace IngSoft.Repository.Implementation
                 {
                     { "@Id", Guid.NewGuid() },
                     { "@FechaInsert", DateTime.Now },
-                    { "@UsuarioId", usuario?.Id ?? Guid.Empty },
+                    { "@UsuarioId", usuario.IdUsuario },
                     { "@ProductoId", item.Producto.Id },
                     { "@Cantidad", item.Cantidad },
                     { "@Precio", item.Precio }
@@ -109,7 +109,7 @@ namespace IngSoft.Repository.Implementation
             }
         }
 
-        public bool AceptarCarrito()
+        public bool AceptarCarrito(DateTime fechaEntrega)
         {
             _connection.NuevaConexion(connectionString);
             try
@@ -118,7 +118,8 @@ namespace IngSoft.Repository.Implementation
                 var usuario = SessionManager.GetUsuario() as Usuario;
                 var parametros = new Dictionary<string, object>
                 {
-                    { "@UsuarioId", usuario?.Id ?? Guid.Empty }
+                    { "@UsuarioId",    usuario.IdUsuario },
+                    { "@FechaEntrega", fechaEntrega }
                 };
                 var resultado = _connection.EjecutarEscalar("AceptarCarritoMinorista", parametros);
                 _connection.AceptarTransaccion();
@@ -144,7 +145,7 @@ namespace IngSoft.Repository.Implementation
                 var usuario = SessionManager.GetUsuario() as Usuario;
                 var parametros = new Dictionary<string, object>
                 {
-                    { "@UsuarioId", usuario?.Id ?? Guid.Empty }
+                    { "@UsuarioId", usuario.IdUsuario}
                 };
                 var resultado = _connection.EjecutarEscalar("RechazarCarritoMinorista", parametros);
                 _connection.AceptarTransaccion();
@@ -222,7 +223,7 @@ namespace IngSoft.Repository.Implementation
                 var parametros = new Dictionary<string, object>
                 {
                     { "@CarritoId",    carritoId },
-                    { "@UsuarioId",    usuario?.Id ?? Guid.Empty },
+                    { "@UsuarioId",    usuario.IdUsuario },
                     { "@FechaEntrega", fechaEntrega }
                 };
                 var resultado = _connection.EjecutarEscalar("AceptarCarritoPorId", parametros);

@@ -76,6 +76,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\IngSoft.Abstractions\IngSoft.Abstractions.csproj">
+      <Project>{f5884fd3-5665-45ae-8228-33c20c81ece5}</Project>
+      <Name>IngSoft.Abstractions</Name>
+    </ProjectReference>
     <ProjectReference Include="..\IngSoft.DBConnection\IngSoft.DBConnection.csproj">
       <Project>{e9988f9d-f7ad-47e9-a8e5-db0fce3bfeb2}</Project>
       <Name>IngSoft.DBConnection</Name>
