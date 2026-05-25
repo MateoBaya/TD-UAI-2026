@@ -213,6 +213,33 @@ namespace IngSoft.Repository.Implementation
             }
         }
 
+        public bool RechazarCarritoPorId(Guid carritoId)
+        {
+            _connection.NuevaConexion(connectionString);
+            try
+            {
+                _connection.IniciarTransaccion();
+                var usuario = SessionManager.GetUsuario() as Usuario;
+                var parametros = new Dictionary<string, object>
+                {
+                    { "@UsuarioId", usuario.IdUsuario },
+                    { "@CarritoId", carritoId }
+                };
+                var resultado = _connection.EjecutarEscalar("RechazarCarritoMinorista", parametros);
+                _connection.AceptarTransaccion();
+                return resultado != null && Convert.ToBoolean(resultado);
+            }
+            catch (Exception)
+            {
+                _connection.CancelarTransaccion();
+                throw;
+            }
+            finally
+            {
+                _connection.FinalizarConexion();
+            }
+        }
+
         public bool AceptarCarritoPorId(Guid carritoId, DateTime fechaEntrega)
         {
             _connection.NuevaConexion(connectionString);

@@ -124,6 +124,25 @@ namespace IngSoft.ApplicationServices.Implementation
             }
         }
 
+        public override bool RechazarCarrito(Guid carritoId)
+        {
+            try
+            {
+                var resultado = _carritoMinoristaRepository.RechazarCarritoPorId(carritoId);
+                _registrarEnBitacora(SessionManager.GetUsuario() as Usuario,
+                    $"Carrito minorista rechazado por Id: {carritoId}",
+                    "RechazarCarrito", TipoEvento.Message);
+                return resultado;
+            }
+            catch (Exception)
+            {
+                _registrarEnBitacora(SessionManager.GetUsuario() as Usuario,
+                    "Error al rechazar carrito minorista por Id",
+                    "RechazarCarrito", TipoEvento.Error);
+                throw;
+            }
+        }
+
         public override bool FinalizarCarrito()
         {
             try

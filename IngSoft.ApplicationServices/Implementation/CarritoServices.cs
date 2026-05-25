@@ -111,5 +111,10 @@ namespace IngSoft.ApplicationServices.Implementation
         {
             throw new NotSupportedException("Este tipo de carrito no soporta la operacion AprobarCarrito por Id.");
         }
+
+        public virtual bool RechazarCarrito(Guid carritoId)
+        {
+            throw new NotSupportedException("Este tipo de carrito no soporta la operacion RechazarCarrito por Id.");
+        }
     }
 }

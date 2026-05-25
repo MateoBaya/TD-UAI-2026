@@ -437,42 +437,46 @@ GO
 
 -- ============================================================
 -- SP: RechazarCarritoMinorista
--- Cambia el estado del carrito minorista activo a 'Rechazado'.
--- Retorna 1 si la operacion fue exitosa, 0 si no habia carrito.
+-- Cambia el estado del carrito minorista a 'Rechazado'.
+-- Genera un registro de Venta asociado al rechazo (FechaEntrega NULL).
+-- Retorna 1 si exitoso, 0 si el carrito no existe o no esta Pendiente.
 -- ============================================================
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
 GO
 
-CREATE PROCEDURE [dbo].[RechazarCarritoMinorista]
+ALTER PROCEDURE [dbo].[RechazarCarritoMinorista]
+    @UsuarioId  UNIQUEIDENTIFIER,
+    @CarritoId  UNIQUEIDENTIFIER
 AS
 BEGIN
     SET NOCOUNT ON;
 
-    DECLARE @CarritoId UNIQUEIDENTIFIER;
-    DECLARE @EstadoId  UNIQUEIDENTIFIER;
+    DECLARE @EstadoRechazadoId  UNIQUEIDENTIFIER;
+    DECLARE @EstadoActualNombre NVARCHAR(100);
 
-    SELECT TOP 1 @CarritoId = c.Id
+    SELECT @EstadoActualNombre = e.Nombre
     FROM dbo.Carrito c
-    INNER JOIN dbo.Estado e       ON c.EstadoId      = e.Id
-    INNER JOIN dbo.CarritoTipo ct ON c.CarritoTipoId = ct.Id
-    WHERE e.Nombre = 'Pendiente' AND ct.Nombre = 'Minorista'
-    ORDER BY c.FechaInsert DESC;
+    INNER JOIN dbo.Estado e ON c.EstadoId = e.Id
+    WHERE c.Id = @CarritoId;
 
-    IF @CarritoId IS NULL
+    IF @EstadoActualNombre IS NULL OR @EstadoActualNombre <> 'Pendiente'
     BEGIN
         SELECT CAST(0 AS BIT);
         RETURN;
     END
 
-    SELECT @EstadoId = Id FROM dbo.Estado WHERE Nombre = 'Rechazado';
+    SELECT @EstadoRechazadoId = Id FROM dbo.Estado WHERE Nombre = 'Rechazado';
 
     BEGIN TRY
         UPDATE dbo.Carrito
-        SET EstadoId    = @EstadoId,
+        SET EstadoId    = @EstadoRechazadoId,
             FechaUpdate = GETDATE()
         WHERE Id = @CarritoId;
+
+        INSERT INTO dbo.Venta (Id, CarritoId, UsuarioAprobadorId, EstadoId, FechaUpdate, FechaEntrega)
+        VALUES (NEWID(), @CarritoId, @UsuarioId, @EstadoRechazadoId, GETDATE(), NULL);
 
         SELECT CAST(1 AS BIT);
     END TRY

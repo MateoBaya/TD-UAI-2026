@@ -34,6 +34,7 @@ namespace IngSoft.UI
         private Label _lblTotal;
         private Label _lblFechaEntrega;
         private DateTimePicker _dtpFechaEntrega;
+        private Button _btnRechazar;
         private Button _btnAceptar;
 
         // ── Resize ───────────────────────────────────────────────────────────────
@@ -134,10 +135,16 @@ namespace IngSoft.UI
             };
             _pnlRight.Controls.Add(_dtpFechaEntrega);
 
+            int halfW = (rightW - 18 - 6) / 2;
+            _btnRechazar = FlexibilizadorFormularios.CreateButton(_pnlRight, "btnRechazarCarrito",
+                new Point(8, panelH - BtnFromBot), new Size(halfW, 34),
+                "Rechazar", BtnRechazarCarrito_Click);
+            EstilizarBoton(_btnRechazar, Color.FromArgb(192, 57, 43));
+            _btnRechazar.Enabled = false;
+
             _btnAceptar = FlexibilizadorFormularios.CreateButton(_pnlRight, "btnAceptarCarrito",
-                new Point(8, panelH - BtnFromBot), new Size(rightW - 18, 34),
-                "Aceptar carrito",
-                BtnAceptarCarrito_Click);
+                new Point(8 + halfW + 6, panelH - BtnFromBot), new Size(halfW, 34),
+                "Aceptar", BtnAceptarCarrito_Click);
             EstilizarBoton(_btnAceptar, Color.FromArgb(39, 174, 96));
             _btnAceptar.Enabled = false;
 
@@ -198,10 +205,16 @@ namespace IngSoft.UI
                 _dtpFechaEntrega.Width    = rightW - 18;
             }
 
+            int halfW = (rightW - 18 - 6) / 2;
+            if (_btnRechazar != null)
+            {
+                _btnRechazar.Location = new Point(8, panelH - BtnFromBot);
+                _btnRechazar.Size     = new Size(halfW, 34);
+            }
             if (_btnAceptar != null)
             {
-                _btnAceptar.Location = new Point(8, panelH - BtnFromBot);
-                _btnAceptar.Size     = new Size(rightW - 18, 34);
+                _btnAceptar.Location = new Point(8 + halfW + 6, panelH - BtnFromBot);
+                _btnAceptar.Size     = new Size(halfW, 34);
             }
         }
 
@@ -312,6 +325,7 @@ namespace IngSoft.UI
             if (_lblInfoNroCarrito != null) _lblInfoNroCarrito.Text = "—";
             if (_lblInfoFecha     != null) _lblInfoFecha.Text = "—";
             if (_dtpFechaEntrega  != null) { _dtpFechaEntrega.Value = DateTime.Today.AddDays(7); _dtpFechaEntrega.Enabled = false; }
+            if (_btnRechazar      != null) _btnRechazar.Enabled = false;
             if (_btnAceptar       != null) _btnAceptar.Enabled = false;
         }
 
@@ -338,7 +352,52 @@ namespace IngSoft.UI
 
             CargarDetalle();
             if (_dtpFechaEntrega != null) _dtpFechaEntrega.Enabled = true;
-            _btnAceptar.Enabled = true;
+            _btnRechazar.Enabled = true;
+            _btnAceptar.Enabled  = true;
+        }
+
+        // ── Rechazar ─────────────────────────────────────────────────────────────
+
+        private void BtnRechazarCarrito_Click(object sender, EventArgs e)
+        {
+            if (_carritoSeleccionado == null)
+            {
+                MessageBox.Show("Seleccione un carrito de la lista.", "Atención",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            var confirm = MessageBox.Show(
+                $"¿Rechazar el carrito Nro. {_carritoSeleccionado.NroCarrito}?",
+                "Confirmar rechazo", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+            if (confirm != DialogResult.Yes) return;
+
+            try
+            {
+                var resultado = _carritoServices.RechazarCarrito(_carritoSeleccionado.Id);
+                if (resultado)
+                {
+                    MessageBox.Show("Carrito rechazado correctamente.", "Rechazo",
+                        MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    _carritoSeleccionado = null;
+                    CargarCarritos();
+                    _dgvCarritos.DataSource = BuildCarritosDataTable(_carritos);
+                    if (_dgvCarritos.Columns["Id"] != null)
+                        _dgvCarritos.Columns["Id"].Visible = false;
+                    _dgvCarritos.ClearSelection();
+                    ResetDetalle();
+                }
+                else
+                {
+                    MessageBox.Show("No se pudo rechazar el carrito.", "Error",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error al rechazar el carrito: {ex.Message}", "Error",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         // ── Aceptar ──────────────────────────────────────────────────────────────
