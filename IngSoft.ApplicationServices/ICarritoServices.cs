@@ -21,5 +21,7 @@ namespace IngSoft.ApplicationServices
         List<Carrito> ObtenerCarritosPendientes();
         List<CarritoItem> MostrarDetalleCarrito(Guid carritoId);
         bool AprobarCarrito(Guid carritoId, DateTime fechaEntrega);
+        List<PedidoResumen> ObtenerMisPedidos();
+        List<PedidoItem>    ObtenerDetallePedido(Guid carritoId);
     }
 }

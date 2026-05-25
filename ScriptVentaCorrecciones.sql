@@ -504,3 +504,70 @@ BEGIN
     END CATCH
 END
 GO
+
+
+-- ============================================================
+-- NUEVOS SPs PARA EL MODULO MIS PEDIDOS
+-- ============================================================
+
+-- ============================================================
+-- SP: ObtenerPedidosPorUsuario
+-- Retorna todos los carritos (minoristas y mayoristas) del
+-- usuario indicado, con tipo, estado y fecha de entrega
+-- (via LEFT JOIN con Venta, ya que solo existe cuando el
+-- carrito fue aceptado o rechazado).
+-- ============================================================
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[ObtenerPedidosPorUsuario]
+    @UsuarioId UNIQUEIDENTIFIER
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        c.Id,
+        c.NroCarrito,
+        ct.Nombre                                                AS Tipo,
+        e.Nombre                                                 AS Estado,
+        c.FechaInsert,
+        ISNULL(CONVERT(VARCHAR(10), v.FechaEntrega, 103), '-')  AS FechaEntregaTexto
+    FROM dbo.Carrito c
+    INNER JOIN dbo.CarritoTipo ct ON c.CarritoTipoId = ct.Id
+    INNER JOIN dbo.Estado e       ON c.EstadoId      = e.Id
+    LEFT  JOIN dbo.Venta v        ON v.CarritoId     = c.Id
+    WHERE c.UsuarioId = @UsuarioId
+    ORDER BY c.FechaInsert DESC;
+END
+GO
+
+-- ============================================================
+-- SP: ObtenerDetallePedidoPorId
+-- Retorna los items de un carrito con el nombre del producto,
+-- cantidad, precio unitario y subtotal calculado.
+-- ============================================================
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[ObtenerDetallePedidoPorId]
+    @CarritoId UNIQUEIDENTIFIER
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    SELECT
+        ci.Id,
+        p.Nombre                               AS NombreProducto,
+        ci.Cantidad,
+        ci.Precio,
+        CAST(ci.Cantidad * ci.Precio AS FLOAT) AS Subtotal
+    FROM dbo.CarritoItem ci
+    INNER JOIN dbo.Producto p ON ci.ProductoId = p.Id
+    WHERE ci.CarritoId = @CarritoId;
+END
+GO

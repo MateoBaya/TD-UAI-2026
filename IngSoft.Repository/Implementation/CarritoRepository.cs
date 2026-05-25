@@ -92,5 +92,39 @@ namespace IngSoft.Repository.Implementation
                 _connection.FinalizarConexion();
             }
         }
+
+        public List<PedidoResumen> ObtenerPedidosPorUsuario(Guid usuarioId)
+        {
+            _connection.NuevaConexion(connectionString);
+            try
+            {
+                var parametros = new Dictionary<string, object>
+                {
+                    { "@UsuarioId", usuarioId }
+                };
+                return _connection.EjecutarDataSet<PedidoResumen>("ObtenerPedidosPorUsuario", parametros);
+            }
+            finally
+            {
+                _connection.FinalizarConexion();
+            }
+        }
+
+        public List<PedidoItem> ObtenerDetallePedido(Guid carritoId)
+        {
+            _connection.NuevaConexion(connectionString);
+            try
+            {
+                var parametros = new Dictionary<string, object>
+                {
+                    { "@CarritoId", carritoId }
+                };
+                return _connection.EjecutarDataSet<PedidoItem>("ObtenerDetallePedidoPorId", parametros);
+            }
+            finally
+            {
+                _connection.FinalizarConexion();
+            }
+        }
     }
 }

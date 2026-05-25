@@ -34,6 +34,7 @@ namespace IngSoft.UI.Dictionaries
             {  "ventaMinoristaToolStripMenuItem", "VentaMinorista" },
             {  "iniciarVentaMinoristaToolStripMenuItem", "IniciarVentaMinorista" },
             {  "aprobacionCarritoToolStripMenuItem", "AprobacionCarrito" },
+            {  "misPedidosToolStripMenuItem",        "MisPedidos" },
         };
     }
 }

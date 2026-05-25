@@ -9,5 +9,7 @@ namespace IngSoft.Repository
         bool AgregarCantidadesItem(CarritoItem item);
         Carrito BuscarCarrito(Carrito carrito);
         List<Carrito> BuscarCarritosFiltrados(Usuario usuario, DateTime fechaDesde, DateTime fechaHasta);
+        List<PedidoResumen> ObtenerPedidosPorUsuario(Guid usuarioId);
+        List<PedidoItem>    ObtenerDetallePedido(Guid carritoId);
     }
 }

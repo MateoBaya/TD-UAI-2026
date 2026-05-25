@@ -116,5 +116,36 @@ namespace IngSoft.ApplicationServices.Implementation
         {
             throw new NotSupportedException("Este tipo de carrito no soporta la operacion RechazarCarrito por Id.");
         }
+
+        public List<PedidoResumen> ObtenerMisPedidos()
+        {
+            try
+            {
+                var usuario = SessionManager.GetUsuario() as Usuario;
+                return _carritoRepository.ObtenerPedidosPorUsuario(usuario?.Id ?? Guid.Empty);
+            }
+            catch (Exception)
+            {
+                _registrarEnBitacora(SessionManager.GetUsuario() as Usuario,
+                    "Error al obtener mis pedidos",
+                    "ObtenerMisPedidos", TipoEvento.Error);
+                throw;
+            }
+        }
+
+        public List<PedidoItem> ObtenerDetallePedido(Guid carritoId)
+        {
+            try
+            {
+                return _carritoRepository.ObtenerDetallePedido(carritoId);
+            }
+            catch (Exception)
+            {
+                _registrarEnBitacora(SessionManager.GetUsuario() as Usuario,
+                    "Error al obtener detalle de pedido",
+                    "ObtenerDetallePedido", TipoEvento.Error);
+                throw;
+            }
+        }
     }
 }
